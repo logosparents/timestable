@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>星際乘數表寶石測驗</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #09111f;
+      --surface: rgba(17, 29, 52, 0.85);
+      --surface-2: rgba(26, 42, 73, 0.92);
+      --border: rgba(255,255,255,0.14);
+      --text: #f7fbff;
+      --muted: #b7c7e6;
+      --primary: #60d8ff;
+      --primary-2: #7b7dff;
+      --success: #58e29a;
+      --danger: #ff8a8a;
+      --warning: #ffd564;
+      --gold: #ffd54a;
+      --shadow: 0 20px 50px rgba(0,0,0,0.35);
+      --radius: 24px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(96,216,255,0.18), transparent 28%),
+        radial-gradient(circle at 80% 20%, rgba(123,125,255,0.18), transparent 22%),
+        linear-gradient(180deg, #0b1426 0%, #09111f 100%);
+    }
+    .stars, .stars::before, .stars::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,.8), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,.5), transparent),
+        radial-gradient(1px 1px at 50px 160px, rgba(255,255,255,.7), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,.7), transparent),
+        radial-gradient(2px 2px at 130px 80px, rgba(255,255,255,.5), transparent);
+      background-repeat: repeat;
+      background-size: 180px 180px;
+      pointer-events: none;
+      opacity: .35;
+      z-index: 0;
+    }
+    .stars::before { transform: scale(1.15); opacity: .25; }
+    .stars::after { transform: scale(.9); opacity: .18; }
+    .app {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 18px;
+      margin-bottom: 18px;
+    }
+    .brand { display: flex; gap: 14px; align-items: center; }
+    .logo {
+      width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center;
+      background: linear-gradient(145deg, rgba(110,243,255,.24), rgba(123,125,255,.3));
+      border: 1px solid rgba(255,255,255,.18); font-size: 28px;
+    }
+    h1, h2, h3 { font-family: 'Baloo 2', cursive; margin: 0; line-height: 1.1; }
+    .muted { color: var(--muted); }
+    .stats { display: flex; gap: 10px; flex-wrap: wrap; }
+    .pill {
+      padding: 10px 14px; border-radius: 999px; background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.1); font-weight: 800;
+    }
+    .grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; }
+    .home, .quiz, .side { padding: 22px; }
+    .step-row, .levels { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 14px; }
+    .card, .level-btn { background: var(--surface-2); border: 1px solid var(--border); border-radius: 20px; padding: 16px; }
+    .level-btn {
+      cursor: pointer; text-align: left; transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+    .level-btn:hover, .level-btn:focus-visible { transform: translateY(-2px); border-color: rgba(96,216,255,.5); }
+    .level-btn.locked { opacity: .55; cursor: not-allowed; }
+    .active-hero { border-color: rgba(255,213,74,.7); box-shadow: 0 0 0 2px rgba(255,213,74,.18) inset; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px;
+      font-size: 14px; font-weight: 800; background: rgba(255,255,255,.08); margin-bottom: 10px;
+    }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+    button {
+      border: 0; border-radius: 16px; padding: 14px 18px; font: inherit; font-weight: 800;
+      color: #08111e; background: linear-gradient(135deg, var(--primary), #a6f0ff); cursor: pointer; min-height: 48px;
+    }
+    button.secondary {
+      color: var(--text); background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+    }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    .quiz-shell { display: none; }
+    .quiz-shell.active, .home-shell.active { display: block; }
+    .home-shell { display: none; }
+    .question-box {
+      margin-top: 20px; padding: 24px; border-radius: 24px; background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.12); text-align: center;
+    }
+    .question { font-family: 'Baloo 2', cursive; font-size: clamp(40px, 10vw, 74px); margin: 8px 0 6px; }
+    .timerbar { height: 14px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,.08); margin-top: 18px; }
+    .timerfill { height: 100%; width: 100%; background: linear-gradient(90deg, var(--success), var(--warning), var(--danger)); transition: width 1s linear; }
+    .answers { margin-top: 18px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .answer-btn { color: var(--text); background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); }
+    .answer-btn.correct { background: rgba(88,226,154,.22); color: var(--text); }
+    .answer-btn.wrong { background: rgba(255,138,138,.2); color: var(--text); }
+    .side section + section { margin-top: 14px; }
+    .mini-list { display: grid; gap: 10px; margin-top: 12px; }
+    .mini-item {
+      display: flex; justify-content: space-between; gap: 10px; align-items: center; background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.09); border-radius: 16px; padding: 12px 14px;
+    }
+    .stars-row { letter-spacing: 2px; color: var(--gold); font-size: 20px; }
+    .result { display: none; margin-top: 18px; padding: 18px; border-radius: 20px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); }
+    .result.show { display: block; }
+    .small { font-size: 14px; }
+    .footer-note { margin-top: 14px; font-size: 13px; color: var(--muted); }
+    @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } .answers { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+  <div class="app">
+    <header class="panel topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">🎤</div>
+        <div>
+          <h1>星際乘數表寶石測驗</h1>
+          <div class="muted">Huntrix 風格原型：可選 Zoey、Rumi、Mira 開始冒險，含 30 題測驗、寶石累積、最高分、弱點記錄</div>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="pill">💎 總寶石：<span id="totalGems">0</span></div>
+        <div class="pill">🔥 最佳連對：<span id="bestStreak">0</span></div>
+        <div class="pill">📚 錯題數：<span id="wrongCount">0</span></div>
+        <div class="pill">🎤 主角：<span id="heroName">未選擇</span></div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <main>
+        <section class="panel home home-shell active" id="homeView">
+          <span class="badge">🌌 關卡地圖</span>
+          <h2>先選一位主角開始冒險</h2>
+          <p class="muted">靈感來自 Netflix《KPop Demon Hunters》的 Rumi、Mira、Zoey 三位主角設定：她們是 K-pop 超級巨星，同時以秘密力量保護粉絲免受超自然威脅。[web:31][web:34]</p>
+
+          <div class="levels" id="heroList"></div>
+
+          <h2 style="margin-top:22px;">再選乘數表關卡</h2>
+          <p class="muted">Step 1：1-2，Step 2：5、10，Step 3：3、4，Step 4：6，Step 5：7，Step 6：8，Step 7：9。完成全部關卡後可解鎖混合模式。</p>
+
+          <div class="step-row">
+            <div class="card"><strong>Step 1</strong><div class="muted small">1、2</div></div>
+            <div class="card"><strong>Step 2</strong><div class="muted small">5、10</div></div>
+            <div class="card"><strong>Step 3</strong><div class="muted small">3、4</div></div>
+            <div class="card"><strong>Step 4-7</strong><div class="muted small">6、7、8、9</div></div>
+          </div>
+
+          <div class="levels" id="levelList"></div>
+
+          <div class="actions">
+            <button id="dailyBtn">每日挑戰</button>
+            <button class="secondary" id="weakBtn">弱點複習</button>
+            <button class="secondary" id="mixedBtn">混合模式</button>
+            <button class="secondary" id="resetBtn">重設資料</button>
+          </div>
+
+          <div class="footer-note">此版本是受角色設定啟發的非官方原型，只加入 Zoey、Rumi、Mira 作為可選主角，不包含受版權保護的官方圖像、音樂或劇情素材。[web:31]</div>
+        </section>
+
+        <section class="panel quiz quiz-shell" id="quizView">
+          <span class="badge" id="quizBadge">🪐 測驗中</span>
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;">
+            <div>
+              <h2 id="quizTitle">2 的乘數表</h2>
+              <div class="muted" id="quizSubtitle">30 題｜每題 20 秒｜答錯直接下一題</div>
+            </div>
+            <button class="secondary" id="backHomeBtn">返回主頁</button>
+          </div>
+
+          <div class="question-box">
+            <div class="muted">第 <span id="questionIndex">1</span> / <span id="questionTotal">30</span> 題</div>
+            <div class="question" id="questionText">2 × 4 = ?</div>
+            <div class="muted">本題可得：<span id="questionGemHint">1</span> 💎</div>
+            <div class="timerbar"><div class="timerfill" id="timerFill"></div></div>
+            <div class="answers" id="answers"></div>
+          </div>
+
+          <div class="result" id="resultBox"></div>
+        </section>
+      </main>
+
+      <aside class="panel side">
+        <section>
+          <span class="badge">🏆 最高紀錄</span>
+          <div class="mini-list" id="leaderboard"></div>
+        </section>
+        <section>
+          <span class="badge">⭐ 學習星星</span>
+          <div class="mini-list" id="starsBoard"></div>
+        </section>
+        <section>
+          <span class="badge">🧠 錯題本</span>
+          <div class="mini-list" id="wrongBook"></div>
+        </section>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const storageKey = 'multiplication-space-prototype-v2';
+    const memoryStore = { value: null };
+    function safeLoad() {
+      const fallback = {
+        hero: null,
+        totalGems: 0,
+        bestStreak: 0,
+        levelHighScores: {},
+        levelStars: {},
+        practiceCount: {},
+        wrongFacts: [],
+        unlocked: [1,2],
+        completed: []
+      };
+      try {
+        const raw = localStorage.getItem(storageKey);
+        return raw ? { ...fallback, ...JSON.parse(raw) } : fallback;
+      } catch (e) {
+        return memoryStore.value ? { ...fallback, ...memoryStore.value } : fallback;
+      }
+    }
+    function safeSave(data) {
+      try { localStorage.setItem(storageKey, JSON.stringify(data)); }
+      catch (e) { memoryStore.value = JSON.parse(JSON.stringify(data)); }
+    }
+
+    const heroes = [
+      { id: 'zoey', name: 'Zoey', emoji: '🎧', vibe: '節奏感強，適合衝連對', power: 'Rap Burst' },
+      { id: 'rumi', name: 'Rumi', emoji: '🎼', vibe: '聲線穩定，適合每日挑戰', power: 'Vocal Shield' },
+      { id: 'mira', name: 'Mira', emoji: '⚔️', vibe: '舞台氣勢強，適合高難度關卡', power: 'Blade Spin' }
+    ];
+    const steps = [
+      { step: 1, levels: [1,2] },
+      { step: 2, levels: [5,10] },
+      { step: 3, levels: [3,4] },
+      { step: 4, levels: [6] },
+      { step: 5, levels: [7] },
+      { step: 6, levels: [8] },
+      { step: 7, levels: [9] }
+    ];
+
+    const state = {
+      profile: safeLoad(), mode: 'level', currentLevel: null, questions: [], currentQuestion: 0,
+      timeLeft: 20, timer: null, score: 0, correct: 0, streak: 0, maxStreak: 0, sessionWrong: []
+    };
+
+    const el = {
+      totalGems: document.getElementById('totalGems'),
+      bestStreak: document.getElementById('bestStreak'),
+      wrongCount: document.getElementById('wrongCount'),
+      heroName: document.getElementById('heroName'),
+      heroList: document.getElementById('heroList'),
+      levelList: document.getElementById('levelList'),
+      leaderboard: document.getElementById('leaderboard'),
+      starsBoard: document.getElementById('starsBoard'),
+      wrongBook: document.getElementById('wrongBook'),
+      homeView: document.getElementById('homeView'),
+      quizView: document.getElementById('quizView'),
+      quizTitle: document.getElementById('quizTitle'),
+      quizSubtitle: document.getElementById('quizSubtitle'),
+      quizBadge: document.getElementById('quizBadge'),
+      questionIndex: document.getElementById('questionIndex'),
+      questionTotal: document.getElementById('questionTotal'),
+      questionText: document.getElementById('questionText'),
+      questionGemHint: document.getElementById('questionGemHint'),
+      timerFill: document.getElementById('timerFill'),
+      answers: document.getElementById('answers'),
+      resultBox: document.getElementById('resultBox')
+    };
+
+    function shuffle(arr) {
+      const clone = [...arr];
+      for (let i = clone.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [clone[i], clone[j]] = [clone[j], clone[i]];
+      }
+      return clone;
+    }
+    function getStarCount(rate) { if (rate >= 95) return 3; if (rate >= 85) return 2; if (rate >= 70) return 1; return 0; }
+    function levelUnlocked(level) { return state.profile.unlocked.includes(level); }
+    function canPlayMixed() { return [1,2,3,4,5,6,7,8,9,10].every(n => state.profile.completed.includes(n)); }
+    function persist() { safeSave(state.profile); }
+
+    function generateQuestions(mode, level) {
+      const pool = [];
+      if (mode === 'daily') {
+        const seed = new Date().toISOString().slice(0,10).replaceAll('-', '');
+        let base = Number(seed) % 9 + 1;
+        for (let i = 1; i <= 30; i++) {
+          const a = (base + i) % 10 || 10;
+          const b = (i % 10) || 10;
+          pool.push({ a, b, answer: a * b, key: `${a}x${b}` });
+        }
+        return pool;
+      }
+      if (mode === 'weak') {
+        const weak = state.profile.wrongFacts.slice(0, 30);
+        if (weak.length) {
+          while (pool.length < 30) {
+            const item = weak[pool.length % weak.length];
+            const [a, b] = item.key.split('x').map(Number);
+            pool.push({ a, b, answer: a * b, key: item.key });
+          }
+          return shuffle(pool);
+        }
+      }
+      if (mode === 'mixed') {
+        for (let i = 0; i < 30; i++) {
+          const a = Math.floor(Math.random() * 10) + 1;
+          const b = Math.floor(Math.random() * 10) + 1;
+          pool.push({ a, b, answer: a * b, key: `${a}x${b}` });
+        }
+        return pool;
+      }
+      for (let i = 0; i < 30; i++) {
+        const b = Math.floor(Math.random() * 10) + 1;
+        pool.push({ a: level, b, answer: level * b, key: `${level}x${b}` });
+      }
+      return pool;
+    }
+
+    function getChoices(correct) {
+      const set = new Set([correct]);
+      while (set.size < 4) {
+        const offset = Math.floor(Math.random() * 10) + 1;
+        const sign = Math.random() > 0.5 ? 1 : -1;
+        set.add(Math.max(0, correct + offset * sign));
+      }
+      return shuffle([...set]);
+    }
+
+    function renderHome() {
+      el.totalGems.textContent = state.profile.totalGems;
+      el.bestStreak.textContent = state.profile.bestStreak;
+      el.wrongCount.textContent = state.profile.wrongFacts.length;
+      el.heroName.textContent = state.profile.hero ? state.profile.hero.name : '未選擇';
+
+      el.heroList.innerHTML = heroes.map(hero => {
+        const active = state.profile.hero && state.profile.hero.id === hero.id;
+        return `
+          <button class="level-btn ${active ? 'active-hero' : ''}" data-hero="${hero.id}">
+            <div class="badge">${hero.emoji} ${active ? '已選主角' : '選擇主角'}</div>
+            <h3>${hero.name}</h3>
+            <div class="muted small">${hero.vibe}</div>
+            <div class="muted small">技能名：${hero.power}</div>
+          </button>
+        `;
+      }).join('');
+      [...el.heroList.querySelectorAll('[data-hero]')].forEach(btn => {
+        btn.addEventListener('click', () => {
+          const selected = heroes.find(h => h.id === btn.dataset.hero);
+          state.profile.hero = selected;
+          persist();
+          renderHome();
+          alertLike(`已選擇 ${selected.name} 作為主角！`);
+        });
+      });
+
+      el.levelList.innerHTML = [1,2,3,4,5,6,7,8,9,10].map(level => {
+        const unlocked = levelUnlocked(level);
+        const high = state.profile.levelHighScores[level] || 0;
+        const stars = state.profile.levelStars[level] || 0;
+        return `
+          <button class="level-btn ${unlocked ? '' : 'locked'}" ${unlocked ? '' : 'disabled'} data-level="${level}">
+            <div class="badge">${unlocked ? '🟢 已開放' : '🔒 未解鎖'}</div>
+            <h3>${level} 的乘數表</h3>
+            <div class="muted small">最高寶石：${high}｜星星：${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</div>
+          </button>
+        `;
+      }).join('');
+      [...el.levelList.querySelectorAll('[data-level]')].forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (!state.profile.hero) { alertLike('請先選擇 Zoey、Rumi 或 Mira。'); return; }
+          startQuiz('level', Number(btn.dataset.level));
+        });
+      });
+
+      el.leaderboard.innerHTML = [1,2,3,4,5,6,7,8,9,10].map(level =>
+        `<div class="mini-item"><span>${level} 的乘數表</span><strong>${state.profile.levelHighScores[level] || 0} 💎</strong></div>`
+      ).join('');
+
+      el.starsBoard.innerHTML = [1,2,3,4,5,6,7,8,9,10].map(level => {
+        const star = state.profile.levelStars[level] || 0;
+        return `<div class="mini-item"><span>${level} 的乘數表</span><span class="stars-row">${'★'.repeat(star)}${'☆'.repeat(3 - star)}</span></div>`;
+      }).join('');
+
+      el.wrongBook.innerHTML = state.profile.wrongFacts.length
+        ? state.profile.wrongFacts.slice(0, 8).map(item => `<div class="mini-item"><span>${item.key.replace('x', ' × ')}</span><button class="secondary" data-remove="${item.key}" style="padding:8px 12px;min-height:auto;color:var(--text);">刪除</button></div>`).join('')
+        : '<div class="mini-item"><span>暫時沒有錯題，太好了！</span></div>';
+      [...el.wrongBook.querySelectorAll('[data-remove]')].forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.profile.wrongFacts = state.profile.wrongFacts.filter(x => x.key !== btn.dataset.remove);
+          persist();
+          renderHome();
+        });
+      });
+    }
+
+    function unlockNext(level) {
+      const flat = steps.flatMap(s => s.levels);
+      const idx = flat.indexOf(level);
+      if (idx >= 0 && idx < flat.length - 1) {
+        const next = flat[idx + 1];
+        if (!state.profile.unlocked.includes(next)) state.profile.unlocked.push(next);
+      }
+    }
+
+    function showQuiz() {
+      el.homeView.classList.remove('active');
+      el.quizView.classList.add('active');
+    }
+    function showHome() {
+      clearInterval(state.timer);
+      el.quizView.classList.remove('active');
+      el.homeView.classList.add('active');
+      el.resultBox.classList.remove('show');
+      renderHome();
+    }
+
+    function startQuiz(mode, level = null) {
+      if (!state.profile.hero) { alertLike('請先選擇 Zoey、Rumi 或 Mira 作為主角。'); return; }
+      if (mode === 'mixed' && !canPlayMixed()) { alertLike('混合模式尚未解鎖，請先完成全部關卡。'); return; }
+      if (mode === 'weak' && state.profile.wrongFacts.length === 0) { alertLike('目前沒有錯題可複習。'); return; }
+      state.mode = mode;
+      state.currentLevel = level;
+      state.questions = generateQuestions(mode, level);
+      state.currentQuestion = 0;
+      state.score = 0;
+      state.correct = 0;
+      state.streak = 0;
+      state.maxStreak = 0;
+      state.sessionWrong = [];
+      el.resultBox.classList.remove('show');
+      const heroLabel = state.profile.hero ? `｜主角：${state.profile.hero.name}` : '';
+      const titles = { level: `${level} 的乘數表`, daily: '每日挑戰', weak: '弱點複習', mixed: '混合模式' };
+      el.quizTitle.textContent = titles[mode] + heroLabel;
+      el.quizSubtitle.textContent = '30 題｜每題 20 秒｜答錯直接下一題';
+      el.quizBadge.textContent = mode === 'daily' ? '📅 每日挑戰' : mode === 'weak' ? '🧠 弱點複習' : mode === 'mixed' ? '🌠 混合模式' : '🪐 關卡挑戰';
+      showQuiz();
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      clearInterval(state.timer);
+      if (state.currentQuestion >= state.questions.length) { finishQuiz(); return; }
+      state.timeLeft = 20;
+      const q = state.questions[state.currentQuestion];
+      const currentBonus = 1 + (state.streak >= 3 ? 1 : 0);
+      el.questionIndex.textContent = state.currentQuestion + 1;
+      el.questionTotal.textContent = state.questions.length;
+      el.questionText.textContent = `${q.a} × ${q.b} = ?`;
+      el.questionGemHint.textContent = currentBonus;
+      el.timerFill.style.width = '100%';
+      el.answers.innerHTML = getChoices(q.answer).map(choice => `<button class="answer-btn" data-choice="${choice}">${choice}</button>`).join('');
+      [...el.answers.querySelectorAll('[data-choice]')].forEach(btn => btn.addEventListener('click', () => answerQuestion(Number(btn.dataset.choice), btn)));
+      state.timer = setInterval(() => {
+        state.timeLeft -= 1;
+        el.timerFill.style.width = `${(state.timeLeft / 20) * 100}%`;
+        if (state.timeLeft <= 0) {
+          clearInterval(state.timer);
+          markWrong(q);
+          setTimeout(nextQuestion, 250);
+        }
+      }, 1000);
+    }
+
+    function answerQuestion(choice, button) {
+      clearInterval(state.timer);
+      const q = state.questions[state.currentQuestion];
+      if (choice === q.answer) {
+        button.classList.add('correct');
+        state.correct += 1;
+        state.streak += 1;
+        state.maxStreak = Math.max(state.maxStreak, state.streak);
+        let gems = 1;
+        if (state.streak >= 3) gems += 1;
+        if (state.timeLeft >= 10) gems += 1;
+        state.score += gems;
+      } else {
+        button.classList.add('wrong');
+        markWrong(q);
+      }
+      setTimeout(nextQuestion, 250);
+    }
+
+    function markWrong(q) {
+      state.streak = 0;
+      state.sessionWrong.push(q.key);
+      if (!state.profile.wrongFacts.some(x => x.key === q.key)) {
+        state.profile.wrongFacts.push({ key: q.key, lastWrongAt: new Date().toISOString() });
+      }
+    }
+    function nextQuestion() { state.currentQuestion += 1; renderQuestion(); }
+
+    function finishQuiz() {
+      clearInterval(state.timer);
+      const rate = Math.round((state.correct / state.questions.length) * 100);
+      const stars = getStarCount(rate);
+      state.profile.totalGems += state.score;
+      state.profile.bestStreak = Math.max(state.profile.bestStreak, state.maxStreak);
+      if (state.mode === 'level') {
+        const level = state.currentLevel;
+        state.profile.practiceCount[level] = (state.profile.practiceCount[level] || 0) + 1;
+        state.profile.levelHighScores[level] = Math.max(state.profile.levelHighScores[level] || 0, state.score);
+        state.profile.levelStars[level] = Math.max(state.profile.levelStars[level] || 0, stars);
+        if (!state.profile.completed.includes(level)) state.profile.completed.push(level);
+        unlockNext(level);
+      }
+      persist();
+      renderHome();
+      el.resultBox.classList.add('show');
+      el.resultBox.innerHTML = `
+        <h3>完成挑戰！</h3>
+        <p>主角 <strong>${state.profile.hero.name}</strong> 今次答對了 <strong>${state.correct}</strong> / ${state.questions.length} 題，正確率 ${rate}% 。</p>
+        <p>本關獲得 <strong>${state.score}</strong> 顆寶石，最高連對 <strong>${state.maxStreak}</strong> 題，星星評級：<span class="stars-row">${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</span></p>
+        <p class="muted small">答錯題目會加入錯題本，之後可用「弱點複習」再練習。</p>
+      `;
+    }
+
+    function alertLike(message) {
+      const box = document.createElement('div');
+      box.className = 'panel';
+      box.style.position = 'fixed';
+      box.style.left = '50%';
+      box.style.top = '24px';
+      box.style.transform = 'translateX(-50%)';
+      box.style.padding = '14px 18px';
+      box.style.zIndex = '10';
+      box.textContent = message;
+      document.body.appendChild(box);
+      setTimeout(() => box.remove(), 1800);
+    }
+
+    document.getElementById('dailyBtn').addEventListener('click', () => startQuiz('daily'));
+    document.getElementById('weakBtn').addEventListener('click', () => startQuiz('weak'));
+    document.getElementById('mixedBtn').addEventListener('click', () => startQuiz('mixed'));
+    document.getElementById('backHomeBtn').addEventListener('click', showHome);
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      memoryStore.value = null;
+      try { localStorage.removeItem(storageKey); } catch (e) {}
+      state.profile = safeLoad();
+      renderHome();
+      alertLike('已重設所有資料。');
+    });
+    renderHome();
+  </script>
+</body>
+</html>
