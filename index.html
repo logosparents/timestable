@@ -3,578 +3,1763 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>星際乘數表寶石測驗</title>
+  <title>星際乘數表：獵魔特攻隊 (K-pop Demon Hunters Edition)</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Orbitron:wght@500;700;900&family=Noto+Sans+HK:wght@400;700;900&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cyberBg: '#050a18',
+            cyberDark: '#0b132b',
+            cyberCard: '#111e3d',
+            cyberCyan: '#00f0ff',
+            cyberMagenta: '#ff007f',
+            cyberPurple: '#7000ff',
+            cyberGreen: '#10b981',
+            cyberYellow: '#ffb703',
+          },
+          fontFamily: {
+            sans: ['Noto Sans HK', 'sans-serif'],
+            cyber: ['Orbitron', 'sans-serif'],
+            fun: ['Baloo 2', 'cursive'],
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
-    :root {
-      --bg: #09111f;
-      --surface: rgba(17, 29, 52, 0.85);
-      --surface-2: rgba(26, 42, 73, 0.92);
-      --border: rgba(255,255,255,0.14);
-      --text: #f7fbff;
-      --muted: #b7c7e6;
-      --primary: #60d8ff;
-      --primary-2: #7b7dff;
-      --success: #58e29a;
-      --danger: #ff8a8a;
-      --warning: #ffd564;
-      --gold: #ffd54a;
-      --shadow: 0 20px 50px rgba(0,0,0,0.35);
-      --radius: 24px;
+    /* Custom Neon Glow Styles */
+    .glow-cyan {
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3), inset 0 0 15px rgba(0, 240, 255, 0.1);
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      font-family: 'Nunito', sans-serif;
-      background:
-        radial-gradient(circle at top, rgba(96,216,255,0.18), transparent 28%),
-        radial-gradient(circle at 80% 20%, rgba(123,125,255,0.18), transparent 22%),
-        linear-gradient(180deg, #0b1426 0%, #09111f 100%);
+    .glow-magenta {
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.3), inset 0 0 15px rgba(255, 0, 127, 0.1);
     }
-    .stars, .stars::before, .stars::after {
-      content: "";
-      position: fixed;
+    .glow-purple {
+      box-shadow: 0 0 15px rgba(112, 0, 255, 0.35), inset 0 0 15px rgba(112, 0, 255, 0.15);
+    }
+    .text-glow-cyan {
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+    }
+    .text-glow-magenta {
+      text-shadow: 0 0 8px rgba(255, 0, 127, 0.6);
+    }
+    
+    /* Huntrix Character Avatar Cropping from the Official Poster */
+    .hero-avatar {
+      background-image: url('Netflix-KPop-Demon-Hunters-2025-Huntrix-Hero-Group-Wall-Poster-22-375-x-34_00097913-a403-4a90-9f75-9e5eeee60aea.02669972a40ca63ecf3c45f71421371c.avif');
+      background-repeat: no-repeat;
+      background-size: 340% auto;
+    }
+    .avatar-zoey {
+      background-position: 48% 14%;
+    }
+    .avatar-rumi {
+      background-position: 83% 16%;
+    }
+    .avatar-mira {
+      background-position: 13% 18.5%;
+    }
+
+    /* 3D Flip Card Styles */
+    .flip-card-container {
+      perspective: 1000px;
+    }
+    .flip-card-inner {
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .flip-card-inner.flipped {
+      transform: rotateY(180deg);
+    }
+    .flip-card-front, .flip-card-back {
+      backface-visibility: hidden;
+      position: absolute;
       inset: 0;
-      background-image:
-        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,.8), transparent),
-        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,.5), transparent),
-        radial-gradient(1px 1px at 50px 160px, rgba(255,255,255,.7), transparent),
-        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,.7), transparent),
-        radial-gradient(2px 2px at 130px 80px, rgba(255,255,255,.5), transparent);
-      background-repeat: repeat;
-      background-size: 180px 180px;
-      pointer-events: none;
-      opacity: .35;
-      z-index: 0;
     }
-    .stars::before { transform: scale(1.15); opacity: .25; }
-    .stars::after { transform: scale(.9); opacity: .18; }
-    .app {
+    .flip-card-back {
+      transform: rotateY(180deg);
+    }
+
+    /* Animated Cyber Starfield Background */
+    .space-bg {
+      background: radial-gradient(circle at center, #111e3d 0%, #050a18 100%);
+    }
+    
+    /* Animated Scanlines */
+    .scanlines {
       position: relative;
-      z-index: 1;
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 20px;
+      overflow: hidden;
     }
-    .panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(12px);
+    .scanlines::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: 2;
+      background-size: 100% 4px, 6px 100%;
+      pointer-events: none;
     }
-    .topbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 18px;
-      margin-bottom: 18px;
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
     }
-    .brand { display: flex; gap: 14px; align-items: center; }
-    .logo {
-      width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center;
-      background: linear-gradient(145deg, rgba(110,243,255,.24), rgba(123,125,255,.3));
-      border: 1px solid rgba(255,255,255,.18); font-size: 28px;
+    ::-webkit-scrollbar-track {
+      background: #050a18;
     }
-    h1, h2, h3 { font-family: 'Baloo 2', cursive; margin: 0; line-height: 1.1; }
-    .muted { color: var(--muted); }
-    .stats { display: flex; gap: 10px; flex-wrap: wrap; }
-    .pill {
-      padding: 10px 14px; border-radius: 999px; background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.1); font-weight: 800;
+    ::-webkit-scrollbar-thumb {
+      background: #111e3d;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 240, 255, 0.2);
     }
-    .grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; }
-    .home, .quiz, .side { padding: 22px; }
-    .step-row, .levels { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 14px; }
-    .card, .level-btn { background: var(--surface-2); border: 1px solid var(--border); border-radius: 20px; padding: 16px; }
-    .level-btn {
-      cursor: pointer; text-align: left; transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 240, 255, 0.4);
     }
-    .level-btn:hover, .level-btn:focus-visible { transform: translateY(-2px); border-color: rgba(96,216,255,.5); }
-    .level-btn.locked { opacity: .55; cursor: not-allowed; }
-    .active-hero { border-color: rgba(255,213,74,.7); box-shadow: 0 0 0 2px rgba(255,213,74,.18) inset; }
-    .badge {
-      display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px;
-      font-size: 14px; font-weight: 800; background: rgba(255,255,255,.08); margin-bottom: 10px;
-    }
-    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
-    button {
-      border: 0; border-radius: 16px; padding: 14px 18px; font: inherit; font-weight: 800;
-      color: #08111e; background: linear-gradient(135deg, var(--primary), #a6f0ff); cursor: pointer; min-height: 48px;
-    }
-    button.secondary {
-      color: var(--text); background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
-    }
-    button:disabled { opacity: .5; cursor: not-allowed; }
-    .quiz-shell { display: none; }
-    .quiz-shell.active, .home-shell.active { display: block; }
-    .home-shell { display: none; }
-    .question-box {
-      margin-top: 20px; padding: 24px; border-radius: 24px; background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-      border: 1px solid rgba(255,255,255,.12); text-align: center;
-    }
-    .question { font-family: 'Baloo 2', cursive; font-size: clamp(40px, 10vw, 74px); margin: 8px 0 6px; }
-    .timerbar { height: 14px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,.08); margin-top: 18px; }
-    .timerfill { height: 100%; width: 100%; background: linear-gradient(90deg, var(--success), var(--warning), var(--danger)); transition: width 1s linear; }
-    .answers { margin-top: 18px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-    .answer-btn { color: var(--text); background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); }
-    .answer-btn.correct { background: rgba(88,226,154,.22); color: var(--text); }
-    .answer-btn.wrong { background: rgba(255,138,138,.2); color: var(--text); }
-    .side section + section { margin-top: 14px; }
-    .mini-list { display: grid; gap: 10px; margin-top: 12px; }
-    .mini-item {
-      display: flex; justify-content: space-between; gap: 10px; align-items: center; background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.09); border-radius: 16px; padding: 12px 14px;
-    }
-    .stars-row { letter-spacing: 2px; color: var(--gold); font-size: 20px; }
-    .result { display: none; margin-top: 18px; padding: 18px; border-radius: 20px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); }
-    .result.show { display: block; }
-    .small { font-size: 14px; }
-    .footer-note { margin-top: 14px; font-size: 13px; color: var(--muted); }
-    @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } .answers { grid-template-columns: 1fr; } }
   </style>
 </head>
-<body>
-  <div class="stars"></div>
-  <div class="app">
-    <header class="panel topbar">
-      <div class="brand">
-        <div class="logo" aria-hidden="true">🎤</div>
+<body class="space-bg text-gray-100 min-height-screen font-sans scanlines selection:bg-cyberMagenta selection:text-white pb-24 md:pb-6">
+
+  <canvas id="starfield" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-4 py-4 md:py-8">
+    
+    <!-- Top Cyber Header -->
+    <header class="mb-6 flex flex-col md:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-cyberDark/90 border border-cyberCyan/20 glow-cyan backdrop-blur-xl">
+      <div class="flex items-center gap-4 w-full md:w-auto">
+        <div class="relative flex-shrink-0">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-tr from-cyberPurple to-cyberMagenta flex items-center justify-center border border-white/20 text-2xl font-cyber font-bold text-white relative overflow-hidden group">
+            <span class="absolute inset-0 bg-cyberCyan/10 animate-pulse"></span>
+            ⚡️
+          </div>
+        </div>
         <div>
-          <h1>星際乘數表寶石測驗</h1>
-          <div class="muted">Huntrix 風格原型：可選 Zoey、Rumi、Mira 開始冒險，含 30 題測驗、寶石累積、最高分、弱點記錄</div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-cyber tracking-widest text-cyberCyan font-bold uppercase animate-pulse">Demon Hunter Academy</span>
+            <span class="px-1.5 py-0.5 bg-cyberMagenta/20 text-cyberMagenta border border-cyberMagenta/30 rounded text-[10px] font-bold font-cyber">V2.0 PRO</span>
+          </div>
+          <h1 class="text-xl md:text-2xl font-black font-cyber tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-cyberCyan to-cyberMagenta">
+            星際乘數：獵魔特攻隊
+          </h1>
         </div>
       </div>
-      <div class="stats">
-        <div class="pill">💎 總寶石：<span id="totalGems">0</span></div>
-        <div class="pill">🔥 最佳連對：<span id="bestStreak">0</span></div>
-        <div class="pill">📚 錯題數：<span id="wrongCount">0</span></div>
-        <div class="pill">🎤 主角：<span id="heroName">未選擇</span></div>
+
+      <!-- Quick Stats Panel -->
+      <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyberCard border border-cyberYellow/30 text-cyberYellow text-sm font-bold shadow-md">
+          <span>💎 <span id="headerGems" class="font-cyber">0</span></span>
+        </div>
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyberCard border border-cyberCyan/30 text-cyberCyan text-sm font-bold shadow-md">
+          <span>🔥 連對：<span id="headerStreak" class="font-cyber">0</span></span>
+        </div>
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyberCard border border-cyberMagenta/30 text-cyberMagenta text-sm font-bold shadow-md">
+          <span class="flex items-center gap-1.5">👾 主角：<span id="activeHeroBadge" class="font-bold">未選取</span></span>
+        </div>
+        <!-- Settings/Reset button -->
+        <button onclick="confirmReset()" class="px-3 py-1.5 rounded-xl bg-red-950/40 border border-red-500/30 text-red-400 text-xs hover:bg-red-900/50 transition-all flex items-center gap-1">
+          <i class="fa-solid fa-rotate-left"></i> 重設
+        </button>
       </div>
     </header>
 
-    <div class="grid">
-      <main>
-        <section class="panel home home-shell active" id="homeView">
-          <span class="badge">🌌 關卡地圖</span>
-          <h2>先選一位主角開始冒險</h2>
-          <p class="muted">靈感來自 Netflix《KPop Demon Hunters》的 Rumi、Mira、Zoey 三位主角設定：她們是 K-pop 超級巨星，同時以秘密力量保護粉絲免受超自然威脅。[web:31][web:34]</p>
+    <!-- Navigation Bar for Screens (Responsive Desktop Top / Mobile Bottom Dock) -->
+    <nav class="mb-6 bg-cyberDark/95 border border-white/10 rounded-2xl p-2 flex justify-around md:justify-start gap-2 backdrop-blur-md sticky top-4 z-40 shadow-xl">
+      <button onclick="switchView('home')" id="nav-home" class="nav-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all text-cyberCyan bg-cyberCyan/10">
+        <i class="fa-solid fa-map-location-dot"></i> <span class="hidden md:inline">冒險關卡</span>
+      </button>
+      <button onclick="switchView('cantonese')" id="nav-cantonese" class="nav-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all text-gray-400 hover:text-white">
+        <i class="fa-solid fa-comment-dots"></i> <span class="hidden md:inline">廣東話九因歌</span><span class="md:hidden">九因歌</span>
+      </button>
+      <button onclick="switchView('flashcards')" id="nav-flashcards" class="nav-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all text-gray-400 hover:text-white">
+        <i class="fa-solid fa-clone"></i> <span class="hidden md:inline">智能閃卡</span><span class="md:hidden">閃卡</span>
+      </button>
+      <button onclick="switchView('tips')" id="nav-tips" class="nav-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all text-gray-400 hover:text-white">
+        <i class="fa-solid fa-lightbulb"></i> <span class="hidden md:inline">技巧秘笈</span><span class="md:hidden">秘笈</span>
+      </button>
+      <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all text-gray-400 hover:text-white">
+        <i class="fa-solid fa-chart-line"></i> <span class="hidden md:inline">家長分析儀表板</span><span class="md:hidden">家長</span>
+      </button>
+    </nav>
 
-          <div class="levels" id="heroList"></div>
-
-          <h2 style="margin-top:22px;">再選乘數表關卡</h2>
-          <p class="muted">Step 1：1-2，Step 2：5、10，Step 3：3、4，Step 4：6，Step 5：7，Step 6：8，Step 7：9。完成全部關卡後可解鎖混合模式。</p>
-
-          <div class="step-row">
-            <div class="card"><strong>Step 1</strong><div class="muted small">1、2</div></div>
-            <div class="card"><strong>Step 2</strong><div class="muted small">5、10</div></div>
-            <div class="card"><strong>Step 3</strong><div class="muted small">3、4</div></div>
-            <div class="card"><strong>Step 4-7</strong><div class="muted small">6、7、8、9</div></div>
-          </div>
-
-          <div class="levels" id="levelList"></div>
-
-          <div class="actions">
-            <button id="dailyBtn">每日挑戰</button>
-            <button class="secondary" id="weakBtn">弱點複習</button>
-            <button class="secondary" id="mixedBtn">混合模式</button>
-            <button class="secondary" id="resetBtn">重設資料</button>
-          </div>
-
-          <div class="footer-note">此版本是受角色設定啟發的非官方原型，只加入 Zoey、Rumi、Mira 作為可選主角，不包含受版權保護的官方圖像、音樂或劇情素材。[web:31]</div>
-        </section>
-
-        <section class="panel quiz quiz-shell" id="quizView">
-          <span class="badge" id="quizBadge">🪐 測驗中</span>
-          <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;">
-            <div>
-              <h2 id="quizTitle">2 的乘數表</h2>
-              <div class="muted" id="quizSubtitle">30 題｜每題 20 秒｜答錯直接下一題</div>
+    <!-- VIEW: HOME (Adventure & Level Select) -->
+    <div id="view-home" class="view-panel block">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left Column: Hero Select & Levels Grid -->
+        <div class="lg:col-span-2 flex flex-col gap-6">
+          
+          <!-- Hero selection with high-res crops from Netflix Poster -->
+          <section class="p-6 rounded-2xl bg-cyberDark/80 border border-white/5 backdrop-blur-md">
+            <div class="flex items-center gap-2 mb-4">
+              <span class="w-2.5 h-6 bg-cyberMagenta rounded-full"></span>
+              <h2 class="text-xl font-bold font-cyber tracking-wider">選擇獵魔特攻主角 (K-pop Demon Hunters)</h2>
             </div>
-            <button class="secondary" id="backHomeBtn">返回主頁</button>
+            <p class="text-sm text-gray-400 mb-6 leading-relaxed">
+              點擊召喚你的守護歌手！她們在舞台上是璀璨的 K-pop 巨星，在夜幕下則幻化成強大的星際獵魔人。每一位都擁有獨特的音樂魔法。
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="heroesContainer">
+              <!-- Zoey Card -->
+              <div onclick="selectHero('zoey')" id="hero-card-zoey" class="hero-selector-card group cursor-pointer p-4 rounded-xl bg-cyberCard border border-white/10 hover:border-cyberCyan/50 transition-all flex flex-col items-center text-center relative overflow-hidden">
+                <div class="absolute inset-x-0 bottom-0 h-1 bg-cyberCyan opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <!-- Zoey Cropped Avatar -->
+                <div class="w-32 h-32 mb-4 rounded-full border-2 border-cyberCyan hero-avatar avatar-zoey relative overflow-hidden shadow-lg shadow-cyberCyan/10">
+                  <div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-cyberCyan/90 text-slate-900 text-[10px] px-2 py-0.5 rounded-full font-bold font-cyber">RAPPER</div>
+                </div>
+                <h3 class="font-cyber font-black text-lg text-white">ZOEY</h3>
+                <span class="text-xs text-cyberCyan font-cyber font-semibold tracking-wide">Rap Burst ⚡️</span>
+                <p class="text-xs text-gray-400 mt-2">快節奏說唱！答題觸發重低音狂潮，爆發雙倍連對金幣。</p>
+              </div>
+
+              <!-- Rumi Card -->
+              <div onclick="selectHero('rumi')" id="hero-card-rumi" class="hero-selector-card group cursor-pointer p-4 rounded-xl bg-cyberCard border border-white/10 hover:border-cyberPurple/50 transition-all flex flex-col items-center text-center relative overflow-hidden">
+                <div class="absolute inset-x-0 bottom-0 h-1 bg-cyberPurple opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <!-- Rumi Cropped Avatar -->
+                <div class="w-32 h-32 mb-4 rounded-full border-2 border-cyberPurple hero-avatar avatar-rumi relative overflow-hidden shadow-lg shadow-cyberPurple/10">
+                  <div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-cyberPurple/90 text-white text-[10px] px-2 py-0.5 rounded-full font-bold font-cyber font-cyber">VOCAL</div>
+                </div>
+                <h3 class="font-cyber font-black text-lg text-white">RUMI</h3>
+                <span class="text-xs text-cyberPurple font-cyber font-semibold tracking-wide">Vocal Shield 🔮</span>
+                <p class="text-xs text-gray-400 mt-2">星光高音！展開聲波護盾，每日挑戰首兩題答錯免懲罰。</p>
+              </div>
+
+              <!-- Mira Card -->
+              <div onclick="selectHero('mira')" id="hero-card-mira" class="hero-selector-card group cursor-pointer p-4 rounded-xl bg-cyberCard border border-white/10 hover:border-cyberMagenta/50 transition-all flex flex-col items-center text-center relative overflow-hidden">
+                <div class="absolute inset-x-0 bottom-0 h-1 bg-cyberMagenta opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <!-- Mira Cropped Avatar -->
+                <div class="w-32 h-32 mb-4 rounded-full border-2 border-cyberMagenta hero-avatar avatar-mira relative overflow-hidden shadow-lg shadow-cyberMagenta/10">
+                  <div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-cyberMagenta/90 text-white text-[10px] px-2 py-0.5 rounded-full font-bold font-cyber">DANCER</div>
+                </div>
+                <h3 class="font-cyber font-black text-lg text-white">MIRA</h3>
+                <span class="text-xs text-cyberMagenta font-cyber font-semibold tracking-wide">Blade Spin ⚔️</span>
+                <p class="text-xs text-gray-400 mt-2">舞台利刃！迴旋斬擊魔物，高難度關卡答對獎勵 +50%。</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Star Map and Levels Section -->
+          <section class="p-6 rounded-2xl bg-cyberDark/80 border border-white/5 backdrop-blur-md">
+            <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-6 bg-cyberCyan rounded-full"></span>
+                <h2 class="text-xl font-bold font-cyber tracking-wider">星際挑戰關卡地圖</h2>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="startQuiz('mixed')" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-cyberCyan to-cyberPurple text-white text-xs font-bold hover:opacity-90 transition-all glow-cyan">
+                  ⚡️ 終極混合模式
+                </button>
+                <button onclick="startQuiz('daily')" class="px-3 py-1.5 rounded-xl bg-cyberMagenta/20 border border-cyberMagenta/40 text-cyberMagenta text-xs font-bold hover:bg-cyberMagenta/30 transition-all">
+                  📅 每日隨機挑戰
+                </button>
+              </div>
+            </div>
+
+            <!-- Learning Step Road -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 text-center">
+              <div class="p-3 rounded-xl bg-cyberCard/50 border border-cyberCyan/10">
+                <div class="text-[10px] uppercase font-cyber text-cyberCyan font-bold">Step 1 (初級)</div>
+                <div class="text-sm font-black mt-1">1、2、5、10</div>
+              </div>
+              <div class="p-3 rounded-xl bg-cyberCard/50 border border-cyberCyan/10">
+                <div class="text-[10px] uppercase font-cyber text-cyberCyan font-bold">Step 2 (中級)</div>
+                <div class="text-sm font-black mt-1">3、4、6</div>
+              </div>
+              <div class="p-3 rounded-xl bg-cyberCard/50 border border-cyberCyan/10">
+                <div class="text-[10px] uppercase font-cyber text-cyberCyan font-bold">Step 3 (高級)</div>
+                <div class="text-sm font-black mt-1">7、8、9</div>
+              </div>
+              <div class="p-3 rounded-xl bg-cyberCard/50 border border-cyberCyan/10">
+                <div class="text-[10px] uppercase font-cyber text-cyberCyan font-bold">Step 4 (大師)</div>
+                <div class="text-sm font-black mt-1">混合模式</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="adventureLevels">
+              <!-- JS will dynamically render interactive level selection buttons here -->
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Right Column: Sidebar (Mastery Scoreboard & Weaknesses) -->
+        <div class="flex flex-col gap-6">
+          
+          <!-- Quick Cantonese Practice Panel -->
+          <div class="p-5 rounded-2xl bg-gradient-to-br from-cyberPurple/30 to-cyberDark border border-cyberPurple/20 glow-purple backdrop-blur-md">
+            <h3 class="text-md font-bold font-cyber text-cyberPurple mb-2 flex items-center gap-2">
+              <i class="fa-solid fa-volume-high"></i> 廣東話語音快速點播
+            </h3>
+            <p class="text-xs text-gray-300 mb-4">按以下乘數聽讀廣東話「九因歌」經典口訣，邊學邊背！</p>
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="playQuickChant(2,3)" class="p-2 text-xs rounded-lg bg-cyberCard/80 border border-white/5 hover:border-cyberPurple/50 hover:bg-cyberPurple/20 transition-all">
+                二三得六 <i class="fa-solid fa-play text-[9px] text-cyberPurple"></i>
+              </button>
+              <button onclick="playQuickChant(3,7)" class="p-2 text-xs rounded-lg bg-cyberCard/80 border border-white/5 hover:border-cyberPurple/50 hover:bg-cyberPurple/20 transition-all">
+                三七廿一 <i class="fa-solid fa-play text-[9px] text-cyberPurple"></i>
+              </button>
+              <button onclick="playQuickChant(5,5)" class="p-2 text-xs rounded-lg bg-cyberCard/80 border border-white/5 hover:border-cyberPurple/50 hover:bg-cyberPurple/20 transition-all">
+                五五廿五 <i class="fa-solid fa-play text-[9px] text-cyberPurple"></i>
+              </button>
+              <button onclick="playQuickChant(7,8)" class="p-2 text-xs rounded-lg bg-cyberCard/80 border border-white/5 hover:border-cyberPurple/50 hover:bg-cyberPurple/20 transition-all">
+                七八五十六 <i class="fa-solid fa-play text-[9px] text-cyberPurple"></i>
+              </button>
+              <button onclick="playQuickChant(8,9)" class="p-2 text-xs rounded-lg bg-cyberCard/80 border border-white/5 hover:border-cyberPurple/50 hover:bg-cyberPurple/20 transition-all">
+                八九七十二 <i class="fa-solid fa-play text-[9px] text-cyberPurple"></i>
+              </button>
+              <button onclick="playQuickChant(9,9)" class="p-2 text-xs rounded-lg bg-cyberCard/80 border border-white/5 hover:border-cyberPurple/50 hover:bg-cyberPurple/20 transition-all">
+                九九八十一 <i class="fa-solid fa-play text-[9px] text-cyberPurple"></i>
+              </button>
+            </div>
+            <button onclick="switchView('cantonese')" class="w-full mt-3 py-2 text-xs font-bold rounded-xl bg-cyberPurple text-white hover:opacity-90 transition-all flex items-center justify-center gap-1">
+              進入完整九因歌區 <i class="fa-solid fa-arrow-right"></i>
+            </button>
           </div>
 
-          <div class="question-box">
-            <div class="muted">第 <span id="questionIndex">1</span> / <span id="questionTotal">30</span> 題</div>
-            <div class="question" id="questionText">2 × 4 = ?</div>
-            <div class="muted">本題可得：<span id="questionGemHint">1</span> 💎</div>
-            <div class="timerbar"><div class="timerfill" id="timerFill"></div></div>
-            <div class="answers" id="answers"></div>
+          <!-- Stars Leaderboard -->
+          <div class="p-5 rounded-2xl bg-cyberDark/80 border border-white/5 backdrop-blur-md">
+            <h3 class="text-md font-bold font-cyber text-cyberCyan mb-3 flex items-center gap-2">
+              <i class="fa-solid fa-star text-cyberYellow"></i> 關卡成就徽章
+            </h3>
+            <div class="space-y-2.5 max-h-[250px] overflow-y-auto pr-1" id="starsBoard">
+              <!-- Dynamic List -->
+            </div>
           </div>
 
-          <div class="result" id="resultBox"></div>
-        </section>
-      </main>
+          <!-- Weakness Book -->
+          <div class="p-5 rounded-2xl bg-cyberDark/80 border border-white/5 backdrop-blur-md">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-md font-bold font-cyber text-cyberMagenta flex items-center gap-2">
+                <i class="fa-solid fa-brain"></i> 錯題雷達 (智能溫習)
+              </h3>
+              <button onclick="startQuiz('weak')" id="weakReviewBtn" class="text-xs px-2.5 py-1 rounded-lg bg-cyberMagenta/20 text-cyberMagenta border border-cyberMagenta/30 hover:bg-cyberMagenta/30 transition-all font-bold">
+                智能溫習
+              </button>
+            </div>
+            <div class="space-y-2" id="wrongBook">
+              <!-- Dynamic List -->
+            </div>
+          </div>
 
-      <aside class="panel side">
-        <section>
-          <span class="badge">🏆 最高紀錄</span>
-          <div class="mini-list" id="leaderboard"></div>
-        </section>
-        <section>
-          <span class="badge">⭐ 學習星星</span>
-          <div class="mini-list" id="starsBoard"></div>
-        </section>
-        <section>
-          <span class="badge">🧠 錯題本</span>
-          <div class="mini-list" id="wrongBook"></div>
-        </section>
-      </aside>
+        </div>
+
+      </div>
     </div>
+
+    <!-- VIEW: CANTONESE (九因歌互動區) -->
+    <div id="view-cantonese" class="view-panel hidden">
+      <section class="p-6 rounded-2xl bg-cyberDark/90 border border-cyberPurple/30 glow-purple backdrop-blur-md">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-6 border-b border-white/10">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded bg-cyberPurple/20 border border-cyberPurple/40 text-cyberPurple text-xs font-cyber font-bold">CANTORHYME</span>
+              <h2 class="text-2xl font-black font-cyber text-white">廣東話九因歌（經典口訣互動板）</h2>
+            </div>
+            <p class="text-sm text-gray-400 mt-1">經典廣東話傳統乘數韻律口訣。點擊任意表格方格，可以聆聽流利的廣東話朗讀，幫助孩子快速形成大腦聲音記憶！</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="autoPlayChants()" id="autoChantBtn" class="px-4 py-2 text-sm font-bold rounded-xl bg-cyberPurple text-white hover:bg-cyberPurple/80 transition-all flex items-center gap-2">
+              <i class="fa-solid fa-play"></i> 自動整表朗讀 (1-9)
+            </button>
+          </div>
+        </div>
+
+        <!-- Table View Tabs for Mobile -->
+        <div class="flex overflow-x-auto gap-2 pb-3 mb-4" id="chantTableSelector">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="cantoneseChantsContainer">
+          <!-- Rendered dynamic content of Cantonese formulas with TTS buttons -->
+        </div>
+      </section>
+    </div>
+
+    <!-- VIEW: FLASHCARDS (閃卡模式) -->
+    <div id="view-flashcards" class="view-panel hidden">
+      <section class="p-6 rounded-2xl bg-cyberDark/90 border border-cyberCyan/30 glow-cyan backdrop-blur-md max-w-2xl mx-auto">
+        <div class="text-center mb-6">
+          <div class="flex items-center justify-center gap-2 mb-1">
+            <span class="w-2.5 h-6 bg-cyberCyan rounded-full"></span>
+            <h2 class="text-2xl font-black font-cyber text-white">獵魔智能星際閃卡</h2>
+          </div>
+          <p class="text-sm text-gray-400">零壓力、無時限。運用大腦「間隔記憶法」，在正式獵魔前溫習公式！</p>
+        </div>
+
+        <!-- Flashcard Control Bar -->
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-6 p-3 rounded-xl bg-cyberCard border border-white/10">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-gray-400">溫習哪張表：</span>
+            <select id="flashcardSelect" onchange="initFlashcards()" class="bg-cyberDark text-white border border-white/20 rounded-lg px-2 py-1 text-sm outline-none focus:border-cyberCyan">
+              <option value="2">2 的乘數表</option>
+              <option value="3">3 的乘數表</option>
+              <option value="4">4 的乘數表</option>
+              <option value="5">5 的乘數表</option>
+              <option value="6">6 的乘數表</option>
+              <option value="7">7 的乘數表</option>
+              <option value="8">8 的乘數表</option>
+              <option value="9">9 的乘數表</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="toggleFlashcardAutoPlay()" id="flashcardAutoBtn" class="px-3 py-1 text-xs font-bold rounded bg-cyberCyan/10 text-cyberCyan border border-cyberCyan/20 hover:bg-cyberCyan/20 transition-all">
+              <i class="fa-solid fa-play"></i> 自動播放
+            </button>
+            <span class="text-xs text-gray-400" id="flashcardProgress">0 / 9</span>
+          </div>
+        </div>
+
+        <!-- 3D Flashcard Base Component -->
+        <div class="flip-card-container w-full h-80 cursor-pointer" onclick="flipFlashcard()">
+          <div id="flashcardInner" class="flip-card-inner w-full h-full relative rounded-2xl shadow-2xl">
+            
+            <!-- Card FRONT -->
+            <div class="flip-card-front rounded-2xl bg-gradient-to-br from-cyberCard to-cyberDark border-2 border-cyberCyan flex flex-col items-center justify-center p-6 text-center">
+              <div class="absolute top-4 left-4 text-xs font-cyber tracking-widest text-cyberCyan font-bold uppercase">Space Card</div>
+              <div class="absolute top-4 right-4 text-xs text-gray-400 font-cyber flex items-center gap-1">
+                <i class="fa-solid fa-arrows-rotate animate-spin"></i> 點擊卡片翻看答案
+              </div>
+              <div class="text-6xl font-cyber font-black text-white tracking-wider glow-cyan" id="fcFrontText">7 × 8</div>
+              <div class="mt-8 text-xs text-gray-400 flex items-center gap-2">
+                <span class="px-2 py-1 rounded bg-white/5 border border-white/10">空白鍵翻卡</span>
+                <span class="px-2 py-1 rounded bg-white/5 border border-white/10">← / → 上下一張</span>
+              </div>
+            </div>
+            
+            <!-- Card BACK -->
+            <div class="flip-card-back rounded-2xl bg-gradient-to-br from-cyberDark to-cyberCard border-2 border-cyberMagenta flex flex-col items-center justify-center p-6 text-center">
+              <div class="absolute top-4 left-4 text-xs font-cyber tracking-widest text-cyberMagenta font-bold uppercase">Result Decrypted</div>
+              <div class="text-7xl font-cyber font-black text-transparent bg-clip-text bg-gradient-to-r from-cyberMagenta to-cyberYellow glow-magenta" id="fcBackText">56</div>
+              <div class="mt-4 px-4 py-1.5 rounded-full bg-cyberMagenta/20 border border-cyberMagenta/30 text-cyberMagenta text-sm font-bold" id="fcChantText">
+                七八五十六
+              </div>
+              <div class="mt-4 text-xs text-gray-400">
+                點擊卡片翻回正面
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Touch / Action Buttons -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
+          <button onclick="prevFlashcard()" class="py-2.5 px-4 rounded-xl bg-cyberCard border border-white/10 text-white font-bold hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-arrow-left"></i> 上一張
+          </button>
+          
+          <button onclick="markFlashcardMastery(true)" class="py-2.5 px-4 rounded-xl bg-green-950/40 border border-green-500/30 text-green-400 font-bold hover:bg-green-900/40 transition-all flex items-center justify-center gap-1">
+            <i class="fa-solid fa-circle-check"></i> 已熟練
+          </button>
+          
+          <button onclick="markFlashcardMastery(false)" class="py-2.5 px-4 rounded-xl bg-red-950/40 border border-red-500/30 text-red-400 font-bold hover:bg-red-900/40 transition-all flex items-center justify-center gap-1">
+            <i class="fa-solid fa-circle-xmark"></i> 需溫習
+          </button>
+          
+          <button onclick="nextFlashcard()" class="py-2.5 px-4 rounded-xl bg-cyberCard border border-white/10 text-white font-bold hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+            下一張 <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- VIEW: TIPS (技巧提示頁) -->
+    <div id="view-tips" class="view-panel hidden">
+      <section class="p-6 rounded-2xl bg-cyberDark/90 border border-cyberYellow/30 glow-yellow backdrop-blur-md">
+        <div class="flex items-center gap-2 mb-4 pb-4 border-b border-white/10">
+          <span class="text-2xl text-cyberYellow">💡</span>
+          <div>
+            <h2 class="text-2xl font-black font-cyber text-white">九因歌超能技巧秘笈</h2>
+            <p class="text-sm text-gray-400">大腦思考捷徑！掌握這些神奇的小竅門，秒殺複雜的乘數運算！</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Tip card 1: Doubling for 4s -->
+          <div class="p-5 rounded-xl bg-cyberCard border border-white/5 relative overflow-hidden group">
+            <div class="absolute -right-8 -bottom-8 text-7xl opacity-5 text-white group-hover:scale-110 transition-transform">4</div>
+            <div class="w-10 h-10 rounded-lg bg-cyberCyan/10 border border-cyberCyan/30 text-cyberCyan flex items-center justify-center text-lg font-bold mb-3 font-cyber">x4</div>
+            <h3 class="text-md font-bold text-white mb-2">二倍再二倍之術（4 的秘笈）</h3>
+            <p class="text-xs text-gray-400 leading-relaxed mb-3">
+              乘以 4 其實就是**先乘以 2，然後再乘以 2**！
+            </p>
+            <div class="bg-cyberDark p-3 rounded-lg text-xs font-cyber border border-cyberCyan/10">
+              <span class="text-cyberCyan font-bold">例子：</span> 7 × 4 = ?<br>
+              ① 先將 7 翻倍 ➔ <span class="text-white font-bold">14</span><br>
+              ② 再將 14 翻倍 ➔ <span class="text-cyberYellow font-bold">28</span>！
+            </div>
+          </div>
+
+          <!-- Tip card 2: Halve and Ten for 5s -->
+          <div class="p-5 rounded-xl bg-cyberCard border border-white/5 relative overflow-hidden group">
+            <div class="absolute -right-8 -bottom-8 text-7xl opacity-5 text-white group-hover:scale-110 transition-transform">5</div>
+            <div class="w-10 h-10 rounded-lg bg-cyberPurple/10 border border-cyberPurple/30 text-cyberPurple flex items-center justify-center text-lg font-bold mb-3 font-cyber">x5</div>
+            <h3 class="text-md font-bold text-white mb-2">折半添零之術（5 的秘笈）</h3>
+            <p class="text-xs text-gray-400 leading-relaxed mb-3">
+              乘以 5 其實就是**除以 2，然後乘以 10**！
+            </p>
+            <div class="bg-cyberDark p-3 rounded-lg text-xs font-cyber border border-cyberPurple/10">
+              <span class="text-cyberPurple font-bold">例子：</span> 8 × 5 = ?<br>
+              ① 先將 8 除以 2 ➔ <span class="text-white font-bold">4</span><br>
+              ② 在 4 的後面補上 0 ➔ <span class="text-cyberYellow font-bold">40</span>！
+            </div>
+          </div>
+
+          <!-- Tip card 3: Finger Magic for 9s -->
+          <div class="p-5 rounded-xl bg-cyberCard border border-white/5 relative overflow-hidden group">
+            <div class="absolute -right-8 -bottom-8 text-7xl opacity-5 text-white group-hover:scale-110 transition-transform">9</div>
+            <div class="w-10 h-10 rounded-lg bg-cyberMagenta/10 border border-cyberMagenta/30 text-cyberMagenta flex items-center justify-center text-lg font-bold mb-3 font-cyber">x9</div>
+            <h3 class="text-md font-bold text-white mb-2">九之手指魔術（9 的秘笈）</h3>
+            <p class="text-xs text-gray-400 leading-relaxed mb-3">
+              伸出雙手，從左到右數第 N 隻手指並彎曲它：
+            </p>
+            <div class="bg-cyberDark p-3 rounded-lg text-xs font-cyber border border-cyberMagenta/10">
+              <span class="text-cyberMagenta font-bold">例子：</span> 9 × 7 = ?<br>
+              ① 彎曲左手起第 <span class="text-white font-bold">7</span> 隻手指。<br>
+              ② 左邊剩下的手指 ➔ <span class="text-cyberCyan font-bold">6 隻</span>（代表 60）。<br>
+              ③ 右邊剩下的手指 ➔ <span class="text-cyberCyan font-bold">3 隻</span>（代表 3）。<br>
+              ➔ 答案是 <span class="text-cyberYellow font-bold">63</span>！
+            </div>
+          </div>
+
+          <!-- Tip card 4: Easy 6s -->
+          <div class="p-5 rounded-xl bg-cyberCard border border-white/5 relative overflow-hidden group">
+            <div class="absolute -right-8 -bottom-8 text-7xl opacity-5 text-white group-hover:scale-110 transition-transform">6</div>
+            <div class="w-10 h-10 rounded-lg bg-cyberCyan/10 border border-cyberCyan/30 text-cyberCyan flex items-center justify-center text-lg font-bold mb-3 font-cyber">x6</div>
+            <h3 class="text-md font-bold text-white mb-2">偶數加半之術（6 的偶數秘笈）</h3>
+            <p class="text-xs text-gray-400 leading-relaxed mb-3">
+              當偶數乘以 6 時，個位數是該偶數，十位數是該偶數的一半！
+            </p>
+            <div class="bg-cyberDark p-3 rounded-lg text-xs font-cyber border border-cyberCyan/10">
+              <span class="text-cyberCyan font-bold">例子：</span> 8 × 6 = ?<br>
+              ① 個位數就是 <span class="text-white font-bold">8</span>。<br>
+              ② 十位數是 8 的一半 ➔ <span class="text-white font-bold">4</span>。<br>
+              ➔ 答案是 <span class="text-cyberYellow font-bold">48</span>！
+            </div>
+          </div>
+
+          <!-- Tip card 5: Easy 8s -->
+          <div class="p-5 rounded-xl bg-cyberCard border border-white/5 relative overflow-hidden group">
+            <div class="absolute -right-8 -bottom-8 text-7xl opacity-5 text-white group-hover:scale-110 transition-transform">8</div>
+            <div class="w-10 h-10 rounded-lg bg-cyberPurple/10 border border-cyberPurple/30 text-cyberPurple flex items-center justify-center text-lg font-bold mb-3 font-cyber">x8</div>
+            <h3 class="text-md font-bold text-white mb-2">三次折半降級（8 的秘笈）</h3>
+            <p class="text-xs text-gray-400 leading-relaxed mb-3">
+              乘以 8 等於將數字**翻倍、再翻倍、再翻倍**三次！
+            </p>
+            <div class="bg-cyberDark p-3 rounded-lg text-xs font-cyber border border-cyberPurple/10">
+              <span class="text-cyberPurple font-bold">例子：</span> 6 × 8 = ?<br>
+              ① 6 翻倍 ➔ <span class="text-white">12</span><br>
+              ② 12 再翻倍 ➔ <span class="text-white">24</span><br>
+              ③ 24 第三次翻倍 ➔ <span class="text-cyberYellow font-bold">48</span>！
+            </div>
+          </div>
+
+          <!-- Tip card 6: Zero Power -->
+          <div class="p-5 rounded-xl bg-cyberCard border border-white/5 relative overflow-hidden group">
+            <div class="absolute -right-8 -bottom-8 text-7xl opacity-5 text-white group-hover:scale-110 transition-transform">10</div>
+            <div class="w-10 h-10 rounded-lg bg-cyberMagenta/10 border border-cyberMagenta/30 text-cyberMagenta flex items-center justify-center text-lg font-bold mb-3 font-cyber">x10</div>
+            <h3 class="text-md font-bold text-white mb-2">星際黑洞吸零（10 的秘笈）</h3>
+            <p class="text-xs text-gray-400 leading-relaxed mb-3">
+              任何數字乘以 10，只需要直接在右邊加上一個「0」！
+            </p>
+            <div class="bg-cyberDark p-3 rounded-lg text-xs font-cyber border border-cyberMagenta/10">
+              <span class="text-cyberMagenta font-bold">例子：</span> 9 × 10 = ?<br>
+              ① 在 9 後面加一個 <span class="text-cyberYellow font-bold">0</span> ➔ 答案是 <span class="text-cyberYellow font-bold">90</span>！
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- VIEW: DASHBOARD (家長分析儀表板) -->
+    <div id="view-dashboard" class="view-panel hidden">
+      <section class="p-6 rounded-2xl bg-cyberDark/90 border border-cyberCyan/30 glow-cyan backdrop-blur-md">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-6 border-b border-white/10">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded bg-cyberCyan/20 border border-cyberCyan/40 text-cyberCyan text-xs font-cyber font-bold">PARENT PORTAL</span>
+              <h2 class="text-2xl font-black font-cyber text-white">家長監督與學力分析儀表板</h2>
+            </div>
+            <p class="text-sm text-gray-400 mt-1">追蹤孩子的乘數精通進度、弱點分佈與答題效率，引導高效學習！</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="clearAnalytics()" class="px-4 py-2 text-xs font-bold rounded-xl bg-red-950/40 border border-red-500/30 text-red-400 hover:bg-red-900/40 transition-all">
+              清除學歷記錄
+            </button>
+            <button onclick="exportProgress()" class="px-4 py-2 text-xs font-bold rounded-xl bg-cyberCyan/10 border border-cyberCyan/30 text-cyberCyan hover:bg-cyberCyan/20 transition-all">
+              複製報告發送給老師
+            </button>
+          </div>
+        </div>
+
+        <!-- Analytical Widgets -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          
+          <div class="p-4 rounded-xl bg-cyberCard border border-white/5 text-center">
+            <span class="text-xs text-gray-400 uppercase font-cyber font-bold">冒險成功關卡</span>
+            <div class="text-3xl font-cyber font-black text-cyberCyan mt-1" id="dashCompletedLevels">0 / 10</div>
+            <p class="text-[10px] text-gray-500 mt-1">通關可解鎖終極混合挑戰</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-cyberCard border border-white/5 text-center">
+            <span class="text-xs text-gray-400 uppercase font-cyber font-bold">總共解答題數</span>
+            <div class="text-3xl font-cyber font-black text-cyberPurple mt-1" id="dashTotalSolved">0</div>
+            <p class="text-[10px] text-gray-500 mt-1">不斷努力答題！</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-cyberCard border border-white/5 text-center">
+            <span class="text-xs text-gray-400 uppercase font-cyber font-bold">平均正確率</span>
+            <div class="text-3xl font-cyber font-black text-cyberGreen mt-1" id="dashAvgAccuracy">0%</div>
+            <p class="text-[10px] text-gray-500 mt-1">答對大於 85% 獲取三星評級</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-cyberCard border border-white/5 text-center">
+            <span class="text-xs text-gray-400 uppercase font-cyber font-bold">最高回答連擊數</span>
+            <div class="text-3xl font-cyber font-black text-cyberYellow mt-1" id="dashStreakRecord">0</div>
+            <p class="text-[10px] text-gray-500 mt-1">連擊越高獲得寶石翻倍</p>
+          </div>
+
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Heatmap of Multiplication Table Mastery -->
+          <div class="lg:col-span-2 p-5 rounded-xl bg-cyberCard border border-white/5">
+            <h3 class="text-sm font-bold font-cyber text-white mb-3 uppercase tracking-wider">
+              <i class="fa-solid fa-fire text-cyberMagenta"></i> 乘數精通度熱力分析
+            </h3>
+            <p class="text-xs text-gray-400 mb-4">顯示從 1 至 10 各單元乘數表的最高答題得分。綠色越深代表熟練度越高！</p>
+            
+            <div class="grid grid-cols-5 md:grid-cols-10 gap-2 text-center font-cyber" id="dashboardHeatmap">
+              <!-- Dynamic items rendered -->
+            </div>
+          </div>
+
+          <!-- Weakness Radar & Analysis -->
+          <div class="p-5 rounded-xl bg-cyberCard border border-white/5">
+            <h3 class="text-sm font-bold font-cyber text-white mb-3 uppercase tracking-wider">
+              <i class="fa-solid fa-list-check text-cyberYellow"></i> 本地最難核心盲區 (Top 5)
+            </h3>
+            <p class="text-xs text-gray-400 mb-3">孩子最容易混淆的前 5 道題目，建議加強訓練：</p>
+            
+            <div class="space-y-2.5" id="parentWeakList">
+              <!-- Dynamic lists render -->
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+    </div>
+
+    <!-- VIEW: QUIZ ACTIVE (寶石測驗中) -->
+    <div id="view-quiz" class="view-panel hidden">
+      <section class="p-6 rounded-2xl bg-cyberDark/95 border border-cyberCyan/30 glow-cyan backdrop-blur-md">
+        
+        <div class="flex items-center justify-between flex-wrap gap-4 mb-6 pb-4 border-b border-white/10">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded bg-cyberCyan/10 border border-cyberCyan/30 text-cyberCyan text-xs font-cyber font-semibold animate-pulse" id="quizModeBadge">🛸 戰鬥模式</span>
+              <h2 class="text-2xl font-black font-cyber text-white" id="activeQuizTitle"></h2>
+            </div>
+            <p class="text-xs text-gray-400 mt-1">30 題極速測驗 | 每題 20 秒 | 連對有驚喜加倍 💎 | 答錯會加入錯題雷達</p>
+          </div>
+          <button onclick="switchView('home')" class="px-4 py-2 rounded-xl bg-cyberCard border border-white/10 text-xs font-bold hover:bg-white/5 transition-all text-gray-300">
+            放棄戰鬥返回主頁
+          </button>
+        </div>
+
+        <div class="max-w-2xl mx-auto">
+          
+          <div class="p-6 rounded-2xl bg-cyberCard/80 border border-white/10 relative overflow-hidden flex flex-col items-center">
+            <!-- Active Hunter Profile overlay -->
+            <div class="absolute top-4 left-4 flex items-center gap-2 px-2.5 py-1 rounded-lg bg-cyberDark/80 border border-white/10">
+              <div id="quizHunterIcon" class="w-7 h-7 rounded-full hero-avatar border border-white/30 inline-block"></div>
+              <span class="text-xs font-cyber font-bold text-white animate-pulse" id="quizHunterName">Zoey</span>
+            </div>
+            <div class="absolute top-4 right-4 text-sm font-cyber text-cyberCyan font-bold">
+              第 <span id="currentQuestionNum" class="text-lg">1</span> / <span id="totalQuestionsNum">30</span> 題
+            </div>
+
+            <!-- Big Formula Screen -->
+            <div class="my-8 text-center">
+              <div class="text-6xl md:text-8xl font-cyber font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-300" id="currentQuestionText">
+                8 × 7 = ?
+              </div>
+              <div class="mt-4 text-xs font-bold text-cyberYellow uppercase tracking-widest" id="streakBonusLabel">
+                ⚡️ 快快答題，賺取 +2 💎 獎勵倍率！
+              </div>
+            </div>
+
+            <!-- Timer bar -->
+            <div class="w-full h-2 rounded-full bg-slate-900 overflow-hidden mb-6">
+              <div id="quizTimerFill" class="h-full bg-gradient-to-r from-cyberCyan to-cyberMagenta w-full transition-all duration-100 ease-linear"></div>
+            </div>
+
+            <!-- Answers Grid -->
+            <div class="grid grid-cols-2 gap-4 w-full" id="quizAnswersContainer">
+              <!-- Dynamically populated answer buttons -->
+            </div>
+
+          </div>
+
+          <!-- Live Result Modal/Overlay inside Quiz -->
+          <div id="quizScoreResult" class="hidden mt-6 p-6 rounded-2xl bg-cyberDark/90 border border-cyberYellow/30 text-center glow-yellow">
+            <h3 class="text-2xl font-black font-cyber text-cyberYellow mb-2">👾 獵魔行動成功！</h3>
+            <p class="text-gray-300 text-sm mb-4" id="quizResultText"></p>
+            <div class="flex justify-center gap-3">
+              <button onclick="switchView('home')" class="px-5 py-2.5 rounded-xl bg-cyberCyan text-slate-950 font-bold hover:opacity-90 transition-all text-sm">
+                返回地圖
+              </button>
+              <button onclick="startQuiz('mixed')" class="px-5 py-2.5 rounded-xl bg-cyberPurple text-white font-bold hover:opacity-90 transition-all text-sm">
+                挑戰混合大師
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+    </div>
+
+  </div>
+
+  <!-- Custom Alert Overlay -->
+  <div id="customAlert" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 p-4 rounded-xl bg-cyberDark border border-cyberCyan text-cyberCyan text-sm font-bold shadow-2xl backdrop-blur-xl opacity-0 translate-y-[-20px] transition-all duration-300 pointer-events-none">
+    Notification text
   </div>
 
   <script>
-    const storageKey = 'multiplication-space-prototype-v2';
-    const memoryStore = { value: null };
+    const storageKey = 'space-demon-hunters-multiplication-v3';
+    
+    // Web Audio Sound FX Synthesizer (No External Files)
+    class SoundEngine {
+      constructor() {
+        this.ctx = null;
+      }
+      init() {
+        if (!this.ctx) {
+          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+      }
+      playClick() {
+        this.init();
+        if (!this.ctx) return;
+        let osc = this.ctx.createOscillator();
+        let gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(150, this.ctx.currentTime + 0.08);
+        
+        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
+        
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.08);
+      }
+      playCorrect() {
+        this.init();
+        if (!this.ctx) return;
+        let now = this.ctx.currentTime;
+        let playTone = (freq, start, duration) => {
+          let osc = this.ctx.createOscillator();
+          let gain = this.ctx.createGain();
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, start);
+          gain.gain.setValueAtTime(0.12, start);
+          gain.gain.exponentialRampToValueAtTime(0.01, start + duration);
+          osc.start(start);
+          osc.stop(start + duration);
+        }
+        playTone(523.25, now, 0.1); // C5
+        playTone(659.25, now + 0.08, 0.1); // E5
+        playTone(783.99, now + 0.16, 0.12); // G5
+        playTone(1046.50, now + 0.24, 0.2); // C6
+      }
+      playWrong() {
+        this.init();
+        if (!this.ctx) return;
+        let osc = this.ctx.createOscillator();
+        let gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(180, this.ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(80, this.ctx.currentTime + 0.35);
+        
+        gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.35);
+        
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.35);
+      }
+      playGemCollect() {
+        this.init();
+        if (!this.ctx) return;
+        let osc = this.ctx.createOscillator();
+        let gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(987.77, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1567.98, this.ctx.currentTime + 0.15);
+        
+        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.18);
+        
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.18);
+      }
+      playLevelComplete() {
+        this.init();
+        if (!this.ctx) return;
+        let now = this.ctx.currentTime;
+        let chords = [440, 554.37, 659.25, 880];
+        chords.forEach((freq, idx) => {
+          let osc = this.ctx.createOscillator();
+          let gain = this.ctx.createGain();
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+          gain.gain.setValueAtTime(0.15, now + idx * 0.1);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.1 + 0.6);
+          osc.start(now + idx * 0.1);
+          osc.stop(now + idx * 0.1 + 0.65);
+        });
+      }
+    }
+    
+    const SFX = new SoundEngine();
+
+    // Heroes Info mapping with visual assets
+    const heroes = {
+      zoey: { name: 'Zoey', icon: '🎧', power: 'Rap Burst', color: 'cyberCyan', desc: '雙倍連擊寶石獎勵' },
+      rumi: { name: 'Rumi', icon: '🎼', power: 'Vocal Shield', color: 'cyberPurple', desc: '每天免受兩次答錯扣分' },
+      mira: { name: 'Mira', icon: '⚔️', power: 'Blade Spin', color: 'cyberMagenta', desc: '高難度關卡答對得分 +50%' }
+    };
+
+    // Default Save Data
+    const fallbackProfile = {
+      hero: 'zoey',
+      totalGems: 0,
+      bestStreak: 0,
+      levelHighScores: {},
+      levelStars: {},
+      wrongFacts: [],
+      masteryLevels: {},
+      unlocked: [1, 2, 5, 10],
+      completed: [],
+      solvedCount: 0
+    };
+
+    let profile = safeLoad();
+    const memoryCache = { value: null };
+
     function safeLoad() {
-      const fallback = {
-        hero: null,
-        totalGems: 0,
-        bestStreak: 0,
-        levelHighScores: {},
-        levelStars: {},
-        practiceCount: {},
-        wrongFacts: [],
-        unlocked: [1,2],
-        completed: []
-      };
+      const fallback = { ...fallbackProfile };
       try {
         const raw = localStorage.getItem(storageKey);
         return raw ? { ...fallback, ...JSON.parse(raw) } : fallback;
       } catch (e) {
-        return memoryStore.value ? { ...fallback, ...memoryStore.value } : fallback;
+        return memoryCache.value ? { ...fallback, ...memoryCache.value } : fallback;
       }
     }
-    function safeSave(data) {
-      try { localStorage.setItem(storageKey, JSON.stringify(data)); }
-      catch (e) { memoryStore.value = JSON.parse(JSON.stringify(data)); }
-    }
 
-    const heroes = [
-      { id: 'zoey', name: 'Zoey', emoji: '🎧', vibe: '節奏感強，適合衝連對', power: 'Rap Burst' },
-      { id: 'rumi', name: 'Rumi', emoji: '🎼', vibe: '聲線穩定，適合每日挑戰', power: 'Vocal Shield' },
-      { id: 'mira', name: 'Mira', emoji: '⚔️', vibe: '舞台氣勢強，適合高難度關卡', power: 'Blade Spin' }
-    ];
-    const steps = [
-      { step: 1, levels: [1,2] },
-      { step: 2, levels: [5,10] },
-      { step: 3, levels: [3,4] },
-      { step: 4, levels: [6] },
-      { step: 5, levels: [7] },
-      { step: 6, levels: [8] },
-      { step: 7, levels: [9] }
-    ];
-
-    const state = {
-      profile: safeLoad(), mode: 'level', currentLevel: null, questions: [], currentQuestion: 0,
-      timeLeft: 20, timer: null, score: 0, correct: 0, streak: 0, maxStreak: 0, sessionWrong: []
-    };
-
-    const el = {
-      totalGems: document.getElementById('totalGems'),
-      bestStreak: document.getElementById('bestStreak'),
-      wrongCount: document.getElementById('wrongCount'),
-      heroName: document.getElementById('heroName'),
-      heroList: document.getElementById('heroList'),
-      levelList: document.getElementById('levelList'),
-      leaderboard: document.getElementById('leaderboard'),
-      starsBoard: document.getElementById('starsBoard'),
-      wrongBook: document.getElementById('wrongBook'),
-      homeView: document.getElementById('homeView'),
-      quizView: document.getElementById('quizView'),
-      quizTitle: document.getElementById('quizTitle'),
-      quizSubtitle: document.getElementById('quizSubtitle'),
-      quizBadge: document.getElementById('quizBadge'),
-      questionIndex: document.getElementById('questionIndex'),
-      questionTotal: document.getElementById('questionTotal'),
-      questionText: document.getElementById('questionText'),
-      questionGemHint: document.getElementById('questionGemHint'),
-      timerFill: document.getElementById('timerFill'),
-      answers: document.getElementById('answers'),
-      resultBox: document.getElementById('resultBox')
-    };
-
-    function shuffle(arr) {
-      const clone = [...arr];
-      for (let i = clone.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [clone[i], clone[j]] = [clone[j], clone[i]];
+    function safeSave() {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(profile));
+      } catch (e) {
+        memoryCache.value = JSON.parse(JSON.stringify(profile));
       }
-      return clone;
+      updateGlobalStatusIndicators();
     }
-    function getStarCount(rate) { if (rate >= 95) return 3; if (rate >= 85) return 2; if (rate >= 70) return 1; return 0; }
-    function levelUnlocked(level) { return state.profile.unlocked.includes(level); }
-    function canPlayMixed() { return [1,2,3,4,5,6,7,8,9,10].every(n => state.profile.completed.includes(n)); }
-    function persist() { safeSave(state.profile); }
 
-    function generateQuestions(mode, level) {
-      const pool = [];
-      if (mode === 'daily') {
-        const seed = new Date().toISOString().slice(0,10).replaceAll('-', '');
-        let base = Number(seed) % 9 + 1;
-        for (let i = 1; i <= 30; i++) {
-          const a = (base + i) % 10 || 10;
-          const b = (i % 10) || 10;
-          pool.push({ a, b, answer: a * b, key: `${a}x${b}` });
+    const cantoneseNumbers = {
+      1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六', 7: '七', 8: '八', 9: '九', 10: '十',
+      20: '二十', 30: '三十', 40: '四十', 50: '五十', 60: '六十', 70: '七十', 80: '八十', 90: '九十'
+    };
+
+    function getCantoneseChant(a, b) {
+      const product = a * b;
+      let verbalProduct = '';
+
+      if (product < 10) {
+        verbalProduct = `得${cantoneseNumbers[product]}`;
+      } else {
+        if (product === 21) verbalProduct = '廿一';
+        else if (product === 24) verbalProduct = '廿四';
+        else if (product === 25) verbalProduct = '廿五';
+        else if (product === 27) verbalProduct = '廿七';
+        else if (product === 28) verbalProduct = '廿八';
+        else if (product === 32) verbalProduct = '卅二';
+        else if (product === 35) verbalProduct = '卅五';
+        else if (product === 36) verbalProduct = '卅六';
+        else {
+          const tens = Math.floor(product / 10);
+          const ones = product % 10;
+          verbalProduct = `${cantoneseNumbers[tens * 10]}${ones > 0 ? cantoneseNumbers[ones] : ''}`;
         }
-        return pool;
       }
-      if (mode === 'weak') {
-        const weak = state.profile.wrongFacts.slice(0, 30);
-        if (weak.length) {
-          while (pool.length < 30) {
-            const item = weak[pool.length % weak.length];
-            const [a, b] = item.key.split('x').map(Number);
-            pool.push({ a, b, answer: a * b, key: item.key });
+      return `${cantoneseNumbers[a]}${cantoneseNumbers[b]}${verbalProduct}`;
+    }
+
+    let voiceSynthesisPlaying = false;
+    function speakText(text, rate = 0.95) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'zh-HK';
+      utterance.rate = rate;
+      utterance.pitch = 1.0;
+      
+      const voices = window.speechSynthesis.getVoices();
+      const hkVoice = voices.find(v => v.lang.includes('HK') || v.lang.includes('hk') || v.name.includes('Cantonese') || v.name.includes('Hong Kong'));
+      if (hkVoice) {
+        utterance.voice = hkVoice;
+      }
+
+      utterance.onstart = () => { voiceSynthesisPlaying = true; };
+      utterance.onend = () => { voiceSynthesisPlaying = false; };
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // FLASHCARD ENGINE
+    let flashcardState = {
+      table: 2,
+      currentIndex: 0,
+      isFlipped: false,
+      deck: [],
+      autoPlayTimer: null,
+      isAutoPlaying: false
+    };
+
+    function initFlashcards() {
+      const selectedTable = parseInt(document.getElementById('flashcardSelect').value);
+      flashcardState.table = selectedTable;
+      flashcardState.currentIndex = 0;
+      flashcardState.isFlipped = false;
+      
+      flashcardState.deck = [];
+      for (let i = 1; i <= 10; i++) {
+        flashcardState.deck.push({
+          a: selectedTable,
+          b: i,
+          ans: selectedTable * i,
+          chant: getCantoneseChant(selectedTable, i)
+        });
+      }
+      
+      renderFlashcard();
+    }
+
+    function renderFlashcard() {
+      const card = flashcardState.deck[flashcardState.currentIndex];
+      const frontText = document.getElementById('fcFrontText');
+      const backText = document.getElementById('fcBackText');
+      const chantText = document.getElementById('fcChantText');
+      const inner = document.getElementById('flashcardInner');
+      const progress = document.getElementById('flashcardProgress');
+
+      frontText.textContent = `${card.a} × ${card.b}`;
+      backText.textContent = card.ans;
+      chantText.innerHTML = `<i class="fa-solid fa-volume-high"></i> ${card.chant}`;
+      
+      if (flashcardState.isFlipped) {
+        inner.classList.add('flipped');
+        speakText(card.chant, 0.9);
+      } else {
+        inner.classList.remove('flipped');
+      }
+
+      progress.textContent = `${flashcardState.currentIndex + 1} / ${flashcardState.deck.length}`;
+    }
+
+    function flipFlashcard() {
+      SFX.playClick();
+      flashcardState.isFlipped = !flashcardState.isFlipped;
+      renderFlashcard();
+    }
+
+    function nextFlashcard() {
+      SFX.playClick();
+      flashcardState.isFlipped = false;
+      document.getElementById('flashcardInner').classList.remove('flipped');
+      
+      setTimeout(() => {
+        flashcardState.currentIndex = (flashcardState.currentIndex + 1) % flashcardState.deck.length;
+        renderFlashcard();
+      }, 150);
+    }
+
+    function prevFlashcard() {
+      SFX.playClick();
+      flashcardState.isFlipped = false;
+      document.getElementById('flashcardInner').classList.remove('flipped');
+      
+      setTimeout(() => {
+        flashcardState.currentIndex = (flashcardState.currentIndex - 1 + flashcardState.deck.length) % flashcardState.deck.length;
+        renderFlashcard();
+      }, 150);
+    }
+
+    function markFlashcardMastery(mastered) {
+      const card = flashcardState.deck[flashcardState.currentIndex];
+      const key = `${card.a}x${card.b}`;
+      
+      if (mastered) {
+        profile.wrongFacts = profile.wrongFacts.filter(item => item.key !== key);
+        triggerToast(`💎 已標記 ${card.a} × ${card.b} 為「已熟練」！`);
+      } else {
+        if (!profile.wrongFacts.some(item => item.key === key)) {
+          profile.wrongFacts.push({ key: key, lastWrongAt: new Date().toISOString() });
+        }
+        triggerToast(`🧠 已加至「錯題雷達」加強溫習！`);
+      }
+      safeSave();
+      nextFlashcard();
+    }
+
+    function toggleFlashcardAutoPlay() {
+      const btn = document.getElementById('flashcardAutoBtn');
+      if (flashcardState.isAutoPlaying) {
+        clearInterval(flashcardState.autoPlayTimer);
+        flashcardState.isAutoPlaying = false;
+        btn.innerHTML = `<i class="fa-solid fa-play"></i> 自動播放`;
+        btn.classList.remove('bg-cyberMagenta/20', 'text-cyberMagenta', 'border-cyberMagenta/40');
+        btn.classList.add('bg-cyberCyan/10', 'text-cyberCyan', 'border-cyberCyan/20');
+      } else {
+        flashcardState.isAutoPlaying = true;
+        btn.innerHTML = `<i class="fa-solid fa-pause"></i> 停止自動播放`;
+        btn.classList.add('bg-cyberMagenta/20', 'text-cyberMagenta', 'border-cyberMagenta/40');
+        btn.classList.remove('bg-cyberCyan/10', 'text-cyberCyan', 'border-cyberCyan/20');
+        
+        flashcardState.autoPlayTimer = setInterval(() => {
+          if (!flashcardState.isFlipped) {
+            flipFlashcard();
+          } else {
+            nextFlashcard();
           }
-          return shuffle(pool);
-        }
+        }, 3200);
       }
-      if (mode === 'mixed') {
+    }
+
+    // ACTIVE QUIZ ACTION ENGINE
+    let quizState = {
+      mode: 'level',
+      currentLevel: null,
+      questions: [],
+      currentIndex: 0,
+      streak: 0,
+      points: 0,
+      timer: null,
+      timeLeft: 20,
+      correctCount: 0,
+      sessionWrongs: []
+    };
+
+    function startQuiz(mode, level = null) {
+      SFX.playClick();
+      
+      if (!profile.hero) {
+        triggerToast("請先選擇一位獵魔特攻主角開始戰鬥！", true);
+        return;
+      }
+
+      let deck = [];
+      if (mode === 'level') {
+        quizState.currentLevel = level;
+        for (let i = 0; i < 30; i++) {
+          const randMultiplier = Math.floor(Math.random() * 10) + 1;
+          deck.push({ a: level, b: randMultiplier, ans: level * randMultiplier });
+        }
+      } else if (mode === 'mixed') {
         for (let i = 0; i < 30; i++) {
           const a = Math.floor(Math.random() * 10) + 1;
           const b = Math.floor(Math.random() * 10) + 1;
-          pool.push({ a, b, answer: a * b, key: `${a}x${b}` });
+          deck.push({ a, b, ans: a * b });
         }
-        return pool;
+      } else if (mode === 'daily') {
+        const todaySeed = new Date().getDate();
+        for (let i = 0; i < 30; i++) {
+          const a = ((todaySeed + i) % 9) + 1;
+          const b = Math.floor(Math.random() * 10) + 1;
+          deck.push({ a, b, ans: a * b });
+        }
+      } else if (mode === 'weak') {
+        if (profile.wrongFacts.length === 0) {
+          triggerToast("你的錯題本很乾淨！先去關卡地圖冒險一下吧。");
+          return;
+        }
+        const wrongs = [...profile.wrongFacts];
+        for (let i = 0; i < 30; i++) {
+          const rawFact = wrongs[i % wrongs.length];
+          const parts = rawFact.key.split('x');
+          const a = parseInt(parts[0]);
+          const b = parseInt(parts[1]);
+          deck.push({ a, b, ans: a * b });
+        }
+        deck.sort(() => Math.random() - 0.5);
       }
-      for (let i = 0; i < 30; i++) {
-        const b = Math.floor(Math.random() * 10) + 1;
-        pool.push({ a: level, b, answer: level * b, key: `${level}x${b}` });
-      }
-      return pool;
+
+      quizState.mode = mode;
+      quizState.questions = deck;
+      quizState.currentIndex = 0;
+      quizState.streak = 0;
+      quizState.points = 0;
+      quizState.correctCount = 0;
+      quizState.sessionWrongs = [];
+
+      const titlesMap = {
+        level: `${level} 的乘數星系關卡`,
+        mixed: `終極混合乘數星系`,
+        daily: `星際每日獵魔任務`,
+        weak: `大腦記憶盲區淨化任務`
+      };
+      document.getElementById('activeQuizTitle').textContent = titlesMap[mode];
+      document.getElementById('quizModeBadge').textContent = `🚀 挑戰中`;
+      
+      // Dynamic Hunter crop binding for the combat header
+      const currentHero = heroes[profile.hero];
+      const iconBox = document.getElementById('quizHunterIcon');
+      iconBox.className = `w-7 h-7 rounded-full hero-avatar avatar-${profile.hero} border border-white/30 inline-block`;
+      document.getElementById('quizHunterName').textContent = `${currentHero.name} (${currentHero.power})`;
+
+      switchView('quiz');
+      document.getElementById('quizScoreResult').classList.add('hidden');
+      
+      renderQuizQuestion();
     }
 
-    function getChoices(correct) {
-      const set = new Set([correct]);
-      while (set.size < 4) {
-        const offset = Math.floor(Math.random() * 10) + 1;
+    function renderQuizQuestion() {
+      clearInterval(quizState.timer);
+      
+      if (quizState.currentIndex >= quizState.questions.length) {
+        finishQuiz();
+        return;
+      }
+
+      document.getElementById('currentQuestionNum').textContent = quizState.currentIndex + 1;
+      document.getElementById('totalQuestionsNum').textContent = quizState.questions.length;
+
+      const q = quizState.questions[quizState.currentIndex];
+      document.getElementById('currentQuestionText').textContent = `${q.a} × ${q.b}`;
+
+      const currentHero = heroes[profile.hero];
+      let bonusLabel = "⚡️ 答對獲取 1 💎";
+      if (quizState.streak >= 3) {
+        bonusLabel = `🔥 連擊狂熱！獲得額外連擊寶石！(Active: ${currentHero.power})`;
+      }
+      document.getElementById('streakBonusLabel').textContent = bonusLabel;
+
+      let choices = [q.ans];
+      while (choices.length < 4) {
         const sign = Math.random() > 0.5 ? 1 : -1;
-        set.add(Math.max(0, correct + offset * sign));
-      }
-      return shuffle([...set]);
-    }
-
-    function renderHome() {
-      el.totalGems.textContent = state.profile.totalGems;
-      el.bestStreak.textContent = state.profile.bestStreak;
-      el.wrongCount.textContent = state.profile.wrongFacts.length;
-      el.heroName.textContent = state.profile.hero ? state.profile.hero.name : '未選擇';
-
-      el.heroList.innerHTML = heroes.map(hero => {
-        const active = state.profile.hero && state.profile.hero.id === hero.id;
-        return `
-          <button class="level-btn ${active ? 'active-hero' : ''}" data-hero="${hero.id}">
-            <div class="badge">${hero.emoji} ${active ? '已選主角' : '選擇主角'}</div>
-            <h3>${hero.name}</h3>
-            <div class="muted small">${hero.vibe}</div>
-            <div class="muted small">技能名：${hero.power}</div>
-          </button>
-        `;
-      }).join('');
-      [...el.heroList.querySelectorAll('[data-hero]')].forEach(btn => {
-        btn.addEventListener('click', () => {
-          const selected = heroes.find(h => h.id === btn.dataset.hero);
-          state.profile.hero = selected;
-          persist();
-          renderHome();
-          alertLike(`已選擇 ${selected.name} 作為主角！`);
-        });
-      });
-
-      el.levelList.innerHTML = [1,2,3,4,5,6,7,8,9,10].map(level => {
-        const unlocked = levelUnlocked(level);
-        const high = state.profile.levelHighScores[level] || 0;
-        const stars = state.profile.levelStars[level] || 0;
-        return `
-          <button class="level-btn ${unlocked ? '' : 'locked'}" ${unlocked ? '' : 'disabled'} data-level="${level}">
-            <div class="badge">${unlocked ? '🟢 已開放' : '🔒 未解鎖'}</div>
-            <h3>${level} 的乘數表</h3>
-            <div class="muted small">最高寶石：${high}｜星星：${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</div>
-          </button>
-        `;
-      }).join('');
-      [...el.levelList.querySelectorAll('[data-level]')].forEach(btn => {
-        btn.addEventListener('click', () => {
-          if (!state.profile.hero) { alertLike('請先選擇 Zoey、Rumi 或 Mira。'); return; }
-          startQuiz('level', Number(btn.dataset.level));
-        });
-      });
-
-      el.leaderboard.innerHTML = [1,2,3,4,5,6,7,8,9,10].map(level =>
-        `<div class="mini-item"><span>${level} 的乘數表</span><strong>${state.profile.levelHighScores[level] || 0} 💎</strong></div>`
-      ).join('');
-
-      el.starsBoard.innerHTML = [1,2,3,4,5,6,7,8,9,10].map(level => {
-        const star = state.profile.levelStars[level] || 0;
-        return `<div class="mini-item"><span>${level} 的乘數表</span><span class="stars-row">${'★'.repeat(star)}${'☆'.repeat(3 - star)}</span></div>`;
-      }).join('');
-
-      el.wrongBook.innerHTML = state.profile.wrongFacts.length
-        ? state.profile.wrongFacts.slice(0, 8).map(item => `<div class="mini-item"><span>${item.key.replace('x', ' × ')}</span><button class="secondary" data-remove="${item.key}" style="padding:8px 12px;min-height:auto;color:var(--text);">刪除</button></div>`).join('')
-        : '<div class="mini-item"><span>暫時沒有錯題，太好了！</span></div>';
-      [...el.wrongBook.querySelectorAll('[data-remove]')].forEach(btn => {
-        btn.addEventListener('click', () => {
-          state.profile.wrongFacts = state.profile.wrongFacts.filter(x => x.key !== btn.dataset.remove);
-          persist();
-          renderHome();
-        });
-      });
-    }
-
-    function unlockNext(level) {
-      const flat = steps.flatMap(s => s.levels);
-      const idx = flat.indexOf(level);
-      if (idx >= 0 && idx < flat.length - 1) {
-        const next = flat[idx + 1];
-        if (!state.profile.unlocked.includes(next)) state.profile.unlocked.push(next);
-      }
-    }
-
-    function showQuiz() {
-      el.homeView.classList.remove('active');
-      el.quizView.classList.add('active');
-    }
-    function showHome() {
-      clearInterval(state.timer);
-      el.quizView.classList.remove('active');
-      el.homeView.classList.add('active');
-      el.resultBox.classList.remove('show');
-      renderHome();
-    }
-
-    function startQuiz(mode, level = null) {
-      if (!state.profile.hero) { alertLike('請先選擇 Zoey、Rumi 或 Mira 作為主角。'); return; }
-      if (mode === 'mixed' && !canPlayMixed()) { alertLike('混合模式尚未解鎖，請先完成全部關卡。'); return; }
-      if (mode === 'weak' && state.profile.wrongFacts.length === 0) { alertLike('目前沒有錯題可複習。'); return; }
-      state.mode = mode;
-      state.currentLevel = level;
-      state.questions = generateQuestions(mode, level);
-      state.currentQuestion = 0;
-      state.score = 0;
-      state.correct = 0;
-      state.streak = 0;
-      state.maxStreak = 0;
-      state.sessionWrong = [];
-      el.resultBox.classList.remove('show');
-      const heroLabel = state.profile.hero ? `｜主角：${state.profile.hero.name}` : '';
-      const titles = { level: `${level} 的乘數表`, daily: '每日挑戰', weak: '弱點複習', mixed: '混合模式' };
-      el.quizTitle.textContent = titles[mode] + heroLabel;
-      el.quizSubtitle.textContent = '30 題｜每題 20 秒｜答錯直接下一題';
-      el.quizBadge.textContent = mode === 'daily' ? '📅 每日挑戰' : mode === 'weak' ? '🧠 弱點複習' : mode === 'mixed' ? '🌠 混合模式' : '🪐 關卡挑戰';
-      showQuiz();
-      renderQuestion();
-    }
-
-    function renderQuestion() {
-      clearInterval(state.timer);
-      if (state.currentQuestion >= state.questions.length) { finishQuiz(); return; }
-      state.timeLeft = 20;
-      const q = state.questions[state.currentQuestion];
-      const currentBonus = 1 + (state.streak >= 3 ? 1 : 0);
-      el.questionIndex.textContent = state.currentQuestion + 1;
-      el.questionTotal.textContent = state.questions.length;
-      el.questionText.textContent = `${q.a} × ${q.b} = ?`;
-      el.questionGemHint.textContent = currentBonus;
-      el.timerFill.style.width = '100%';
-      el.answers.innerHTML = getChoices(q.answer).map(choice => `<button class="answer-btn" data-choice="${choice}">${choice}</button>`).join('');
-      [...el.answers.querySelectorAll('[data-choice]')].forEach(btn => btn.addEventListener('click', () => answerQuestion(Number(btn.dataset.choice), btn)));
-      state.timer = setInterval(() => {
-        state.timeLeft -= 1;
-        el.timerFill.style.width = `${(state.timeLeft / 20) * 100}%`;
-        if (state.timeLeft <= 0) {
-          clearInterval(state.timer);
-          markWrong(q);
-          setTimeout(nextQuestion, 250);
+        const deviation = (Math.floor(Math.random() * 10) + 1) * sign;
+        const fakeValue = Math.max(0, q.ans + deviation);
+        if (!choices.includes(fakeValue)) {
+          choices.push(fakeValue);
         }
+      }
+      choices.sort(() => Math.random() - 0.5);
+
+      const answersBox = document.getElementById('quizAnswersContainer');
+      answersBox.innerHTML = '';
+      choices.forEach(val => {
+        const btn = document.createElement('button');
+        btn.className = "py-4 px-6 rounded-2xl bg-cyberCard/80 border border-white/10 hover:border-cyberCyan text-2xl font-cyber font-black text-white hover:bg-cyberCard transition-all transform active:scale-95 flex items-center justify-center glow-cyan/10";
+        btn.textContent = val;
+        btn.onclick = () => submitAnswer(val, btn);
+        answersBox.appendChild(btn);
+      });
+
+      quizState.timeLeft = 20;
+      const fill = document.getElementById('quizTimerFill');
+      fill.style.width = '100%';
+      
+      quizState.timer = setInterval(() => {
+        quizState.timeLeft -= 0.1;
+        const percentage = (quizState.timeLeft / 20) * 100;
+        fill.style.width = `${percentage}%`;
+
+        if (quizState.timeLeft <= 0) {
+          clearInterval(quizState.timer);
+          triggerWrongAnswer();
+        }
+      }, 100);
+    }
+
+    function submitAnswer(chosenValue, selectedBtn) {
+      clearInterval(quizState.timer);
+      const q = quizState.questions[quizState.currentIndex];
+      const answersBox = document.getElementById('quizAnswersContainer');
+      
+      const buttons = answersBox.getElementsByTagName('button');
+      for(let b of buttons) {
+        b.disabled = true;
+      }
+
+      if (chosenValue === q.ans) {
+        SFX.playCorrect();
+        selectedBtn.classList.add('bg-green-600', 'border-green-400', 'text-white');
+        
+        quizState.correctCount++;
+        quizState.streak++;
+        
+        let awardedGems = 1;
+        if (profile.hero === 'zoey' && quizState.streak >= 3) {
+          awardedGems += 2;
+        } else if (profile.hero === 'mira' && quizState.currentLevel >= 7) {
+          awardedGems += 2;
+        } else if (quizState.streak >= 3) {
+          awardedGems += 1;
+        }
+
+        quizState.points += awardedGems;
+        profile.totalGems += awardedGems;
+        profile.bestStreak = Math.max(profile.bestStreak, quizState.streak);
+        profile.solvedCount++;
+      } else {
+        SFX.playWrong();
+        selectedBtn.classList.add('bg-red-600', 'border-red-400', 'text-white');
+        
+        for(let b of buttons) {
+          if (parseInt(b.textContent) === q.ans) {
+            b.classList.add('bg-green-600', 'border-green-400');
+          }
+        }
+        triggerWrongAnswer(q);
+      }
+
+      setTimeout(() => {
+        quizState.currentIndex++;
+        renderQuizQuestion();
       }, 1000);
     }
 
-    function answerQuestion(choice, button) {
-      clearInterval(state.timer);
-      const q = state.questions[state.currentQuestion];
-      if (choice === q.answer) {
-        button.classList.add('correct');
-        state.correct += 1;
-        state.streak += 1;
-        state.maxStreak = Math.max(state.maxStreak, state.streak);
-        let gems = 1;
-        if (state.streak >= 3) gems += 1;
-        if (state.timeLeft >= 10) gems += 1;
-        state.score += gems;
-      } else {
-        button.classList.add('wrong');
-        markWrong(q);
+    function triggerWrongAnswer(q = null) {
+      let isProtectedByVocalShield = false;
+      if (profile.hero === 'rumi' && quizState.streak > 0 && Math.random() > 0.6) {
+        isProtectedByVocalShield = true;
+        triggerToast("🔮 Rumi 聲波護盾啟動！答錯保護免罰連對中斷！");
       }
-      setTimeout(nextQuestion, 250);
-    }
 
-    function markWrong(q) {
-      state.streak = 0;
-      state.sessionWrong.push(q.key);
-      if (!state.profile.wrongFacts.some(x => x.key === q.key)) {
-        state.profile.wrongFacts.push({ key: q.key, lastWrongAt: new Date().toISOString() });
+      if (!isProtectedByVocalShield) {
+        quizState.streak = 0;
+      }
+
+      if (q) {
+        const factKey = `${q.a}x${q.b}`;
+        quizState.sessionWrongs.push(factKey);
+        
+        if (!profile.wrongFacts.some(f => f.key === factKey)) {
+          profile.wrongFacts.push({
+            key: factKey,
+            lastWrongAt: new Date().toISOString()
+          });
+        }
       }
     }
-    function nextQuestion() { state.currentQuestion += 1; renderQuestion(); }
 
     function finishQuiz() {
-      clearInterval(state.timer);
-      const rate = Math.round((state.correct / state.questions.length) * 100);
-      const stars = getStarCount(rate);
-      state.profile.totalGems += state.score;
-      state.profile.bestStreak = Math.max(state.profile.bestStreak, state.maxStreak);
-      if (state.mode === 'level') {
-        const level = state.currentLevel;
-        state.profile.practiceCount[level] = (state.profile.practiceCount[level] || 0) + 1;
-        state.profile.levelHighScores[level] = Math.max(state.profile.levelHighScores[level] || 0, state.score);
-        state.profile.levelStars[level] = Math.max(state.profile.levelStars[level] || 0, stars);
-        if (!state.profile.completed.includes(level)) state.profile.completed.push(level);
-        unlockNext(level);
+      SFX.playLevelComplete();
+      
+      const rate = Math.round((quizState.correctCount / quizState.questions.length) * 100);
+      let calculatedStars = 0;
+      if (rate >= 95) calculatedStars = 3;
+      else if (rate >= 80) calculatedStars = 2;
+      else if (rate >= 60) calculatedStars = 1;
+
+      if (quizState.mode === 'level') {
+        const level = quizState.currentLevel;
+        profile.levelHighScores[level] = Math.max(profile.levelHighScores[level] || 0, quizState.points);
+        profile.levelStars[level] = Math.max(profile.levelStars[level] || 0, calculatedStars);
+        
+        if (!profile.completed.includes(level)) {
+          profile.completed.push(level);
+        }
+
+        const logicalUnlockMapping = {
+          1: [2, 5],
+          2: [3, 4],
+          5: [10, 6],
+          10: [7],
+          3: [6],
+          4: [7],
+          6: [8],
+          7: [8],
+          8: [9],
+          9: []
+        };
+        const itemsToUnlock = logicalUnlockMapping[level] || [];
+        itemsToUnlock.forEach(unlockLvl => {
+          if (!profile.unlocked.includes(unlockLvl)) {
+            profile.unlocked.push(unlockLvl);
+            triggerToast(`🌟 星系解鎖：${unlockLvl} 的乘數表開放！`);
+          }
+        });
       }
-      persist();
-      renderHome();
-      el.resultBox.classList.add('show');
-      el.resultBox.innerHTML = `
-        <h3>完成挑戰！</h3>
-        <p>主角 <strong>${state.profile.hero.name}</strong> 今次答對了 <strong>${state.correct}</strong> / ${state.questions.length} 題，正確率 ${rate}% 。</p>
-        <p>本關獲得 <strong>${state.score}</strong> 顆寶石，最高連對 <strong>${state.maxStreak}</strong> 題，星星評級：<span class="stars-row">${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</span></p>
-        <p class="muted small">答錯題目會加入錯題本，之後可用「弱點複習」再練習。</p>
+
+      const box = document.getElementById('quizScoreResult');
+      box.classList.remove('hidden');
+
+      let starString = '★'.repeat(calculatedStars) + '☆'.repeat(3 - calculatedStars);
+      document.getElementById('quizResultText').innerHTML = `
+        <div class="text-3xl text-cyberYellow font-cyber font-black mb-3">${starString}</div>
+        你的獵魔特攻歌手本場共答對了 <span class="text-cyberCyan font-bold">${quizState.correctCount}</span> / 30 題。<br>
+        正確率達 <span class="text-cyberMagenta font-bold">${rate}%</span>。<br>
+        本次冒險賺取了 <span class="text-cyberYellow font-bold">${quizState.points} 💎 寶石</span>！<br>
+        已歸入你的星際獵魔人總庫。
+      `;
+
+      safeSave();
+      updateParentDashboardWidgets();
+    }
+
+    function renderAdventureLevels() {
+      const levelsBox = document.getElementById('adventureLevels');
+      levelsBox.innerHTML = '';
+
+      for (let i = 1; i <= 10; i++) {
+        const isUnlocked = profile.unlocked.includes(i);
+        const stars = profile.levelStars[i] || 0;
+        const topScore = profile.levelHighScores[i] || 0;
+        
+        const card = document.createElement('div');
+        card.className = `p-4 rounded-xl flex flex-col justify-between transition-all ${
+          isUnlocked 
+            ? 'bg-cyberCard/90 border border-cyberCyan/30 hover:border-cyberCyan cursor-pointer hover:-translate-y-1' 
+            : 'bg-cyberCard/40 border border-white/5 opacity-50 cursor-not-allowed'
+        }`;
+
+        const starsLine = '★'.repeat(stars) + '☆'.repeat(3 - stars);
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-cyber font-bold tracking-widest ${isUnlocked ? 'text-cyberCyan' : 'text-gray-500'}">
+                ${isUnlocked ? '🟢 AVAILABLE' : '🔒 LOCKED'}
+              </span>
+              <span class="text-cyberYellow font-fun text-sm">${isUnlocked ? starsLine : ''}</span>
+            </div>
+            <h3 class="text-lg font-black font-cyber mt-1 text-white">${i} 的乘數表</h3>
+            <p class="text-xs text-gray-400 mt-0.5">最高得分：${topScore} 💎</p>
+          </div>
+          <button ${isUnlocked ? '' : 'disabled'} class="w-full mt-4 py-2 text-xs font-bold font-cyber rounded-lg ${
+            isUnlocked 
+              ? 'bg-cyberCyan text-slate-950 hover:opacity-90' 
+              : 'bg-slate-800 text-gray-500'
+          } transition-all">
+            ${isUnlocked ? 'ENTER SECTOR' : '星系已被魔物封鎖'}
+          </button>
+        `;
+
+        if (isUnlocked) {
+          card.onclick = () => startQuiz('level', i);
+        }
+        levelsBox.appendChild(card);
+      }
+    }
+
+    function selectHero(heroId) {
+      SFX.playClick();
+      profile.hero = heroId;
+      safeSave();
+      
+      document.querySelectorAll('.hero-selector-card').forEach(card => {
+        card.classList.remove('border-cyberCyan', 'border-cyberPurple', 'border-cyberMagenta', 'glow-cyan', 'glow-purple', 'glow-magenta');
+      });
+
+      const activeCard = document.getElementById(`hero-card-${heroId}`);
+      if (heroId === 'zoey') {
+        activeCard.classList.add('border-cyberCyan', 'glow-cyan');
+      } else if (heroId === 'rumi') {
+        activeCard.classList.add('border-cyberPurple', 'glow-purple');
+      } else if (heroId === 'mira') {
+        activeCard.classList.add('border-cyberMagenta', 'glow-magenta');
+      }
+
+      triggerToast(`🎧 已召喚 K-pop 歌手 ${heroes[heroId].name} 為獵魔領隊！`);
+    }
+
+    function renderGlobalScoreboards() {
+      const board = document.getElementById('starsBoard');
+      board.innerHTML = '';
+      let earnedAnything = false;
+      
+      for (let i = 1; i <= 10; i++) {
+        const star = profile.levelStars[i] || 0;
+        if (star > 0) {
+          earnedAnything = true;
+          const item = document.createElement('div');
+          item.className = "flex items-center justify-between p-2.5 rounded-lg bg-cyberCard border border-white/5 text-xs";
+          item.innerHTML = `
+            <span class="font-bold text-white">${i} 的乘數星系</span>
+            <span class="text-cyberYellow font-fun text-sm">${'★'.repeat(star)}</span>
+          `;
+          board.appendChild(item);
+        }
+      }
+      if (!earnedAnything) {
+        board.innerHTML = `<div class="text-xs text-gray-500 text-center py-4">暫未獲得任何通關星星</div>`;
+      }
+
+      const wrongBox = document.getElementById('wrongBook');
+      wrongBox.innerHTML = '';
+      if (profile.wrongFacts.length === 0) {
+        wrongBox.innerHTML = `<div class="text-xs text-cyberGreen text-center py-4"><i class="fa-solid fa-circle-check"></i> 暫時沒有錯題，超棒！</div>`;
+      } else {
+        profile.wrongFacts.slice(0, 5).forEach(item => {
+          const parts = item.key.split('x');
+          const element = document.createElement('div');
+          element.className = "flex items-center justify-between p-2.5 rounded-lg bg-cyberCard/70 border border-cyberMagenta/20 text-xs";
+          element.innerHTML = `
+            <span class="font-cyber font-bold text-white">${parts[0]} × ${parts[1]} = ${parseInt(parts[0]) * parseInt(parts[1])}</span>
+            <button onclick="playQuickChant(${parts[0]}, ${parts[1]})" class="px-2 py-1 rounded bg-cyberPurple/20 hover:bg-cyberPurple/30 text-cyberPurple font-bold transition-all text-[10px]">
+              <i class="fa-solid fa-volume-high"></i> 口訣
+            </button>
+          `;
+          wrongBox.appendChild(element);
+        });
+      }
+    }
+
+    let activeChantSelectedTable = 2;
+    function renderCantoneseInteractiveZone() {
+      const container = document.getElementById('cantoneseChantsContainer');
+      const tabs = document.getElementById('chantTableSelector');
+      
+      tabs.innerHTML = '';
+      for (let i = 1; i <= 10; i++) {
+        const tab = document.createElement('button');
+        tab.className = `flex-shrink-0 px-4 py-2 text-xs font-black rounded-lg transition-all ${
+          activeChantSelectedTable === i
+            ? 'bg-cyberPurple text-white glow-purple'
+            : 'bg-cyberCard text-gray-400 hover:text-white border border-white/5'
+        }`;
+        tab.textContent = `${i} 的九因歌`;
+        tab.onclick = () => {
+          SFX.playClick();
+          activeChantSelectedTable = i;
+          renderCantoneseInteractiveZone();
+        };
+        tabs.appendChild(tab);
+      }
+
+      container.innerHTML = '';
+      for (let j = 1; j <= 10; j++) {
+        const a = activeChantSelectedTable;
+        const b = j;
+        const chant = getCantoneseChant(a, b);
+        
+        const cell = document.createElement('div');
+        cell.className = "p-4 rounded-xl bg-cyberCard border border-white/5 hover:border-cyberPurple/50 hover:bg-cyberPurple/5 transition-all cursor-pointer flex flex-col justify-between group";
+        cell.onclick = () => {
+          SFX.playClick();
+          speakText(chant, 0.9);
+          cell.classList.add('glow-purple');
+          setTimeout(() => cell.classList.remove('glow-purple'), 500);
+        };
+
+        cell.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-cyber text-gray-400 font-bold">${a} × ${b}</span>
+            <i class="fa-solid fa-volume-high text-xs text-cyberPurple opacity-60 group-hover:opacity-100 transition-opacity"></i>
+          </div>
+          <div class="text-xl font-bold text-white mt-2">${chant}</div>
+          <div class="text-right text-xs text-cyberCyan font-cyber font-bold mt-1">= ${a * b}</div>
+        `;
+        container.appendChild(cell);
+      }
+    }
+
+    function autoPlayChants() {
+      SFX.playClick();
+      let index = 1;
+      triggerToast(`🎙️ 開始播放 ${activeChantSelectedTable} 的乘數表整表廣東話朗讀...`);
+      
+      function speakNext() {
+        if (index > 10) return;
+        const chant = getCantoneseChant(activeChantSelectedTable, index);
+        speakText(chant, 0.85);
+        index++;
+        setTimeout(speakNext, 1800);
+      }
+      speakNext();
+    }
+
+    function playQuickChant(a, b) {
+      SFX.playClick();
+      const chant = getCantoneseChant(a, b);
+      speakText(chant, 0.95);
+    }
+
+    function updateParentDashboardWidgets() {
+      document.getElementById('dashCompletedLevels').textContent = `${profile.completed.length} / 10`;
+      document.getElementById('dashTotalSolved').textContent = profile.solvedCount;
+      document.getElementById('dashStreakRecord').textContent = profile.bestStreak;
+
+      let completedTiers = Object.keys(profile.levelStars).length;
+      let totalStars = Object.values(profile.levelStars).reduce((s, c) => s + c, 0);
+      let avgAcc = completedTiers > 0 ? Math.round((totalStars / (completedTiers * 3)) * 100) : 0;
+      document.getElementById('dashAvgAccuracy').textContent = `${avgAcc}%`;
+
+      const mapBox = document.getElementById('dashboardHeatmap');
+      mapBox.innerHTML = '';
+      for (let i = 1; i <= 10; i++) {
+        const topScore = profile.levelHighScores[i] || 0;
+        let bgStyle = 'bg-slate-900 border-white/5 text-gray-600';
+        if (topScore > 0) {
+          if (topScore >= 25) bgStyle = 'bg-green-950/80 border-green-500/40 text-green-400 glow-cyan';
+          else if (topScore >= 15) bgStyle = 'bg-teal-950/60 border-teal-500/30 text-teal-300';
+          else bgStyle = 'bg-emerald-950/20 border-emerald-500/20 text-emerald-500';
+        }
+
+        const cell = document.createElement('div');
+        cell.className = `p-3 rounded-xl border text-center transition-all ${bgStyle}`;
+        cell.innerHTML = `
+          <div class="text-xs font-bold">${i}x</div>
+          <div class="text-lg font-black mt-1">${topScore}</div>
+          <div class="text-[9px] text-gray-500">Max Pts</div>
+        `;
+        mapBox.appendChild(cell);
+      }
+
+      const parentWeakList = document.getElementById('parentWeakList');
+      parentWeakList.innerHTML = '';
+      if (profile.wrongFacts.length === 0) {
+        parentWeakList.innerHTML = `<div class="text-xs text-cyberGreen py-8 text-center">🎉 非常棒！孩子目前沒有記錄任何公式錯誤。</div>`;
+      } else {
+        profile.wrongFacts.slice(0, 5).forEach(item => {
+          const parts = item.key.split('x');
+          const element = document.createElement('div');
+          element.className = "p-3 rounded-lg bg-cyberCard/40 border border-cyberMagenta/20 flex items-center justify-between text-xs";
+          element.innerHTML = `
+            <span class="font-cyber font-bold text-white">${parts[0]} × ${parts[1]} = ${parseInt(parts[0]) * parseInt(parts[1])}</span>
+            <span class="text-cyberMagenta font-bold uppercase text-[10px]">需要重點加強 ⚠️</span>
+          `;
+          parentWeakList.appendChild(element);
+        });
+      }
+    }
+
+    function clearAnalytics() {
+      if (confirm("⚠️ 確定要清除所有家長監督進度和測驗記錄嗎？這將不會影響您的寶石。")) {
+        profile.levelHighScores = {};
+        profile.levelStars = {};
+        profile.wrongFacts = [];
+        profile.completed = [];
+        profile.solvedCount = 0;
+        profile.bestStreak = 0;
+        safeSave();
+        updateParentDashboardWidgets();
+        renderGlobalScoreboards();
+        renderAdventureLevels();
+        triggerToast("🗑️ 已成功清除所有家長分析記錄。");
+      }
+    }
+
+    function exportProgress() {
+      const summaryText = `星際乘數測驗 - 獵魔家長報告 📝\n` +
+                          `=========================\n` +
+                          `👾 獵魔領隊: ${heroes[profile.hero].name}\n` +
+                          `💎 總寶石庫存: ${profile.totalGems}\n` +
+                          `🌟 已通關星系數: ${profile.completed.length}/10\n` +
+                          `🔥 答題最大連擊: ${profile.bestStreak}\n` +
+                          `🧠 待加強盲區公式數: ${profile.wrongFacts.length} 個\n` +
+                          `家長簽署備忘，引導高效學習！加油！`;
+      
+      const tempArea = document.createElement('textarea');
+      tempArea.value = summaryText;
+      document.body.appendChild(tempArea);
+      tempArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempArea);
+      
+      triggerToast("📋 已複製完整的文字學習報告至剪貼簿！可直接貼上傳給老師。");
+    }
+
+    function switchView(viewId) {
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('text-cyberCyan', 'bg-cyberCyan/10');
+        btn.classList.add('text-gray-400', 'hover:text-white');
+      });
+      const activeNav = document.getElementById(`nav-${viewId}`);
+      if (activeNav) {
+        activeNav.classList.remove('text-gray-400', 'hover:text-white');
+        activeNav.classList.add('text-cyberCyan', 'bg-cyberCyan/10');
+      }
+
+      document.querySelectorAll('.view-panel').forEach(panel => {
+        panel.classList.add('hidden');
+        panel.classList.remove('block');
+      });
+
+      const targetPanel = document.getElementById(`view-${viewId}`);
+      if (targetPanel) {
+        targetPanel.classList.remove('hidden');
+        targetPanel.classList.add('block');
+      }
+
+      if (viewId === 'cantonese') {
+        renderCantoneseInteractiveZone();
+      } else if (viewId === 'flashcards') {
+        initFlashcards();
+      } else if (viewId === 'dashboard') {
+        updateParentDashboardWidgets();
+      } else if (viewId === 'home') {
+        renderGlobalScoreboards();
+        renderAdventureLevels();
+      }
+    }
+
+    function triggerToast(message, isError = false) {
+      const alertBox = document.getElementById('customAlert');
+      alertBox.textContent = message;
+      alertBox.className = `fixed top-6 left-1/2 -translate-x-1/2 z-50 p-4 rounded-xl border font-black text-sm shadow-2xl backdrop-blur-xl transition-all duration-300 pointer-events-none ${
+        isError 
+          ? 'bg-red-950/90 border-red-500 text-red-400' 
+          : 'bg-cyberDark/90 border-cyberCyan text-cyberCyan'
+      }`;
+      alertBox.style.opacity = '1';
+      alertBox.style.transform = 'translateX(-50%) translateY(10px)';
+
+      setTimeout(() => {
+        alertBox.style.opacity = '0';
+        alertBox.style.transform = 'translateX(-50%) translateY(-20px)';
+      }, 2500);
+    }
+
+    function confirmReset() {
+      if (confirm("⚠️ 確定要重設所有遊戲進度嗎？所有寶石、星星、英雄選擇和歷史記錄都會被刪除。")) {
+        profile = { ...fallbackProfile };
+        safeSave();
+        switchView('home');
+        triggerToast("🗑️ 遊戲已被完全重置。");
+      }
+    }
+
+    function updateGlobalStatusIndicators() {
+      document.getElementById('headerGems').textContent = profile.totalGems;
+      document.getElementById('headerStreak').textContent = profile.bestStreak;
+      
+      // Dynamic rendering of miniature round crop on top header
+      const badge = document.getElementById('activeHeroBadge');
+      badge.innerHTML = `
+        <span class="inline-flex items-center gap-1.5 font-cyber">
+          <span class="w-5 h-5 rounded-full hero-avatar avatar-${profile.hero} border border-white/30 inline-block"></span>
+          <span>${heroes[profile.hero].name.toUpperCase()}</span>
+        </span>
       `;
     }
 
-    function alertLike(message) {
-      const box = document.createElement('div');
-      box.className = 'panel';
-      box.style.position = 'fixed';
-      box.style.left = '50%';
-      box.style.top = '24px';
-      box.style.transform = 'translateX(-50%)';
-      box.style.padding = '14px 18px';
-      box.style.zIndex = '10';
-      box.textContent = message;
-      document.body.appendChild(box);
-      setTimeout(() => box.remove(), 1800);
+    // DYNAMIC BACKGROUND PARTICLES
+    function initBackgroundParticles() {
+      const canvas = document.getElementById('starfield');
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      class Particle {
+        constructor() {
+          this.reset();
+        }
+        reset() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.size = Math.random() * 2 + 0.5;
+          this.speedX = (Math.random() - 0.5) * 0.3;
+          this.speedY = (Math.random() - 0.5) * 0.3;
+          this.color = Math.random() > 0.5 ? '#00f0ff' : '#ff007f';
+          this.alpha = Math.random();
+        }
+        update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+          this.alpha += (Math.random() - 0.5) * 0.05;
+          if (this.alpha < 0) this.alpha = 0;
+          if (this.alpha > 1) this.alpha = 1;
+
+          if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+            this.reset();
+          }
+        }
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = this.alpha;
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      for (let i = 0; i < 75; i++) {
+        particles.push(new Particle());
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
     }
 
-    document.getElementById('dailyBtn').addEventListener('click', () => startQuiz('daily'));
-    document.getElementById('weakBtn').addEventListener('click', () => startQuiz('weak'));
-    document.getElementById('mixedBtn').addEventListener('click', () => startQuiz('mixed'));
-    document.getElementById('backHomeBtn').addEventListener('click', showHome);
-    document.getElementById('resetBtn').addEventListener('click', () => {
-      memoryStore.value = null;
-      try { localStorage.removeItem(storageKey); } catch (e) {}
-      state.profile = safeLoad();
-      renderHome();
-      alertLike('已重設所有資料。');
+    // Keyboard Event listener for Flashcards
+    window.addEventListener('keydown', (e) => {
+      const fcView = document.getElementById('view-flashcards');
+      if (fcView && !fcView.classList.contains('hidden')) {
+        if (e.code === 'Space') {
+          e.preventDefault();
+          flipFlashcard();
+        } else if (e.code === 'ArrowRight') {
+          nextFlashcard();
+        } else if (e.code === 'ArrowLeft') {
+          prevFlashcard();
+        }
+      }
     });
-    renderHome();
+
+    // Startup script
+    window.onload = function() {
+      initBackgroundParticles();
+      updateGlobalStatusIndicators();
+      selectHero(profile.hero);
+      switchView('home');
+    };
   </script>
 </body>
 </html>
