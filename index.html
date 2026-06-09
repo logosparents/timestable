@@ -58,20 +58,22 @@
       text-shadow: 0 0 8px rgba(255, 0, 127, 0.6);
     }
     
-    /* Huntrix Character Avatar Cropping from the Official Poster */
+    /* Huntrix Character Avatar Binding with Cyber Gradient Fallbacks */
     .hero-avatar {
-      background-image: url('Netflix-KPop-Demon-Hunters-2025-Huntrix-Hero-Group-Wall-Poster-22-375-x-34_00097913-a403-4a90-9f75-9e5eeee60aea.02669972a40ca63ecf3c45f71421371c.avif');
       background-repeat: no-repeat;
-      background-size: 340% auto;
+      background-size: cover;
+      background-position: center;
+      position: relative;
     }
+    /* If local JPG fails, browser smoothly degrades to the linear gradients underneath */
     .avatar-zoey {
-      background-position: 48% 14%;
+      background-image: url('zoey.jpg'), linear-gradient(135deg, #050a18 20%, #00f0ff 100%);
     }
     .avatar-rumi {
-      background-position: 83% 16%;
+      background-image: url('Rumi.jpg'), linear-gradient(135deg, #050a18 20%, #7000ff 100%);
     }
     .avatar-mira {
-      background-position: 13% 18.5%;
+      background-image: url('Mira.jpg'), linear-gradient(135deg, #050a18 20%, #ff007f 100%);
     }
 
     /* 3D Flip Card Styles */
@@ -203,7 +205,7 @@
         <!-- Left Column: Hero Select & Levels Grid -->
         <div class="lg:col-span-2 flex flex-col gap-6">
           
-          <!-- Hero selection with high-res crops from Netflix Poster -->
+          <!-- Hero selection with high-res crops -->
           <section class="p-6 rounded-2xl bg-cyberDark/80 border border-white/5 backdrop-blur-md">
             <div class="flex items-center gap-2 mb-4">
               <span class="w-2.5 h-6 bg-cyberMagenta rounded-full"></span>
@@ -217,9 +219,16 @@
               <!-- Zoey Card -->
               <div onclick="selectHero('zoey')" id="hero-card-zoey" class="hero-selector-card group cursor-pointer p-4 rounded-xl bg-cyberCard border border-white/10 hover:border-cyberCyan/50 transition-all flex flex-col items-center text-center relative overflow-hidden">
                 <div class="absolute inset-x-0 bottom-0 h-1 bg-cyberCyan opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <!-- Zoey Cropped Avatar -->
+                <!-- Zoey Dedicated Avatar with SVG HUD fallbacks -->
                 <div class="w-32 h-32 mb-4 rounded-full border-2 border-cyberCyan hero-avatar avatar-zoey relative overflow-hidden shadow-lg shadow-cyberCyan/10">
-                  <div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-cyberCyan/90 text-slate-900 text-[10px] px-2 py-0.5 rounded-full font-bold font-cyber">RAPPER</div>
+                  <!-- Hologram Overlay Pattern -->
+                  <div class="absolute inset-0 bg-[radial-gradient(rgba(0,240,255,0.15)_1px,transparent_1px)] bg-[size:8px_8px] opacity-40"></div>
+                  <!-- Visual Backup Icon -->
+                  <div class="absolute inset-0 flex flex-col items-center justify-center text-cyberCyan/30">
+                    <i class="fa-solid fa-headphones text-4xl mb-1"></i>
+                    <span class="text-[9px] font-cyber tracking-widest uppercase">HUD SIGNAL</span>
+                  </div>
+                  <div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-cyberCyan/90 text-slate-900 text-[10px] px-2 py-0.5 rounded-full font-bold font-cyber z-10">RAPPER</div>
                 </div>
                 <h3 class="font-cyber font-black text-lg text-white">ZOEY</h3>
                 <span class="text-xs text-cyberCyan font-cyber font-semibold tracking-wide">Rap Burst ⚡️</span>
@@ -229,9 +238,16 @@
               <!-- Rumi Card -->
               <div onclick="selectHero('rumi')" id="hero-card-rumi" class="hero-selector-card group cursor-pointer p-4 rounded-xl bg-cyberCard border border-white/10 hover:border-cyberPurple/50 transition-all flex flex-col items-center text-center relative overflow-hidden">
                 <div class="absolute inset-x-0 bottom-0 h-1 bg-cyberPurple opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <!-- Rumi Cropped Avatar -->
+                <!-- Rumi Dedicated Avatar with SVG HUD fallbacks -->
                 <div class="w-32 h-32 mb-4 rounded-full border-2 border-cyberPurple hero-avatar avatar-rumi relative overflow-hidden shadow-lg shadow-cyberPurple/10">
-                  <div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-cyberPurple/90 text-white text-[10px] px-2 py-0.5 rounded-full font-bold font-cyber font-cyber">VOCAL</div>
+                  <!-- Hologram Overlay Pattern -->
+                  <div class="absolute inset-0 bg-[radial-gradient(rgba(112,0,255,0.15)_1px,transparent_1px)] bg-[size:8px_8px] opacity-40"></div>
+                  <!-- Visual Backup Icon -->
+                  <div class="absolute inset-0 flex flex-col items-center justify-center text-cyberPurple/40">
+                    <i class="fa-solid fa-music text-4xl mb-1"></i>
+                    <span class="text-[9px] font-cyber tracking-widest uppercase">V-VOX NET</span>
+                  </div>
+                  <div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-cyberPurple/90 text-white text-[10px] px-2 py-0.5 rounded-full font-bold font-cyber z-10">VOCAL</div>
                 </div>
                 <h3 class="font-cyber font-black text-lg text-white">RUMI</h3>
                 <span class="text-xs text-cyberPurple font-cyber font-semibold tracking-wide">Vocal Shield 🔮</span>
@@ -241,9 +257,16 @@
               <!-- Mira Card -->
               <div onclick="selectHero('mira')" id="hero-card-mira" class="hero-selector-card group cursor-pointer p-4 rounded-xl bg-cyberCard border border-white/10 hover:border-cyberMagenta/50 transition-all flex flex-col items-center text-center relative overflow-hidden">
                 <div class="absolute inset-x-0 bottom-0 h-1 bg-cyberMagenta opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <!-- Mira Cropped Avatar -->
+                <!-- Mira Dedicated Avatar with SVG HUD fallbacks -->
                 <div class="w-32 h-32 mb-4 rounded-full border-2 border-cyberMagenta hero-avatar avatar-mira relative overflow-hidden shadow-lg shadow-cyberMagenta/10">
-                  <div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-cyberMagenta/90 text-white text-[10px] px-2 py-0.5 rounded-full font-bold font-cyber">DANCER</div>
+                  <!-- Hologram Overlay Pattern -->
+                  <div class="absolute inset-0 bg-[radial-gradient(rgba(255,0,127,0.15)_1px,transparent_1px)] bg-[size:8px_8px] opacity-40"></div>
+                  <!-- Visual Backup Icon -->
+                  <div class="absolute inset-0 flex flex-col items-center justify-center text-cyberMagenta/40">
+                    <i class="fa-solid fa-wand-sparkles text-4xl mb-1"></i>
+                    <span class="text-[9px] font-cyber tracking-widest uppercase">BLADE SYS</span>
+                  </div>
+                  <div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-cyberMagenta/90 text-white text-[10px] px-2 py-0.5 rounded-full font-bold font-cyber z-10">DANCER</div>
                 </div>
                 <h3 class="font-cyber font-black text-lg text-white">MIRA</h3>
                 <span class="text-xs text-cyberMagenta font-cyber font-semibold tracking-wide">Blade Spin ⚔️</span>
@@ -688,7 +711,10 @@
           <div class="p-6 rounded-2xl bg-cyberCard/80 border border-white/10 relative overflow-hidden flex flex-col items-center">
             <!-- Active Hunter Profile overlay -->
             <div class="absolute top-4 left-4 flex items-center gap-2 px-2.5 py-1 rounded-lg bg-cyberDark/80 border border-white/10">
-              <div id="quizHunterIcon" class="w-7 h-7 rounded-full hero-avatar border border-white/30 inline-block"></div>
+              <div id="quizHunterIcon" class="w-7 h-7 rounded-full hero-avatar border border-white/30 inline-block relative overflow-hidden">
+                <!-- Backup Icon underneath for small status badge -->
+                <div class="absolute inset-0 bg-cyberCyan/20 flex items-center justify-center text-[10px]">✨</div>
+              </div>
               <span class="text-xs font-cyber font-bold text-white animate-pulse" id="quizHunterName">Zoey</span>
             </div>
             <div class="absolute top-4 right-4 text-sm font-cyber text-cyberCyan font-bold">
@@ -909,7 +935,7 @@
         verbalProduct = `得${cantoneseNumbers[product]}`;
       } else {
         if (product === 21) verbalProduct = '廿一';
-        else if (product === 24) verbalProduct = '廿四';
+        else if (product === 24) verbalProduct = '廿外';
         else if (product === 25) verbalProduct = '廿五';
         else if (product === 27) verbalProduct = '廿七';
         else if (product === 28) verbalProduct = '廿八';
@@ -1144,7 +1170,7 @@
       // Dynamic Hunter crop binding for the combat header
       const currentHero = heroes[profile.hero];
       const iconBox = document.getElementById('quizHunterIcon');
-      iconBox.className = `w-7 h-7 rounded-full hero-avatar avatar-${profile.hero} border border-white/30 inline-block`;
+      iconBox.className = `w-7 h-7 rounded-full hero-avatar avatar-${profile.hero} border border-white/30 inline-block relative overflow-hidden`;
       document.getElementById('quizHunterName').textContent = `${currentHero.name} (${currentHero.power})`;
 
       switchView('quiz');
@@ -1669,7 +1695,10 @@
       const badge = document.getElementById('activeHeroBadge');
       badge.innerHTML = `
         <span class="inline-flex items-center gap-1.5 font-cyber">
-          <span class="w-5 h-5 rounded-full hero-avatar avatar-${profile.hero} border border-white/30 inline-block"></span>
+          <span class="w-5 h-5 rounded-full hero-avatar avatar-${profile.hero} border border-white/30 inline-block relative overflow-hidden">
+            <!-- Overlay visual fallback inside status bar avatar -->
+            <span class="absolute inset-0 bg-cyberCyan/10"></span>
+          </span>
           <span>${heroes[profile.hero].name.toUpperCase()}</span>
         </span>
       `;
