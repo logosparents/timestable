@@ -1,1794 +1,1565 @@
 <!DOCTYPE html>
-<html lang="zh-HK">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>星際乘數表：獵魔特攻隊 (K-pop Demon Hunters Edition)</title>
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Orbitron:wght@500;700;900&family=Noto+Sans+HK:wght@400;700;900&display=swap" rel="stylesheet">
-  
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            cyberBg: '#050a18',
-            cyberDark: '#0b132b',
-            cyberCard: '#111e3d',
-            cyberCyan: '#00f0ff',
-            cyberMagenta: '#ff007f',
-            cyberPurple: '#7000ff',
-            cyberGreen: '#10b981',
-            cyberYellow: '#ffb703',
-          },
-          fontFamily: {
-            sans: ['Noto Sans HK', 'sans-serif'],
-            cyber: ['Orbitron', 'sans-serif'],
-            fun: ['Baloo 2', 'cursive'],
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>瑪利歐乘法大冒險 - Mario Multiplication Adventure</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        marioRed: '#E52521',
+                        marioBlue: '#002FBE',
+                        luigiGreen: '#43B047',
+                        peachPink: '#F3A1C2',
+                        toadRed: '#E93D2C',
+                        yoshiGreen: '#73C83D',
+                        marioYellow: '#F9CF00',
+                        skyBlue: '#5C94FC',
+                    },
+                    fontFamily: {
+                        sans: ['Chalkboard SE', 'Comic Sans MS', 'Microsoft JhengHei', 'sans-serif'],
+                    }
+                }
+            }
         }
-      }
-    }
-  </script>
-
-  <style>
-    /* Custom Neon Glow Styles */
-    .glow-cyan {
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3), inset 0 0 15px rgba(0, 240, 255, 0.1);
-    }
-    .glow-magenta {
-      box-shadow: 0 0 15px rgba(255, 0, 127, 0.3), inset 0 0 15px rgba(255, 0, 127, 0.1);
-    }
-    .glow-purple {
-      box-shadow: 0 0 15px rgba(112, 0, 255, 0.35), inset 0 0 15px rgba(112, 0, 255, 0.15);
-    }
-    .text-glow-cyan {
-      text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
-    }
-    .text-glow-magenta {
-      text-shadow: 0 0 8px rgba(255, 0, 127, 0.6);
-    }
-    
-    /* Huntrix Character Avatar Binding with Cyber Gradient Fallbacks */
-    .hero-avatar {
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
-    /* If local JPG fails, browser smoothly degrades to the linear gradients underneath */
-    .avatar-zoey {
-      background-image: url('zoey.jpg'), linear-gradient(135deg, #050a18 20%, #00f0ff 100%);
-    }
-    .avatar-rumi {
-      background-image: url('Rumi.jpg'), linear-gradient(135deg, #050a18 20%, #7000ff 100%);
-    }
-    .avatar-mira {
-      background-image: url('Mira.jpg'), linear-gradient(135deg, #050a18 20%, #ff007f 100%);
-    }
-
-    /* 3D Flip Card Styles */
-    .flip-card-container {
-      perspective: 1000px;
-    }
-    .flip-card-inner {
-      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-      transform-style: preserve-3d;
-    }
-    .flip-card-inner.flipped {
-      transform: rotateY(180deg);
-    }
-    .flip-card-front, .flip-card-back {
-      backface-visibility: hidden;
-      position: absolute;
-      inset: 0;
-    }
-    .flip-card-back {
-      transform: rotateY(180deg);
-    }
-
-    /* Animated Cyber Starfield Background */
-    .space-bg {
-      background: radial-gradient(circle at center, #111e3d 0%, #050a18 100%);
-    }
-    
-    /* Animated Scanlines */
-    .scanlines {
-      position: relative;
-      overflow: hidden;
-    }
-    .scanlines::before {
-      content: " ";
-      display: block;
-      position: absolute;
-      top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-      z-index: 2;
-      background-size: 100% 4px, 6px 100%;
-      pointer-events: none;
-    }
-
-    /* Scrollbar Styling */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #050a18;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #111e3d;
-      border-radius: 4px;
-      border: 1px solid rgba(0, 240, 255, 0.2);
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(0, 240, 255, 0.4);
-    }
-  </style>
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css for popups and transitions -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        /* Retro NES-style Pixel Border */
+        .retro-border {
+            border: 4px solid #000;
+            box-shadow: 4px 4px 0px #000;
+        }
+        .retro-btn-red {
+            background-color: #E52521;
+            border: 3px solid #000;
+            box-shadow: 4px 4px 0px #000;
+            color: white;
+            transition: all 0.1s ease;
+        }
+        .retro-btn-red:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000;
+        }
+        .retro-btn-yellow {
+            background-color: #F9CF00;
+            border: 3px solid #000;
+            box-shadow: 4px 4px 0px #000;
+            color: #000;
+            transition: all 0.1s ease;
+        }
+        .retro-btn-yellow:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000;
+        }
+        .retro-btn-green {
+            background-color: #43B047;
+            border: 3px solid #000;
+            box-shadow: 4px 4px 0px #000;
+            color: white;
+            transition: all 0.1s ease;
+        }
+        .retro-btn-green:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000;
+        }
+        /* Brick wall background pattern */
+        .brick-bg {
+            background-color: #e4a080;
+            background-image: linear-gradient(90deg, transparent 50%, rgba(255,255,255,.5) 50%),
+                              linear-gradient(rgba(255,255,255,.5) 50%, transparent 50%);
+            background-size: 40px 40px;
+        }
+        /* Smooth floating animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+        .floating {
+            animation: float 2.5s ease-in-out infinite;
+        }
+    </style>
 </head>
-<body class="space-bg text-gray-100 min-height-screen font-sans scanlines selection:bg-cyberMagenta selection:text-white pb-24 md:pb-6">
+<body class="bg-skyBlue min-h-screen flex flex-col font-sans select-none overflow-x-hidden">
 
-  <canvas id="starfield" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
+    <!-- Sound Controller (Internal Synth via Web Audio API) -->
+    <div id="audio-controls" class="hidden"></div>
 
-  <div class="relative z-10 max-w-7xl mx-auto px-4 py-4 md:py-8">
-    
-    <!-- Top Cyber Header -->
-    <header class="mb-6 flex flex-col md:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-cyberDark/90 border border-cyberCyan/20 glow-cyan backdrop-blur-xl">
-      <div class="flex items-center gap-4 w-full md:w-auto">
-        <div class="relative flex-shrink-0">
-          <div class="w-14 h-14 rounded-xl bg-gradient-to-tr from-cyberPurple to-cyberMagenta flex items-center justify-center border border-white/20 text-2xl font-cyber font-bold text-white relative overflow-hidden group">
-            <span class="absolute inset-0 bg-cyberCyan/10 animate-pulse"></span>
-            ⚡️
-          </div>
+    <!-- Navigation Header -->
+    <header class="bg-marioRed text-white py-3 px-4 border-b-4 border-black flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center space-x-2">
+            <span class="text-3xl animate__animated animate__bounceIn">🍄</span>
+            <h1 class="text-xl md:text-2xl font-bold tracking-wider" style="text-shadow: 2px 2px 0px #000;">瑪利歐乘法樂園</h1>
         </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-cyber tracking-widest text-cyberCyan font-bold uppercase animate-pulse">Demon Hunter Academy</span>
-            <span class="px-1.5 py-0.5 bg-cyberMagenta/20 text-cyberMagenta border border-cyberMagenta/30 rounded text-[10px] font-bold font-cyber">V2.0 PRO</span>
-          </div>
-          <h1 class="text-xl md:text-2xl font-black font-cyber tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-cyberCyan to-cyberMagenta">
-            星際乘數：獵魔特攻隊
-          </h1>
+        <!-- Right side Header stats -->
+        <div class="flex items-center space-x-3">
+            <div id="header-character" class="hidden flex items-center space-x-2 bg-black/30 px-3 py-1 rounded-full border-2 border-white/50 text-sm font-semibold">
+                <!-- SVG Container replacing traditional img -->
+                <div id="header-char-svg-box" class="w-7 h-7 flex items-center justify-center"></div>
+                <span id="header-char-name" class="hidden sm:inline"></span>
+            </div>
+            <div class="flex items-center space-x-1 text-marioYellow font-bold" style="text-shadow: 1.5px 1.5px 0px #000;">
+                <span class="text-xl">💎</span>
+                <span id="total-gems" class="text-lg">0</span>
+            </div>
+            <button onclick="showLeaderboard()" class="bg-marioYellow border-2 border-black text-black px-3 py-1 rounded font-bold text-xs hover:scale-105 active:scale-95 transition-transform">
+                🏆 排行榜
+            </button>
         </div>
-      </div>
-
-      <!-- Quick Stats Panel -->
-      <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
-        <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyberCard border border-cyberYellow/30 text-cyberYellow text-sm font-bold shadow-md">
-          <span>💎 <span id="headerGems" class="font-cyber">0</span></span>
-        </div>
-        <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyberCard border border-cyberCyan/30 text-cyberCyan text-sm font-bold shadow-md">
-          <span>🔥 連對：<span id="headerStreak" class="font-cyber">0</span></span>
-        </div>
-        <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyberCard border border-cyberMagenta/30 text-cyberMagenta text-sm font-bold shadow-md">
-          <span class="flex items-center gap-1.5">👾 主角：<span id="activeHeroBadge" class="font-bold">未選取</span></span>
-        </div>
-        <!-- Settings/Reset button -->
-        <button onclick="confirmReset()" class="px-3 py-1.5 rounded-xl bg-red-950/40 border border-red-500/30 text-red-400 text-xs hover:bg-red-900/50 transition-all flex items-center gap-1">
-          <i class="fa-solid fa-rotate-left"></i> 重設
-        </button>
-      </div>
     </header>
 
-    <!-- Navigation Bar for Screens (Responsive Desktop Top / Mobile Bottom Dock) -->
-    <nav class="mb-6 bg-cyberDark/95 border border-white/10 rounded-2xl p-2 flex justify-around md:justify-start gap-2 backdrop-blur-md sticky top-4 z-40 shadow-xl">
-      <button onclick="switchView('home')" id="nav-home" class="nav-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all text-cyberCyan bg-cyberCyan/10">
-        <i class="fa-solid fa-map-location-dot"></i> <span class="hidden md:inline">冒險關卡</span>
-      </button>
-      <button onclick="switchView('cantonese')" id="nav-cantonese" class="nav-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all text-gray-400 hover:text-white">
-        <i class="fa-solid fa-comment-dots"></i> <span class="hidden md:inline">廣東話九因歌</span><span class="md:hidden">九因歌</span>
-      </button>
-      <button onclick="switchView('flashcards')" id="nav-flashcards" class="nav-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all text-gray-400 hover:text-white">
-        <i class="fa-solid fa-clone"></i> <span class="hidden md:inline">智能閃卡</span><span class="md:hidden">閃卡</span>
-      </button>
-      <button onclick="switchView('tips')" id="nav-tips" class="nav-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all text-gray-400 hover:text-white">
-        <i class="fa-solid fa-lightbulb"></i> <span class="hidden md:inline">技巧秘笈</span><span class="md:hidden">秘笈</span>
-      </button>
-      <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all text-gray-400 hover:text-white">
-        <i class="fa-solid fa-chart-line"></i> <span class="hidden md:inline">家長分析儀表板</span><span class="md:hidden">家長</span>
-      </button>
-    </nav>
+    <!-- Main Dynamic Content Wrapper -->
+    <main id="game-container" class="flex-grow flex flex-col items-center justify-center p-4 max-w-5xl mx-auto w-full">
 
-    <!-- VIEW: HOME (Adventure & Level Select) -->
-    <div id="view-home" class="view-panel block">
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- Left Column: Hero Select & Levels Grid -->
-        <div class="lg:col-span-2 flex flex-col gap-6">
-          
-          <!-- Hero selection with high-res crops -->
-          <section class="p-6 rounded-2xl bg-cyberDark/80 border border-white/5 backdrop-blur-md">
-            <div class="flex items-center gap-2 mb-4">
-              <span class="w-2.5 h-6 bg-cyberMagenta rounded-full"></span>
-              <h2 class="text-xl font-bold font-cyber tracking-wider">選擇獵魔特攻主角 (K-pop Demon Hunters)</h2>
+        <!-- SCREEN 1: Welcome/Start Screen -->
+        <section id="screen-welcome" class="w-full bg-white retro-border p-6 md:p-8 rounded-2xl text-center space-y-6 animate__animated animate__fadeIn">
+            <div class="relative inline-block my-4">
+                <div class="text-7xl md:text-8xl floating">🌟</div>
+                <div class="absolute -top-6 -left-6 text-4xl animate-bounce">🍄</div>
+                <div class="absolute -bottom-6 -right-6 text-4xl animate-pulse">🦖</div>
             </div>
-            <p class="text-sm text-gray-400 mb-6 leading-relaxed">
-              點擊召喚你的守護歌手！她們在舞台上是璀璨的 K-pop 巨星，在夜幕下則幻化成強大的星際獵魔人。每一位都擁有獨特的音樂魔法。
+            
+            <h2 class="text-3xl md:text-5xl font-black text-marioRed tracking-wide" style="text-shadow: 3px 3px 0px #F9CF00, 5px 5px 0px #000;">
+                MARIO MULTIPLICATION
+            </h2>
+            <p class="text-lg md:text-xl text-gray-700 font-bold max-w-xl mx-auto leading-relaxed">
+                哈囉！我是瑪利歐老師。庫巴偷偷搶走了蘑菇王國的「乘法力量寶石」！快選一個你的超級夥伴，用神奇的九九乘法魔法，闖過重重難關，把寶石奪回來吧！
             </p>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="heroesContainer">
-              <!-- Zoey Card -->
-              <div onclick="selectHero('zoey')" id="hero-card-zoey" class="hero-selector-card group cursor-pointer p-4 rounded-xl bg-cyberCard border border-white/10 hover:border-cyberCyan/50 transition-all flex flex-col items-center text-center relative overflow-hidden">
-                <div class="absolute inset-x-0 bottom-0 h-1 bg-cyberCyan opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <!-- Zoey Dedicated Avatar with SVG HUD fallbacks -->
-                <div class="w-32 h-32 mb-4 rounded-full border-2 border-cyberCyan hero-avatar avatar-zoey relative overflow-hidden shadow-lg shadow-cyberCyan/10">
-                  <!-- Hologram Overlay Pattern -->
-                  <div class="absolute inset-0 bg-[radial-gradient(rgba(0,240,255,0.15)_1px,transparent_1px)] bg-[size:8px_8px] opacity-40"></div>
-                  <!-- Visual Backup Icon -->
-                  <div class="absolute inset-0 flex flex-col items-center justify-center text-cyberCyan/30">
-                    <i class="fa-solid fa-headphones text-4xl mb-1"></i>
-                    <span class="text-[9px] font-cyber tracking-widest uppercase">HUD SIGNAL</span>
-                  </div>
-                  <div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-cyberCyan/90 text-slate-900 text-[10px] px-2 py-0.5 rounded-full font-bold font-cyber z-10">RAPPER</div>
-                </div>
-                <h3 class="font-cyber font-black text-lg text-white">ZOEY</h3>
-                <span class="text-xs text-cyberCyan font-cyber font-semibold tracking-wide">Rap Burst ⚡️</span>
-                <p class="text-xs text-gray-400 mt-2">快節奏說唱！答題觸發重低音狂潮，爆發雙倍連對金幣。</p>
-              </div>
-
-              <!-- Rumi Card -->
-              <div onclick="selectHero('rumi')" id="hero-card-rumi" class="hero-selector-card group cursor-pointer p-4 rounded-xl bg-cyberCard border border-white/10 hover:border-cyberPurple/50 transition-all flex flex-col items-center text-center relative overflow-hidden">
-                <div class="absolute inset-x-0 bottom-0 h-1 bg-cyberPurple opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <!-- Rumi Dedicated Avatar with SVG HUD fallbacks -->
-                <div class="w-32 h-32 mb-4 rounded-full border-2 border-cyberPurple hero-avatar avatar-rumi relative overflow-hidden shadow-lg shadow-cyberPurple/10">
-                  <!-- Hologram Overlay Pattern -->
-                  <div class="absolute inset-0 bg-[radial-gradient(rgba(112,0,255,0.15)_1px,transparent_1px)] bg-[size:8px_8px] opacity-40"></div>
-                  <!-- Visual Backup Icon -->
-                  <div class="absolute inset-0 flex flex-col items-center justify-center text-cyberPurple/40">
-                    <i class="fa-solid fa-music text-4xl mb-1"></i>
-                    <span class="text-[9px] font-cyber tracking-widest uppercase">V-VOX NET</span>
-                  </div>
-                  <div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-cyberPurple/90 text-white text-[10px] px-2 py-0.5 rounded-full font-bold font-cyber z-10">VOCAL</div>
-                </div>
-                <h3 class="font-cyber font-black text-lg text-white">RUMI</h3>
-                <span class="text-xs text-cyberPurple font-cyber font-semibold tracking-wide">Vocal Shield 🔮</span>
-                <p class="text-xs text-gray-400 mt-2">星光高音！展開聲波護盾，每日挑戰首兩題答錯免懲罰。</p>
-              </div>
-
-              <!-- Mira Card -->
-              <div onclick="selectHero('mira')" id="hero-card-mira" class="hero-selector-card group cursor-pointer p-4 rounded-xl bg-cyberCard border border-white/10 hover:border-cyberMagenta/50 transition-all flex flex-col items-center text-center relative overflow-hidden">
-                <div class="absolute inset-x-0 bottom-0 h-1 bg-cyberMagenta opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <!-- Mira Dedicated Avatar with SVG HUD fallbacks -->
-                <div class="w-32 h-32 mb-4 rounded-full border-2 border-cyberMagenta hero-avatar avatar-mira relative overflow-hidden shadow-lg shadow-cyberMagenta/10">
-                  <!-- Hologram Overlay Pattern -->
-                  <div class="absolute inset-0 bg-[radial-gradient(rgba(255,0,127,0.15)_1px,transparent_1px)] bg-[size:8px_8px] opacity-40"></div>
-                  <!-- Visual Backup Icon -->
-                  <div class="absolute inset-0 flex flex-col items-center justify-center text-cyberMagenta/40">
-                    <i class="fa-solid fa-wand-sparkles text-4xl mb-1"></i>
-                    <span class="text-[9px] font-cyber tracking-widest uppercase">BLADE SYS</span>
-                  </div>
-                  <div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-cyberMagenta/90 text-white text-[10px] px-2 py-0.5 rounded-full font-bold font-cyber z-10">DANCER</div>
-                </div>
-                <h3 class="font-cyber font-black text-lg text-white">MIRA</h3>
-                <span class="text-xs text-cyberMagenta font-cyber font-semibold tracking-wide">Blade Spin ⚔️</span>
-                <p class="text-xs text-gray-400 mt-2">舞台利刃！迴旋斬擊魔物，高難度關卡答對獎勵 +50%。</p>
-              </div>
+            <!-- Guide Box -->
+            <div class="bg-yellow-50 border-2 border-dashed border-marioYellow p-4 rounded-xl max-w-lg mx-auto text-left">
+                <h4 class="font-bold text-marioRed mb-2"><i class="fa-solid fa-star"></i> 冒險大攻略：</h4>
+                <ul class="text-sm text-gray-600 space-y-1.5 list-disc list-inside font-semibold">
+                    <li>選擇一位實力強大的<b>夥伴角色</b>（由我們純代碼手工繪製，100%完美顯示！）。</li>
+                    <li>挑戰 <b>5 大乘法主題關卡</b>。</li>
+                    <li>每關完成：<b>讀口訣 ➡️ 看趣味影片 ➡️ 乘法實戰 ➡️ 解決應用題</b>。</li>
+                    <li>答對累積 💎 寶石，登上最終的<b>世界英雄排行榜</b>！</li>
+                </ul>
             </div>
-          </section>
 
-          <!-- Star Map and Levels Section -->
-          <section class="p-6 rounded-2xl bg-cyberDark/80 border border-white/5 backdrop-blur-md">
-            <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
-              <div class="flex items-center gap-2">
-                <span class="w-2.5 h-6 bg-cyberCyan rounded-full"></span>
-                <h2 class="text-xl font-bold font-cyber tracking-wider">星際挑戰關卡地圖</h2>
-              </div>
-              <div class="flex gap-2">
-                <button onclick="startQuiz('mixed')" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-cyberCyan to-cyberPurple text-white text-xs font-bold hover:opacity-90 transition-all glow-cyan">
-                  ⚡️ 終極混合模式
+            <div class="pt-4">
+                <button onclick="navigateTo('screen-char-select')" class="retro-btn-red text-2xl font-black px-12 py-4 rounded-full hover:scale-105 active:scale-95 transition-transform">
+                    🎮 選擇角色冒險！ START!
                 </button>
-                <button onclick="startQuiz('daily')" class="px-3 py-1.5 rounded-xl bg-cyberMagenta/20 border border-cyberMagenta/40 text-cyberMagenta text-xs font-bold hover:bg-cyberMagenta/30 transition-all">
-                  📅 每日隨機挑戰
+            </div>
+        </section>
+
+        <!-- SCREEN 2: Character Selection (Featuring Live Custom SVG vector Graphics) -->
+        <section id="screen-char-select" class="hidden w-full bg-white retro-border p-6 md:p-8 rounded-2xl space-y-6 animate__animated animate__fadeIn">
+            <div class="text-center">
+                <h3 class="text-2xl md:text-4xl font-extrabold text-marioBlue" style="text-shadow: 1px 1px 0px #000;">
+                    👥 選擇你的冒險角色！
+                </h3>
+                <p class="text-gray-600 font-bold mt-1">選一個你最喜歡的角色，圖片保證 100% 完美呈現！</p>
+            </div>
+
+            <!-- Character Grid with secure dynamic SVGs -->
+            <div id="character-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 py-4">
+                <!-- Character cards built directly inside DOM -->
+            </div>
+
+            <!-- Input Name -->
+            <div class="max-w-md mx-auto text-center space-y-2 pt-2">
+                <label class="block font-black text-gray-700 text-lg">✏️ 輸入你的勇士名字：</label>
+                <input type="text" id="player-name" placeholder="例如：神奇小勇士" class="w-full text-center p-3 border-4 border-black rounded-xl font-bold focus:outline-none focus:ring-4 focus:ring-marioYellow text-xl" value="快樂小勇士">
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex justify-between items-center pt-4 border-t-2 border-gray-100">
+                <button onclick="navigateTo('screen-welcome')" class="retro-btn-yellow font-bold px-6 py-2 rounded">
+                    ⬅️ 回主頁
                 </button>
-              </div>
+                <button onclick="confirmCharacterSelection()" class="retro-btn-red text-xl font-black px-10 py-3 rounded-xl">
+                    確定角色！GO! 🚀
+                </button>
+            </div>
+        </section>
+
+        <!-- SCREEN 3: Level Selection (Adventure Map with Character indicator) -->
+        <section id="screen-level-select" class="hidden w-full bg-white retro-border p-6 rounded-2xl space-y-6 animate__animated animate__fadeIn">
+            <div class="text-center">
+                <h3 class="text-2xl md:text-3xl font-black text-marioRed">🗺️ 乘法樂園冒險地圖</h3>
+                <p class="text-gray-600 font-bold mt-1">請選擇你想挑戰的乘法關卡：</p>
             </div>
 
-            <!-- Learning Step Road -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 text-center">
-              <div class="p-3 rounded-xl bg-cyberCard/50 border border-cyberCyan/10">
-                <div class="text-[10px] uppercase font-cyber text-cyberCyan font-bold">Step 1 (初級)</div>
-                <div class="text-sm font-black mt-1">1、2、5、10</div>
-              </div>
-              <div class="p-3 rounded-xl bg-cyberCard/50 border border-cyberCyan/10">
-                <div class="text-[10px] uppercase font-cyber text-cyberCyan font-bold">Step 2 (中級)</div>
-                <div class="text-sm font-black mt-1">3、4、6</div>
-              </div>
-              <div class="p-3 rounded-xl bg-cyberCard/50 border border-cyberCyan/10">
-                <div class="text-[10px] uppercase font-cyber text-cyberCyan font-bold">Step 3 (高級)</div>
-                <div class="text-sm font-black mt-1">7、8、9</div>
-              </div>
-              <div class="p-3 rounded-xl bg-cyberCard/50 border border-cyberCyan/10">
-                <div class="text-[10px] uppercase font-cyber text-cyberCyan font-bold">Step 4 (大師)</div>
-                <div class="text-sm font-black mt-1">混合模式</div>
-              </div>
+            <!-- Level Map tracks -->
+            <div class="space-y-4 py-4 relative">
+                <!-- Level 1 -->
+                <div class="level-row flex flex-col sm:flex-row items-center justify-between p-4 border-4 border-black rounded-xl bg-gradient-to-r from-red-100 to-amber-50 hover:scale-[1.01] transition-transform relative" id="lvl-row-1">
+                    <div class="flex items-center space-x-4">
+                        <span class="text-4xl bg-white p-2 rounded-lg border-2 border-black font-black text-marioRed">1</span>
+                        <div>
+                            <h4 class="font-black text-lg">第一關：1 與 2 的乘法樂園 🍄</h4>
+                            <p class="text-xs text-gray-600 font-semibold">適合新手起步！熟悉最基礎的倍數魔法。</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3 mt-3 sm:mt-0">
+                        <div id="map-char-indicator-1" class="hidden transition-all duration-300 transform -translate-y-1">
+                            <!-- SVG container instead of img -->
+                            <div class="w-12 h-12 flex items-center justify-center char-svg-container drop-shadow-md"></div>
+                            <span class="bg-black text-white text-[10px] px-1.5 py-0.5 rounded-full block text-center mt-0.5 font-bold animate-pulse">你在這!</span>
+                        </div>
+                        <button onclick="startLevel(1)" class="retro-btn-red px-6 py-2 font-bold text-sm">
+                            進入關卡 ⭐️
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Level 2 -->
+                <div class="level-row flex flex-col sm:flex-row items-center justify-between p-4 border-4 border-gray-300 rounded-xl bg-gray-50 opacity-60 transition-transform relative" id="lvl-row-2">
+                    <div class="flex items-center space-x-4">
+                        <span id="lvl-badge-2" class="text-4xl bg-white p-2 rounded-lg border-2 border-gray-300 font-black text-gray-400">2</span>
+                        <div>
+                            <h4 class="font-black text-lg text-gray-700">第二關：3 與 4 的森林迷宮 🌳</h4>
+                            <p class="text-xs text-gray-500 font-semibold">需要獲得 5 顆寶石解鎖！小心路上的食人花喔。</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3 mt-3 sm:mt-0">
+                        <div id="map-char-indicator-2" class="hidden transition-all duration-300">
+                            <div class="w-12 h-12 flex items-center justify-center char-svg-container drop-shadow-md"></div>
+                            <span class="bg-black text-white text-[10px] px-1.5 py-0.5 rounded-full block text-center mt-0.5 font-bold animate-pulse">你在這!</span>
+                        </div>
+                        <button id="lvl-btn-2" disabled onclick="startLevel(2)" class="bg-gray-400 border-2 border-gray-500 text-white cursor-not-allowed px-6 py-2 font-bold text-sm rounded">
+                            🔒 尚未解鎖
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Level 3 -->
+                <div class="level-row flex flex-col sm:flex-row items-center justify-between p-4 border-4 border-gray-300 rounded-xl bg-gray-50 opacity-60 transition-transform relative" id="lvl-row-3">
+                    <div class="flex items-center space-x-4">
+                        <span id="lvl-badge-3" class="text-4xl bg-white p-2 rounded-lg border-2 border-gray-300 font-black text-gray-400">3</span>
+                        <div>
+                            <h4 class="font-black text-lg text-gray-700">第三關：5 與 6 的黃金沙漠 🌵</h4>
+                            <p class="text-xs text-gray-500 font-semibold">需要獲得 10 顆寶石解鎖！挑戰 5 和 6 的神秘配對。</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3 mt-3 sm:mt-0">
+                        <div id="map-char-indicator-3" class="hidden transition-all duration-300">
+                            <div class="w-12 h-12 flex items-center justify-center char-svg-container drop-shadow-md"></div>
+                            <span class="bg-black text-white text-[10px] px-1.5 py-0.5 rounded-full block text-center mt-0.5 font-bold animate-pulse">你在這!</span>
+                        </div>
+                        <button id="lvl-btn-3" disabled onclick="startLevel(3)" class="bg-gray-400 border-2 border-gray-500 text-white cursor-not-allowed px-6 py-2 font-bold text-sm rounded">
+                            🔒 尚未解鎖
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Level 4 -->
+                <div class="level-row flex flex-col sm:flex-row items-center justify-between p-4 border-4 border-gray-300 rounded-xl bg-gray-50 opacity-60 transition-transform relative" id="lvl-row-4">
+                    <div class="flex items-center space-x-4">
+                        <span id="lvl-badge-4" class="text-4xl bg-white p-2 rounded-lg border-2 border-gray-300 font-black text-gray-400">4</span>
+                        <div>
+                            <h4 class="font-black text-lg text-gray-700">第四關：7 與 8 的雲中城堡 ☁️</h4>
+                            <p class="text-xs text-gray-500 font-semibold">需要獲得 15 顆寶石解鎖！高空中的驚險比拼。</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3 mt-3 sm:mt-0">
+                        <div id="map-char-indicator-4" class="hidden transition-all duration-300">
+                            <div class="w-12 h-12 flex items-center justify-center char-svg-container drop-shadow-md"></div>
+                            <span class="bg-black text-white text-[10px] px-1.5 py-0.5 rounded-full block text-center mt-0.5 font-bold animate-pulse">你在這!</span>
+                        </div>
+                        <button id="lvl-btn-4" disabled onclick="startLevel(4)" class="bg-gray-400 border-2 border-gray-500 text-white cursor-not-allowed px-6 py-2 font-bold text-sm rounded">
+                            🔒 尚未解鎖
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Level 5 -->
+                <div class="level-row flex flex-col sm:flex-row items-center justify-between p-4 border-4 border-gray-300 rounded-xl bg-gray-50 opacity-60 transition-transform relative" id="lvl-row-5">
+                    <div class="flex items-center space-x-4">
+                        <span id="lvl-badge-5" class="text-4xl bg-white p-2 rounded-lg border-2 border-gray-300 font-black text-gray-400">5</span>
+                        <div>
+                            <h4 class="font-black text-lg text-gray-700">第五關：9 的庫巴大魔王終極戰 🏰</h4>
+                            <p class="text-xs text-gray-500 font-semibold">需要獲得 20 顆寶石解鎖！挑戰最強 9 的奧秘，救回桃子公主！</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3 mt-3 sm:mt-0">
+                        <div id="map-char-indicator-5" class="hidden transition-all duration-300">
+                            <div class="w-12 h-12 flex items-center justify-center char-svg-container drop-shadow-md"></div>
+                            <span class="bg-black text-white text-[10px] px-1.5 py-0.5 rounded-full block text-center mt-0.5 font-bold animate-pulse">你在這!</span>
+                        </div>
+                        <button id="lvl-btn-5" disabled onclick="startLevel(5)" class="bg-gray-400 border-2 border-gray-500 text-white cursor-not-allowed px-6 py-2 font-bold text-sm rounded">
+                            🔒 尚未解鎖
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="adventureLevels">
-              <!-- JS will dynamically render interactive level selection buttons here -->
+            <!-- Footer Buttons -->
+            <div class="flex justify-start border-t-2 border-gray-100 pt-4">
+                <button onclick="navigateTo('screen-char-select')" class="retro-btn-yellow font-bold px-6 py-2 rounded">
+                    ⬅️ 重新選擇角色
+                </button>
             </div>
-          </section>
+        </section>
 
-        </div>
-
-        <!-- Right Column: Sidebar (Mastery Scoreboard & Weaknesses) -->
-        <div class="flex flex-col gap-6">
-          
-          <!-- Quick Cantonese Practice Panel -->
-          <div class="p-5 rounded-2xl bg-gradient-to-br from-cyberPurple/30 to-cyberDark border border-cyberPurple/20 glow-purple backdrop-blur-md">
-            <h3 class="text-md font-bold font-cyber text-cyberPurple mb-2 flex items-center gap-2">
-              <i class="fa-solid fa-volume-high"></i> 廣東話語音快速點播
-            </h3>
-            <p class="text-xs text-gray-300 mb-4">按以下乘數聽讀廣東話「九因歌」經典口訣，邊學邊背！</p>
-            <div class="grid grid-cols-3 gap-2">
-              <button onclick="playQuickChant(2,3)" class="p-2 text-xs rounded-lg bg-cyberCard/80 border border-white/5 hover:border-cyberPurple/50 hover:bg-cyberPurple/20 transition-all">
-                二三得六 <i class="fa-solid fa-play text-[9px] text-cyberPurple"></i>
-              </button>
-              <button onclick="playQuickChant(3,7)" class="p-2 text-xs rounded-lg bg-cyberCard/80 border border-white/5 hover:border-cyberPurple/50 hover:bg-cyberPurple/20 transition-all">
-                三七廿一 <i class="fa-solid fa-play text-[9px] text-cyberPurple"></i>
-              </button>
-              <button onclick="playQuickChant(5,5)" class="p-2 text-xs rounded-lg bg-cyberCard/80 border border-white/5 hover:border-cyberPurple/50 hover:bg-cyberPurple/20 transition-all">
-                五五廿五 <i class="fa-solid fa-play text-[9px] text-cyberPurple"></i>
-              </button>
-              <button onclick="playQuickChant(7,8)" class="p-2 text-xs rounded-lg bg-cyberCard/80 border border-white/5 hover:border-cyberPurple/50 hover:bg-cyberPurple/20 transition-all">
-                七八五十六 <i class="fa-solid fa-play text-[9px] text-cyberPurple"></i>
-              </button>
-              <button onclick="playQuickChant(8,9)" class="p-2 text-xs rounded-lg bg-cyberCard/80 border border-white/5 hover:border-cyberPurple/50 hover:bg-cyberPurple/20 transition-all">
-                八九七十二 <i class="fa-solid fa-play text-[9px] text-cyberPurple"></i>
-              </button>
-              <button onclick="playQuickChant(9,9)" class="p-2 text-xs rounded-lg bg-cyberCard/80 border border-white/5 hover:border-cyberPurple/50 hover:bg-cyberPurple/20 transition-all">
-                九九八十一 <i class="fa-solid fa-play text-[9px] text-cyberPurple"></i>
-              </button>
+        <!-- SCREEN 4: Level Workspace (Formulas, Videos, Combat, Applications) -->
+        <section id="screen-level-workspace" class="hidden w-full bg-white retro-border p-4 md:p-6 rounded-2xl space-y-6 animate__animated animate__fadeIn">
+            <!-- Level Header Info -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-4 border-black pb-4">
+                <div class="flex items-center space-x-3">
+                    <div id="workspace-char-avatar-box" class="w-16 h-16 flex items-center justify-center drop-shadow floating"></div>
+                    <div>
+                        <span id="active-lvl-label" class="inline-block bg-marioRed text-white text-xs font-black px-2.5 py-1 rounded-full uppercase tracking-wider">Level 1</span>
+                        <h3 id="active-lvl-title" class="text-xl md:text-2xl font-black mt-1 text-gray-800">1 與 2 的乘法樂園</h3>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 mt-3 md:mt-0 bg-yellow-100 border-2 border-marioYellow px-4 py-1.5 rounded-full font-bold text-sm text-yellow-800 shadow-sm">
+                    <span>👑 本關獲得寶石：</span>
+                    <span id="active-lvl-gems" class="text-marioRed font-black text-lg">0</span> / 8 💎
+                </div>
             </div>
-            <button onclick="switchView('cantonese')" class="w-full mt-3 py-2 text-xs font-bold rounded-xl bg-cyberPurple text-white hover:opacity-90 transition-all flex items-center justify-center gap-1">
-              進入完整九因歌區 <i class="fa-solid fa-arrow-right"></i>
-            </button>
-          </div>
 
-          <!-- Stars Leaderboard -->
-          <div class="p-5 rounded-2xl bg-cyberDark/80 border border-white/5 backdrop-blur-md">
-            <h3 class="text-md font-bold font-cyber text-cyberCyan mb-3 flex items-center gap-2">
-              <i class="fa-solid fa-star text-cyberYellow"></i> 關卡成就徽章
-            </h3>
-            <div class="space-y-2.5 max-h-[250px] overflow-y-auto pr-1" id="starsBoard">
-              <!-- Dynamic List -->
+            <!-- Tabs Navigation -->
+            <div class="grid grid-cols-4 gap-1 md:gap-2 border-b-2 border-gray-200 pb-2">
+                <button id="tab-formulas" onclick="switchSubTab('formulas')" class="py-2.5 px-1 md:px-4 text-xs md:text-sm font-black border-b-4 border-marioRed text-marioRed focus:outline-none">
+                    📖 1. 乘法口訣
+                </button>
+                <button id="tab-video" onclick="switchSubTab('video')" class="py-2.5 px-1 md:px-4 text-xs md:text-sm font-black border-b-4 border-transparent text-gray-500 hover:text-black focus:outline-none">
+                    📺 2. 趣味課堂
+                </button>
+                <button id="tab-combat" onclick="switchSubTab('combat')" class="py-2.5 px-1 md:px-4 text-xs md:text-sm font-black border-b-4 border-transparent text-gray-500 hover:text-black focus:outline-none">
+                    ⚔️ 3. 乘法實戰
+                </button>
+                <button id="tab-application" onclick="switchSubTab('application')" class="py-2.5 px-1 md:px-4 text-xs md:text-sm font-black border-b-4 border-transparent text-gray-500 hover:text-black focus:outline-none">
+                    💡 4. 應用解難
+                </button>
             </div>
-          </div>
 
-          <!-- Weakness Book -->
-          <div class="p-5 rounded-2xl bg-cyberDark/80 border border-white/5 backdrop-blur-md">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="text-md font-bold font-cyber text-cyberMagenta flex items-center gap-2">
-                <i class="fa-solid fa-brain"></i> 錯題雷達 (智能溫習)
-              </h3>
-              <button onclick="startQuiz('weak')" id="weakReviewBtn" class="text-xs px-2.5 py-1 rounded-lg bg-cyberMagenta/20 text-cyberMagenta border border-cyberMagenta/30 hover:bg-cyberMagenta/30 transition-all font-bold">
-                智能溫習
-              </button>
+            <!-- SUB-TAB CONTENT 1: Formulas -->
+            <div id="sub-content-formulas" class="space-y-4">
+                <div class="bg-blue-50 border-2 border-blue-200 p-4 rounded-xl text-center flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-3">
+                    <span class="text-3xl">🗣️</span>
+                    <p class="font-bold text-blue-800 text-sm md:text-base">
+                        <b>老師的話：</b>先跟著你的夥伴一起讀熟以下乘法口訣！可以用手拍打拍子，會學得更快更輕鬆喔！
+                    </p>
+                </div>
+                <!-- Card Grid -->
+                <div id="formula-cards-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                    <!-- Dynamic -->
+                </div>
+                <div class="text-center pt-4">
+                    <button onclick="switchSubTab('video')" class="retro-btn-red px-8 py-3 text-lg font-black rounded-xl">
+                        我背熟了！看有趣影片 📺 ➡️
+                    </button>
+                </div>
             </div>
-            <div class="space-y-2" id="wrongBook">
-              <!-- Dynamic List -->
+
+            <!-- SUB-TAB CONTENT 2: Video -->
+            <div id="sub-content-video" class="hidden space-y-4">
+                <div class="bg-red-50 border-2 border-red-200 p-4 rounded-xl text-center flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-3">
+                    <span class="text-3xl">🎵</span>
+                    <p class="font-bold text-red-800 text-sm md:text-base">
+                        <b>推薦好聽音樂：</b>一邊唱歌、一邊看影片，看完就可以準備進行乘法實戰贏取寶石囉！
+                    </p>
+                </div>
+                <!-- YouTube Container (Now using youtube-nocookie and reliable embedding configuration) -->
+                <div class="relative w-full pb-[56.25%] border-4 border-black rounded-xl overflow-hidden bg-black shadow-inner">
+                    <iframe id="youtube-player" class="absolute top-0 left-0 w-full h-full" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+                <!-- Sandbox Fallback Link Button -->
+                <div class="text-center py-2 bg-yellow-50 border-2 border-marioYellow rounded-xl flex flex-col sm:flex-row items-center justify-between p-4 space-y-2 sm:space-y-0">
+                    <span class="font-bold text-sm text-yellow-800"><i class="fa-brands fa-youtube text-red-600"></i> 如果上面影片無法載入，你可以點擊右邊按鈕：</span>
+                    <a id="youtube-external-btn" href="https://youtube.com/playlist?list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ" target="_blank" class="bg-red-600 border-2 border-black text-white px-4 py-2 rounded font-black text-sm shadow hover:bg-red-700 active:translate-y-0.5 transition-transform">
+                        📺 在 YouTube 開啟播放清單 🚀
+                    </a>
+                </div>
+                <div class="text-center pt-2">
+                    <button onclick="switchSubTab('combat')" class="retro-btn-green px-8 py-3 text-lg font-black rounded-xl text-white">
+                        學會了！挑戰乘法實戰 ⚔️ ➡️
+                    </button>
+                </div>
             </div>
-          </div>
 
-        </div>
+            <!-- SUB-TAB CONTENT 3: Combat -->
+            <div id="sub-content-combat" class="hidden space-y-4">
+                <div class="flex justify-between items-center bg-gray-100 p-3 rounded-xl font-bold">
+                    <span class="text-gray-700">進度：<span id="combat-progress">1 / 5</span> 題</span>
+                    <span class="text-marioRed">目前答對：<span id="combat-score-live">0</span> 題</span>
+                </div>
 
-      </div>
-    </div>
+                <!-- Combat question area -->
+                <div id="combat-card" class="bg-amber-50 border-4 border-black rounded-2xl p-6 md:p-8 text-center space-y-6 relative overflow-hidden">
+                    <!-- Floater helper SVG box -->
+                    <div id="combat-char-helper-box" class="absolute right-4 bottom-4 w-16 h-16 md:w-24 md:h-24 opacity-25 pointer-events-none"></div>
+                    
+                    <div class="flex justify-center items-center space-x-2 text-xl font-black text-gray-700">
+                        <span>🛡️ 乘法大對決！</span>
+                    </div>
 
-    <!-- VIEW: CANTONESE (九因歌互動區) -->
-    <div id="view-cantonese" class="view-panel hidden">
-      <section class="p-6 rounded-2xl bg-cyberDark/90 border border-cyberPurple/30 glow-purple backdrop-blur-md">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-6 border-b border-white/10">
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="px-2 py-0.5 rounded bg-cyberPurple/20 border border-cyberPurple/40 text-cyberPurple text-xs font-cyber font-bold">CANTORHYME</span>
-              <h2 class="text-2xl font-black font-cyber text-white">廣東話九因歌（經典口訣互動板）</h2>
+                    <div class="text-5xl md:text-7xl font-black text-marioBlue flex justify-center items-center space-x-4 py-4" style="text-shadow: 2.5px 2.5px 0px #F9CF00;">
+                        <span id="combat-num1">2</span>
+                        <span>×</span>
+                        <span id="combat-num2">5</span>
+                        <span>=</span>
+                        <span class="text-red-600 animate-pulse">?</span>
+                    </div>
+
+                    <div id="combat-choices" class="grid grid-cols-2 gap-4 max-w-md mx-auto relative z-10">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Finished Panel -->
+                <div id="combat-completed-panel" class="hidden bg-emerald-50 border-4 border-emerald-500 rounded-2xl p-6 text-center space-y-4 animate__animated animate__fadeIn">
+                    <span class="text-6xl block">🏆🎉</span>
+                    <h4 class="text-2xl font-black text-emerald-800">實戰部分挑戰完畢！</h4>
+                    <p class="font-bold text-gray-700 text-lg">
+                        你在這 5 題中一共答對了 <span id="combat-score" class="text-2xl text-marioRed">0</span> 題！
+                    </p>
+                    <p id="combat-gems-feedback" class="text-marioYellow font-black text-lg bg-black px-5 py-2 rounded-full inline-block shadow-lg">
+                        獲得寶石：💎 + 0 顆！
+                    </p>
+                    <div class="pt-2">
+                        <button onclick="switchSubTab('application')" class="retro-btn-yellow font-black px-8 py-3 rounded-xl text-lg">
+                            前進第 4 步：應用解難 💡 ➡️
+                        </button>
+                    </div>
+                </div>
             </div>
-            <p class="text-sm text-gray-400 mt-1">經典廣東話傳統乘數韻律口訣。點擊任意表格方格，可以聆聽流利的廣東話朗讀，幫助孩子快速形成大腦聲音記憶！</p>
-          </div>
-          <div class="flex gap-2">
-            <button onclick="autoPlayChants()" id="autoChantBtn" class="px-4 py-2 text-sm font-bold rounded-xl bg-cyberPurple text-white hover:bg-cyberPurple/80 transition-all flex items-center gap-2">
-              <i class="fa-solid fa-play"></i> 自動整表朗讀 (1-9)
-            </button>
-          </div>
-        </div>
 
-        <!-- Table View Tabs for Mobile -->
-        <div class="flex overflow-x-auto gap-2 pb-3 mb-4" id="chantTableSelector">
-          <!-- Rendered dynamically -->
-        </div>
+            <!-- SUB-TAB CONTENT 4: Application Problems -->
+            <div id="sub-content-application" class="hidden space-y-4">
+                <div class="flex justify-between items-center bg-gray-100 p-3 rounded-xl font-bold">
+                    <span class="text-gray-700">生活應用題進度：<span id="app-progress">1 / 3</span> 題</span>
+                    <span class="text-marioBlue">答對：<span id="app-score">0</span> 題</span>
+                </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="cantoneseChantsContainer">
-          <!-- Rendered dynamic content of Cantonese formulas with TTS buttons -->
-        </div>
-      </section>
-    </div>
+                <!-- Question Area -->
+                <div id="app-question-card" class="bg-blue-50 border-4 border-black rounded-2xl p-6 space-y-6 relative overflow-hidden">
+                    <!-- Helper avatar background -->
+                    <div id="app-char-helper-box" class="absolute right-4 top-4 w-20 h-20 md:w-28 md:h-28 opacity-15 pointer-events-none"></div>
 
-    <!-- VIEW: FLASHCARDS (閃卡模式) -->
-    <div id="view-flashcards" class="view-panel hidden">
-      <section class="p-6 rounded-2xl bg-cyberDark/90 border border-cyberCyan/30 glow-cyan backdrop-blur-md max-w-2xl mx-auto">
-        <div class="text-center mb-6">
-          <div class="flex items-center justify-center gap-2 mb-1">
-            <span class="w-2.5 h-6 bg-cyberCyan rounded-full"></span>
-            <h2 class="text-2xl font-black font-cyber text-white">獵魔智能星際閃卡</h2>
-          </div>
-          <p class="text-sm text-gray-400">零壓力、無時限。運用大腦「間隔記憶法」，在正式獵魔前溫習公式！</p>
-        </div>
+                    <div class="flex items-center space-x-2 text-marioRed font-black text-lg">
+                        <span>💡 生活大應用：</span>
+                    </div>
+                    
+                    <p id="app-question-text" class="text-lg md:text-xl font-bold text-gray-800 leading-relaxed bg-white p-4 rounded-xl border-2 border-gray-200 shadow-sm relative z-10">
+                        讀取中...
+                    </p>
 
-        <!-- Flashcard Control Bar -->
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-6 p-3 rounded-xl bg-cyberCard border border-white/10">
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-bold text-gray-400">溫習哪張表：</span>
-            <select id="flashcardSelect" onchange="initFlashcards()" class="bg-cyberDark text-white border border-white/20 rounded-lg px-2 py-1 text-sm outline-none focus:border-cyberCyan">
-              <option value="2">2 的乘數表</option>
-              <option value="3">3 的乘數表</option>
-              <option value="4">4 的乘數表</option>
-              <option value="5">5 的乘數表</option>
-              <option value="6">6 的乘數表</option>
-              <option value="7">7 的乘數表</option>
-              <option value="8">8 的乘數表</option>
-              <option value="9">9 的乘數表</option>
-            </select>
-          </div>
-          <div class="flex items-center gap-2">
-            <button onclick="toggleFlashcardAutoPlay()" id="flashcardAutoBtn" class="px-3 py-1 text-xs font-bold rounded bg-cyberCyan/10 text-cyberCyan border border-cyberCyan/20 hover:bg-cyberCyan/20 transition-all">
-              <i class="fa-solid fa-play"></i> 自動播放
-            </button>
-            <span class="text-xs text-gray-400" id="flashcardProgress">0 / 9</span>
-          </div>
-        </div>
+                    <div class="space-y-4 relative z-10">
+                        <label class="block font-bold text-gray-700 text-sm">請選出最正確的算式和正確答案：</label>
+                        <div id="app-choices-container" class="grid grid-cols-1 gap-3">
+                            <!-- Loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
 
-        <!-- 3D Flashcard Base Component -->
-        <div class="flip-card-container w-full h-80 cursor-pointer" onclick="flipFlashcard()">
-          <div id="flashcardInner" class="flip-card-inner w-full h-full relative rounded-2xl shadow-2xl">
+                <!-- Finished Panel -->
+                <div id="app-completed-panel" class="hidden bg-purple-50 border-4 border-purple-500 rounded-2xl p-6 text-center space-y-4 animate__animated animate__fadeIn">
+                    <span class="text-6xl block">👑👑</span>
+                    <h4 class="text-2xl font-black text-purple-800">本關卡終極挑戰成功！</h4>
+                    <p class="font-bold text-gray-700 text-lg">
+                        你解決了生活應用問題，答對了 <span id="app-final-correct" class="text-2xl text-marioRed">0</span> / 3 題！
+                    </p>
+                    <p id="app-gems-feedback" class="text-marioYellow font-black text-lg bg-black px-5 py-2 rounded-full inline-block shadow-lg">
+                        獲得寶石：💎 + 0 顆！
+                    </p>
+                    
+                    <div class="pt-4 flex flex-col sm:flex-row justify-center gap-4">
+                        <button onclick="backToMap()" class="retro-btn-yellow font-black px-6 py-3 rounded-xl">
+                            🗺️ 回到地圖
+                        </button>
+                        <button id="workspace-next-level-btn" onclick="goToNextLevel()" class="retro-btn-red font-black px-8 py-3 rounded-xl">
+                            前往下一關 🚀
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom exit bar -->
+            <div class="border-t-2 border-gray-200 pt-4 flex justify-between">
+                <button onclick="backToMap()" class="bg-gray-100 border-2 border-black text-black px-4 py-2 rounded-lg font-bold hover:bg-gray-200 text-sm">
+                    ⬅️ 離開關卡 (進度會自動保存喔)
+                </button>
+            </div>
+        </section>
+
+        <!-- SCREEN 5: Victory Screen -->
+        <section id="screen-game-complete" class="hidden w-full bg-white retro-border p-6 md:p-8 rounded-2xl text-center space-y-6 animate__animated animate__zoomIn">
+            <div class="text-8xl floating my-4">👑</div>
+            <h2 class="text-3xl md:text-5xl font-black text-marioYellow" style="text-shadow: 2px 2px 0px #000;">
+                世界大勝利！寶石守護者！
+            </h2>
             
-            <!-- Card FRONT -->
-            <div class="flip-card-front rounded-2xl bg-gradient-to-br from-cyberCard to-cyberDark border-2 border-cyberCyan flex flex-col items-center justify-center p-6 text-center">
-              <div class="absolute top-4 left-4 text-xs font-cyber tracking-widest text-cyberCyan font-bold uppercase">Space Card</div>
-              <div class="absolute top-4 right-4 text-xs text-gray-400 font-cyber flex items-center gap-1">
-                <i class="fa-solid fa-arrows-rotate animate-spin"></i> 點擊卡片翻看答案
-              </div>
-              <div class="text-6xl font-cyber font-black text-white tracking-wider glow-cyan" id="fcFrontText">7 × 8</div>
-              <div class="mt-8 text-xs text-gray-400 flex items-center gap-2">
-                <span class="px-2 py-1 rounded bg-white/5 border border-white/10">空白鍵翻卡</span>
-                <span class="px-2 py-1 rounded bg-white/5 border border-white/10">← / → 上下一張</span>
-              </div>
-            </div>
-            
-            <!-- Card BACK -->
-            <div class="flip-card-back rounded-2xl bg-gradient-to-br from-cyberDark to-cyberCard border-2 border-cyberMagenta flex flex-col items-center justify-center p-6 text-center">
-              <div class="absolute top-4 left-4 text-xs font-cyber tracking-widest text-cyberMagenta font-bold uppercase">Result Decrypted</div>
-              <div class="text-7xl font-cyber font-black text-transparent bg-clip-text bg-gradient-to-r from-cyberMagenta to-cyberYellow glow-magenta" id="fcBackText">56</div>
-              <div class="mt-4 px-4 py-1.5 rounded-full bg-cyberMagenta/20 border border-cyberMagenta/30 text-cyberMagenta text-sm font-bold" id="fcChantText">
-                七八五十六
-              </div>
-              <div class="mt-4 text-xs text-gray-400">
-                點擊卡片翻回正面
-              </div>
+            <div class="bg-green-50 border-4 border-green-500 p-6 rounded-2xl max-w-xl mx-auto space-y-4">
+                <div class="flex justify-center items-center">
+                    <div id="victory-char-svg-box" class="w-28 h-28 flex items-center justify-center drop-shadow floating"></div>
+                </div>
+                <h3 class="text-xl md:text-2xl font-black text-green-800">🍄 恭喜你救回了桃子公主！</h3>
+                <p class="text-gray-700 font-bold leading-relaxed text-sm md:text-base">
+                    偉大的勇士 <span id="victory-player-name" class="text-marioRed text-lg font-black">小勇士</span>，你用強大無比的九九乘法魔法，成功拿回了所有寶石！
+                    你一共收集了 <span id="victory-total-gems" class="text-xl text-marioYellow font-black bg-black px-3 py-1 rounded-md">0</span> 顆耀眼的乘法寶石！
+                </p>
             </div>
 
-          </div>
+            <div class="flex flex-col sm:flex-row justify-center gap-4 pt-4">
+                <button onclick="restartGame()" class="retro-btn-red font-black text-lg px-8 py-3 rounded-xl">
+                    🔄 重新開始冒險
+                </button>
+                <button onclick="showLeaderboard()" class="retro-btn-yellow font-black text-lg px-8 py-3 rounded-xl">
+                    🏆 查看世界排行榜
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white text-center py-4 text-xs font-semibold border-t-4 border-black mt-8">
+        <div class="max-w-4xl mx-auto px-4 space-y-1">
+            <p>🎮 瑪利歐乘法大冒險 © 2026 Mario Multiplication Studio. All Rights Reserved.</p>
+            <p class="text-gray-400">任天堂系列人物及圖片版權屬於任天堂公司所有。本平台僅供教學，非商業用途。</p>
         </div>
+    </footer>
 
-        <!-- Touch / Action Buttons -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
-          <button onclick="prevFlashcard()" class="py-2.5 px-4 rounded-xl bg-cyberCard border border-white/10 text-white font-bold hover:bg-white/10 transition-all flex items-center justify-center gap-2">
-            <i class="fa-solid fa-arrow-left"></i> 上一張
-          </button>
-          
-          <button onclick="markFlashcardMastery(true)" class="py-2.5 px-4 rounded-xl bg-green-950/40 border border-green-500/30 text-green-400 font-bold hover:bg-green-900/40 transition-all flex items-center justify-center gap-1">
-            <i class="fa-solid fa-circle-check"></i> 已熟練
-          </button>
-          
-          <button onclick="markFlashcardMastery(false)" class="py-2.5 px-4 rounded-xl bg-red-950/40 border border-red-500/30 text-red-400 font-bold hover:bg-red-900/40 transition-all flex items-center justify-center gap-1">
-            <i class="fa-solid fa-circle-xmark"></i> 需溫習
-          </button>
-          
-          <button onclick="nextFlashcard()" class="py-2.5 px-4 rounded-xl bg-cyberCard border border-white/10 text-white font-bold hover:bg-white/10 transition-all flex items-center justify-center gap-2">
-            下一張 <i class="fa-solid fa-arrow-right"></i>
-          </button>
-        </div>
-      </section>
-    </div>
-
-    <!-- VIEW: TIPS (技巧提示頁) -->
-    <div id="view-tips" class="view-panel hidden">
-      <section class="p-6 rounded-2xl bg-cyberDark/90 border border-cyberYellow/30 glow-yellow backdrop-blur-md">
-        <div class="flex items-center gap-2 mb-4 pb-4 border-b border-white/10">
-          <span class="text-2xl text-cyberYellow">💡</span>
-          <div>
-            <h2 class="text-2xl font-black font-cyber text-white">九因歌超能技巧秘笈</h2>
-            <p class="text-sm text-gray-400">大腦思考捷徑！掌握這些神奇的小竅門，秒殺複雜的乘數運算！</p>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Tip card 1: Doubling for 4s -->
-          <div class="p-5 rounded-xl bg-cyberCard border border-white/5 relative overflow-hidden group">
-            <div class="absolute -right-8 -bottom-8 text-7xl opacity-5 text-white group-hover:scale-110 transition-transform">4</div>
-            <div class="w-10 h-10 rounded-lg bg-cyberCyan/10 border border-cyberCyan/30 text-cyberCyan flex items-center justify-center text-lg font-bold mb-3 font-cyber">x4</div>
-            <h3 class="text-md font-bold text-white mb-2">二倍再二倍之術（4 的秘笈）</h3>
-            <p class="text-xs text-gray-400 leading-relaxed mb-3">
-              乘以 4 其實就是**先乘以 2，然後再乘以 2**！
-            </p>
-            <div class="bg-cyberDark p-3 rounded-lg text-xs font-cyber border border-cyberCyan/10">
-              <span class="text-cyberCyan font-bold">例子：</span> 7 × 4 = ?<br>
-              ① 先將 7 翻倍 ➔ <span class="text-white font-bold">14</span><br>
-              ② 再將 14 翻倍 ➔ <span class="text-cyberYellow font-bold">28</span>！
-            </div>
-          </div>
-
-          <!-- Tip card 2: Halve and Ten for 5s -->
-          <div class="p-5 rounded-xl bg-cyberCard border border-white/5 relative overflow-hidden group">
-            <div class="absolute -right-8 -bottom-8 text-7xl opacity-5 text-white group-hover:scale-110 transition-transform">5</div>
-            <div class="w-10 h-10 rounded-lg bg-cyberPurple/10 border border-cyberPurple/30 text-cyberPurple flex items-center justify-center text-lg font-bold mb-3 font-cyber">x5</div>
-            <h3 class="text-md font-bold text-white mb-2">折半添零之術（5 的秘笈）</h3>
-            <p class="text-xs text-gray-400 leading-relaxed mb-3">
-              乘以 5 其實就是**除以 2，然後乘以 10**！
-            </p>
-            <div class="bg-cyberDark p-3 rounded-lg text-xs font-cyber border border-cyberPurple/10">
-              <span class="text-cyberPurple font-bold">例子：</span> 8 × 5 = ?<br>
-              ① 先將 8 除以 2 ➔ <span class="text-white font-bold">4</span><br>
-              ② 在 4 的後面補上 0 ➔ <span class="text-cyberYellow font-bold">40</span>！
-            </div>
-          </div>
-
-          <!-- Tip card 3: Finger Magic for 9s -->
-          <div class="p-5 rounded-xl bg-cyberCard border border-white/5 relative overflow-hidden group">
-            <div class="absolute -right-8 -bottom-8 text-7xl opacity-5 text-white group-hover:scale-110 transition-transform">9</div>
-            <div class="w-10 h-10 rounded-lg bg-cyberMagenta/10 border border-cyberMagenta/30 text-cyberMagenta flex items-center justify-center text-lg font-bold mb-3 font-cyber">x9</div>
-            <h3 class="text-md font-bold text-white mb-2">九之手指魔術（9 的秘笈）</h3>
-            <p class="text-xs text-gray-400 leading-relaxed mb-3">
-              伸出雙手，從左到右數第 N 隻手指並彎曲它：
-            </p>
-            <div class="bg-cyberDark p-3 rounded-lg text-xs font-cyber border border-cyberMagenta/10">
-              <span class="text-cyberMagenta font-bold">例子：</span> 9 × 7 = ?<br>
-              ① 彎曲左手起第 <span class="text-white font-bold">7</span> 隻手指。<br>
-              ② 左邊剩下的手指 ➔ <span class="text-cyberCyan font-bold">6 隻</span>（代表 60）。<br>
-              ③ 右邊剩下的手指 ➔ <span class="text-cyberCyan font-bold">3 隻</span>（代表 3）。<br>
-              ➔ 答案是 <span class="text-cyberYellow font-bold">63</span>！
-            </div>
-          </div>
-
-          <!-- Tip card 4: Easy 6s -->
-          <div class="p-5 rounded-xl bg-cyberCard border border-white/5 relative overflow-hidden group">
-            <div class="absolute -right-8 -bottom-8 text-7xl opacity-5 text-white group-hover:scale-110 transition-transform">6</div>
-            <div class="w-10 h-10 rounded-lg bg-cyberCyan/10 border border-cyberCyan/30 text-cyberCyan flex items-center justify-center text-lg font-bold mb-3 font-cyber">x6</div>
-            <h3 class="text-md font-bold text-white mb-2">偶數加半之術（6 的偶數秘笈）</h3>
-            <p class="text-xs text-gray-400 leading-relaxed mb-3">
-              當偶數乘以 6 時，個位數是該偶數，十位數是該偶數的一半！
-            </p>
-            <div class="bg-cyberDark p-3 rounded-lg text-xs font-cyber border border-cyberCyan/10">
-              <span class="text-cyberCyan font-bold">例子：</span> 8 × 6 = ?<br>
-              ① 個位數就是 <span class="text-white font-bold">8</span>。<br>
-              ② 十位數是 8 的一半 ➔ <span class="text-white font-bold">4</span>。<br>
-              ➔ 答案是 <span class="text-cyberYellow font-bold">48</span>！
-            </div>
-          </div>
-
-          <!-- Tip card 5: Easy 8s -->
-          <div class="p-5 rounded-xl bg-cyberCard border border-white/5 relative overflow-hidden group">
-            <div class="absolute -right-8 -bottom-8 text-7xl opacity-5 text-white group-hover:scale-110 transition-transform">8</div>
-            <div class="w-10 h-10 rounded-lg bg-cyberPurple/10 border border-cyberPurple/30 text-cyberPurple flex items-center justify-center text-lg font-bold mb-3 font-cyber">x8</div>
-            <h3 class="text-md font-bold text-white mb-2">三次折半降級（8 的秘笈）</h3>
-            <p class="text-xs text-gray-400 leading-relaxed mb-3">
-              乘以 8 等於將數字**翻倍、再翻倍、再翻倍**三次！
-            </p>
-            <div class="bg-cyberDark p-3 rounded-lg text-xs font-cyber border border-cyberPurple/10">
-              <span class="text-cyberPurple font-bold">例子：</span> 6 × 8 = ?<br>
-              ① 6 翻倍 ➔ <span class="text-white">12</span><br>
-              ② 12 再翻倍 ➔ <span class="text-white">24</span><br>
-              ③ 24 第三次翻倍 ➔ <span class="text-cyberYellow font-bold">48</span>！
-            </div>
-          </div>
-
-          <!-- Tip card 6: Zero Power -->
-          <div class="p-5 rounded-xl bg-cyberCard border border-white/5 relative overflow-hidden group">
-            <div class="absolute -right-8 -bottom-8 text-7xl opacity-5 text-white group-hover:scale-110 transition-transform">10</div>
-            <div class="w-10 h-10 rounded-lg bg-cyberMagenta/10 border border-cyberMagenta/30 text-cyberMagenta flex items-center justify-center text-lg font-bold mb-3 font-cyber">x10</div>
-            <h3 class="text-md font-bold text-white mb-2">星際黑洞吸零（10 的秘笈）</h3>
-            <p class="text-xs text-gray-400 leading-relaxed mb-3">
-              任何數字乘以 10，只需要直接在右邊加上一個「0」！
-            </p>
-            <div class="bg-cyberDark p-3 rounded-lg text-xs font-cyber border border-cyberMagenta/10">
-              <span class="text-cyberMagenta font-bold">例子：</span> 9 × 10 = ?<br>
-              ① 在 9 後面加一個 <span class="text-cyberYellow font-bold">0</span> ➔ 答案是 <span class="text-cyberYellow font-bold">90</span>！
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <!-- VIEW: DASHBOARD (家長分析儀表板) -->
-    <div id="view-dashboard" class="view-panel hidden">
-      <section class="p-6 rounded-2xl bg-cyberDark/90 border border-cyberCyan/30 glow-cyan backdrop-blur-md">
-        
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-6 border-b border-white/10">
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="px-2 py-0.5 rounded bg-cyberCyan/20 border border-cyberCyan/40 text-cyberCyan text-xs font-cyber font-bold">PARENT PORTAL</span>
-              <h2 class="text-2xl font-black font-cyber text-white">家長監督與學力分析儀表板</h2>
-            </div>
-            <p class="text-sm text-gray-400 mt-1">追蹤孩子的乘數精通進度、弱點分佈與答題效率，引導高效學習！</p>
-          </div>
-          <div class="flex gap-2">
-            <button onclick="clearAnalytics()" class="px-4 py-2 text-xs font-bold rounded-xl bg-red-950/40 border border-red-500/30 text-red-400 hover:bg-red-900/40 transition-all">
-              清除學歷記錄
+    <!-- MODAL 1: Leaderboard -->
+    <div id="modal-leaderboard" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
+        <div class="bg-white retro-border rounded-2xl w-full max-w-md p-6 relative animate__animated animate__jackInTheBox">
+            <button onclick="closeLeaderboard()" class="absolute -top-4 -right-4 bg-marioRed border-4 border-black text-white w-10 h-10 rounded-full font-black text-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-transform">
+                ✕
             </button>
-            <button onclick="exportProgress()" class="px-4 py-2 text-xs font-bold rounded-xl bg-cyberCyan/10 border border-cyberCyan/30 text-cyberCyan hover:bg-cyberCyan/20 transition-all">
-              複製報告發送給老師
-            </button>
-          </div>
-        </div>
-
-        <!-- Analytical Widgets -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          
-          <div class="p-4 rounded-xl bg-cyberCard border border-white/5 text-center">
-            <span class="text-xs text-gray-400 uppercase font-cyber font-bold">冒險成功關卡</span>
-            <div class="text-3xl font-cyber font-black text-cyberCyan mt-1" id="dashCompletedLevels">0 / 10</div>
-            <p class="text-[10px] text-gray-500 mt-1">通關可解鎖終極混合挑戰</p>
-          </div>
-
-          <div class="p-4 rounded-xl bg-cyberCard border border-white/5 text-center">
-            <span class="text-xs text-gray-400 uppercase font-cyber font-bold">總共解答題數</span>
-            <div class="text-3xl font-cyber font-black text-cyberPurple mt-1" id="dashTotalSolved">0</div>
-            <p class="text-[10px] text-gray-500 mt-1">不斷努力答題！</p>
-          </div>
-
-          <div class="p-4 rounded-xl bg-cyberCard border border-white/5 text-center">
-            <span class="text-xs text-gray-400 uppercase font-cyber font-bold">平均正確率</span>
-            <div class="text-3xl font-cyber font-black text-cyberGreen mt-1" id="dashAvgAccuracy">0%</div>
-            <p class="text-[10px] text-gray-500 mt-1">答對大於 85% 獲取三星評級</p>
-          </div>
-
-          <div class="p-4 rounded-xl bg-cyberCard border border-white/5 text-center">
-            <span class="text-xs text-gray-400 uppercase font-cyber font-bold">最高回答連擊數</span>
-            <div class="text-3xl font-cyber font-black text-cyberYellow mt-1" id="dashStreakRecord">0</div>
-            <p class="text-[10px] text-gray-500 mt-1">連擊越高獲得寶石翻倍</p>
-          </div>
-
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          <!-- Heatmap of Multiplication Table Mastery -->
-          <div class="lg:col-span-2 p-5 rounded-xl bg-cyberCard border border-white/5">
-            <h3 class="text-sm font-bold font-cyber text-white mb-3 uppercase tracking-wider">
-              <i class="fa-solid fa-fire text-cyberMagenta"></i> 乘數精通度熱力分析
-            </h3>
-            <p class="text-xs text-gray-400 mb-4">顯示從 1 至 10 各單元乘數表的最高答題得分。綠色越深代表熟練度越高！</p>
-            
-            <div class="grid grid-cols-5 md:grid-cols-10 gap-2 text-center font-cyber" id="dashboardHeatmap">
-              <!-- Dynamic items rendered -->
+            <div class="text-center mb-4">
+                <span class="text-4xl">🏆</span>
+                <h3 class="text-2xl font-black text-marioBlue mt-1">蘑菇王國乘法排行榜</h3>
+                <p class="text-xs text-gray-500 font-semibold">看看誰是收集最多乘法寶石的小博士！</p>
             </div>
-          </div>
 
-          <!-- Weakness Radar & Analysis -->
-          <div class="p-5 rounded-xl bg-cyberCard border border-white/5">
-            <h3 class="text-sm font-bold font-cyber text-white mb-3 uppercase tracking-wider">
-              <i class="fa-solid fa-list-check text-cyberYellow"></i> 本地最難核心盲區 (Top 5)
-            </h3>
-            <p class="text-xs text-gray-400 mb-3">孩子最容易混淆的前 5 道題目，建議加強訓練：</p>
-            
-            <div class="space-y-2.5" id="parentWeakList">
-              <!-- Dynamic lists render -->
+            <div id="leaderboard-list" class="space-y-2 max-h-64 overflow-y-auto pr-1">
+                <!-- Dynamic List -->
             </div>
-          </div>
 
+            <div class="mt-6 flex justify-between items-center border-t border-gray-200 pt-4">
+                <button onclick="resetLeaderboard()" class="text-xs text-red-600 font-bold hover:underline">
+                    ⚠️ 重置數據
+                </button>
+                <button onclick="closeLeaderboard()" class="retro-btn-red px-6 py-2 rounded font-bold text-sm">
+                    關閉
+                </button>
+            </div>
         </div>
-
-      </section>
     </div>
 
-    <!-- VIEW: QUIZ ACTIVE (寶石測驗中) -->
-    <div id="view-quiz" class="view-panel hidden">
-      <section class="p-6 rounded-2xl bg-cyberDark/95 border border-cyberCyan/30 glow-cyan backdrop-blur-md">
-        
-        <div class="flex items-center justify-between flex-wrap gap-4 mb-6 pb-4 border-b border-white/10">
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="px-2 py-0.5 rounded bg-cyberCyan/10 border border-cyberCyan/30 text-cyberCyan text-xs font-cyber font-semibold animate-pulse" id="quizModeBadge">🛸 戰鬥模式</span>
-              <h2 class="text-2xl font-black font-cyber text-white" id="activeQuizTitle"></h2>
-            </div>
-            <p class="text-xs text-gray-400 mt-1">30 題極速測驗 | 每題 20 秒 | 連對有驚喜加倍 💎 | 答錯會加入錯題雷達</p>
-          </div>
-          <button onclick="switchView('home')" class="px-4 py-2 rounded-xl bg-cyberCard border border-white/10 text-xs font-bold hover:bg-white/5 transition-all text-gray-300">
-            放棄戰鬥返回主頁
-          </button>
+    <!-- MODAL 2: Answer Feedback Popup -->
+    <div id="modal-feedback" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
+        <div id="feedback-card" class="bg-white retro-border rounded-2xl max-w-sm w-full p-6 text-center space-y-4 animate__animated">
+            <div id="feedback-emoji" class="text-7xl">🌟</div>
+            <h3 id="feedback-title" class="text-2xl font-black">答對了！</h3>
+            <p id="feedback-text" class="text-gray-600 font-bold text-base leading-relaxed">你獲得了一顆金黃耀眼的寶石！</p>
+            <button onclick="dismissFeedback()" class="retro-btn-red font-black px-8 py-2.5 rounded-lg w-full text-base">
+                繼續挑戰! NEXT!
+            </button>
         </div>
-
-        <div class="max-w-2xl mx-auto">
-          
-          <div class="p-6 rounded-2xl bg-cyberCard/80 border border-white/10 relative overflow-hidden flex flex-col items-center">
-            <!-- Active Hunter Profile overlay -->
-            <div class="absolute top-4 left-4 flex items-center gap-2 px-2.5 py-1 rounded-lg bg-cyberDark/80 border border-white/10">
-              <div id="quizHunterIcon" class="w-7 h-7 rounded-full hero-avatar border border-white/30 inline-block relative overflow-hidden">
-                <!-- Backup Icon underneath for small status badge -->
-                <div class="absolute inset-0 bg-cyberCyan/20 flex items-center justify-center text-[10px]">✨</div>
-              </div>
-              <span class="text-xs font-cyber font-bold text-white animate-pulse" id="quizHunterName">Zoey</span>
-            </div>
-            <div class="absolute top-4 right-4 text-sm font-cyber text-cyberCyan font-bold">
-              第 <span id="currentQuestionNum" class="text-lg">1</span> / <span id="totalQuestionsNum">30</span> 題
-            </div>
-
-            <!-- Big Formula Screen -->
-            <div class="my-8 text-center">
-              <div class="text-6xl md:text-8xl font-cyber font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-300" id="currentQuestionText">
-                8 × 7 = ?
-              </div>
-              <div class="mt-4 text-xs font-bold text-cyberYellow uppercase tracking-widest" id="streakBonusLabel">
-                ⚡️ 快快答題，賺取 +2 💎 獎勵倍率！
-              </div>
-            </div>
-
-            <!-- Timer bar -->
-            <div class="w-full h-2 rounded-full bg-slate-900 overflow-hidden mb-6">
-              <div id="quizTimerFill" class="h-full bg-gradient-to-r from-cyberCyan to-cyberMagenta w-full transition-all duration-100 ease-linear"></div>
-            </div>
-
-            <!-- Answers Grid -->
-            <div class="grid grid-cols-2 gap-4 w-full" id="quizAnswersContainer">
-              <!-- Dynamically populated answer buttons -->
-            </div>
-
-          </div>
-
-          <!-- Live Result Modal/Overlay inside Quiz -->
-          <div id="quizScoreResult" class="hidden mt-6 p-6 rounded-2xl bg-cyberDark/90 border border-cyberYellow/30 text-center glow-yellow">
-            <h3 class="text-2xl font-black font-cyber text-cyberYellow mb-2">👾 獵魔行動成功！</h3>
-            <p class="text-gray-300 text-sm mb-4" id="quizResultText"></p>
-            <div class="flex justify-center gap-3">
-              <button onclick="switchView('home')" class="px-5 py-2.5 rounded-xl bg-cyberCyan text-slate-950 font-bold hover:opacity-90 transition-all text-sm">
-                返回地圖
-              </button>
-              <button onclick="startQuiz('mixed')" class="px-5 py-2.5 rounded-xl bg-cyberPurple text-white font-bold hover:opacity-90 transition-all text-sm">
-                挑戰混合大師
-              </button>
-            </div>
-          </div>
-
-        </div>
-
-      </section>
     </div>
 
-  </div>
-
-  <!-- Custom Alert Overlay -->
-  <div id="customAlert" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 p-4 rounded-xl bg-cyberDark border border-cyberCyan text-cyberCyan text-sm font-bold shadow-2xl backdrop-blur-xl opacity-0 translate-y-[-20px] transition-all duration-300 pointer-events-none">
-    Notification text
-  </div>
-
-  <script>
-    const storageKey = 'space-demon-hunters-multiplication-v3';
-    
-    // Web Audio Sound FX Synthesizer (No External Files)
-    class SoundEngine {
-      constructor() {
-        this.ctx = null;
-      }
-      init() {
-        if (!this.ctx) {
-          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-      }
-      playClick() {
-        this.init();
-        if (!this.ctx) return;
-        let osc = this.ctx.createOscillator();
-        let gain = this.ctx.createGain();
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(600, this.ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(150, this.ctx.currentTime + 0.08);
-        
-        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
-        
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.08);
-      }
-      playCorrect() {
-        this.init();
-        if (!this.ctx) return;
-        let now = this.ctx.currentTime;
-        let playTone = (freq, start, duration) => {
-          let osc = this.ctx.createOscillator();
-          let gain = this.ctx.createGain();
-          osc.connect(gain);
-          gain.connect(this.ctx.destination);
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, start);
-          gain.gain.setValueAtTime(0.12, start);
-          gain.gain.exponentialRampToValueAtTime(0.01, start + duration);
-          osc.start(start);
-          osc.stop(start + duration);
-        }
-        playTone(523.25, now, 0.1); // C5
-        playTone(659.25, now + 0.08, 0.1); // E5
-        playTone(783.99, now + 0.16, 0.12); // G5
-        playTone(1046.50, now + 0.24, 0.2); // C6
-      }
-      playWrong() {
-        this.init();
-        if (!this.ctx) return;
-        let osc = this.ctx.createOscillator();
-        let gain = this.ctx.createGain();
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(180, this.ctx.currentTime);
-        osc.frequency.linearRampToValueAtTime(80, this.ctx.currentTime + 0.35);
-        
-        gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.35);
-        
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.35);
-      }
-      playGemCollect() {
-        this.init();
-        if (!this.ctx) return;
-        let osc = this.ctx.createOscillator();
-        let gain = this.ctx.createGain();
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(987.77, this.ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(1567.98, this.ctx.currentTime + 0.15);
-        
-        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.18);
-        
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.18);
-      }
-      playLevelComplete() {
-        this.init();
-        if (!this.ctx) return;
-        let now = this.ctx.currentTime;
-        let chords = [440, 554.37, 659.25, 880];
-        chords.forEach((freq, idx) => {
-          let osc = this.ctx.createOscillator();
-          let gain = this.ctx.createGain();
-          osc.connect(gain);
-          gain.connect(this.ctx.destination);
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(freq, now + idx * 0.1);
-          gain.gain.setValueAtTime(0.15, now + idx * 0.1);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.1 + 0.6);
-          osc.start(now + idx * 0.1);
-          osc.stop(now + idx * 0.1 + 0.65);
-        });
-      }
-    }
-    
-    const SFX = new SoundEngine();
-
-    // Heroes Info mapping with visual assets
-    const heroes = {
-      zoey: { name: 'Zoey', icon: '🎧', power: 'Rap Burst', color: 'cyberCyan', desc: '雙倍連擊寶石獎勵' },
-      rumi: { name: 'Rumi', icon: '🎼', power: 'Vocal Shield', color: 'cyberPurple', desc: '每天免受兩次答錯扣分' },
-      mira: { name: 'Mira', icon: '⚔️', power: 'Blade Spin', color: 'cyberMagenta', desc: '高難度關卡答對得分 +50%' }
-    };
-
-    // Default Save Data
-    const fallbackProfile = {
-      hero: 'zoey',
-      totalGems: 0,
-      bestStreak: 0,
-      levelHighScores: {},
-      levelStars: {},
-      wrongFacts: [],
-      masteryLevels: {},
-      unlocked: [1, 2, 5, 10],
-      completed: [],
-      solvedCount: 0
-    };
-
-    let profile = safeLoad();
-    const memoryCache = { value: null };
-
-    function safeLoad() {
-      const fallback = { ...fallbackProfile };
-      try {
-        const raw = localStorage.getItem(storageKey);
-        return raw ? { ...fallback, ...JSON.parse(raw) } : fallback;
-      } catch (e) {
-        return memoryCache.value ? { ...fallback, ...memoryCache.value } : fallback;
-      }
-    }
-
-    function safeSave() {
-      try {
-        localStorage.setItem(storageKey, JSON.stringify(profile));
-      } catch (e) {
-        memoryCache.value = JSON.parse(JSON.stringify(profile));
-      }
-      updateGlobalStatusIndicators();
-    }
-
-    const cantoneseNumbers = {
-      1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六', 7: '七', 8: '八', 9: '九', 10: '十',
-      20: '二十', 30: '三十', 40: '四十', 50: '五十', 60: '六十', 70: '七十', 80: '八十', 90: '九十'
-    };
-
-    function getCantoneseChant(a, b) {
-      const product = a * b;
-      let verbalProduct = '';
-
-      if (product < 10) {
-        verbalProduct = `得${cantoneseNumbers[product]}`;
-      } else {
-        if (product === 21) verbalProduct = '廿一';
-        else if (product === 24) verbalProduct = '廿外';
-        else if (product === 25) verbalProduct = '廿五';
-        else if (product === 27) verbalProduct = '廿七';
-        else if (product === 28) verbalProduct = '廿八';
-        else if (product === 32) verbalProduct = '卅二';
-        else if (product === 35) verbalProduct = '卅五';
-        else if (product === 36) verbalProduct = '卅六';
-        else {
-          const tens = Math.floor(product / 10);
-          const ones = product % 10;
-          verbalProduct = `${cantoneseNumbers[tens * 10]}${ones > 0 ? cantoneseNumbers[ones] : ''}`;
-        }
-      }
-      return `${cantoneseNumbers[a]}${cantoneseNumbers[b]}${verbalProduct}`;
-    }
-
-    let voiceSynthesisPlaying = false;
-    function speakText(text, rate = 0.95) {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-      
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-HK';
-      utterance.rate = rate;
-      utterance.pitch = 1.0;
-      
-      const voices = window.speechSynthesis.getVoices();
-      const hkVoice = voices.find(v => v.lang.includes('HK') || v.lang.includes('hk') || v.name.includes('Cantonese') || v.name.includes('Hong Kong'));
-      if (hkVoice) {
-        utterance.voice = hkVoice;
-      }
-
-      utterance.onstart = () => { voiceSynthesisPlaying = true; };
-      utterance.onend = () => { voiceSynthesisPlaying = false; };
-      window.speechSynthesis.speak(utterance);
-    }
-
-    // FLASHCARD ENGINE
-    let flashcardState = {
-      table: 2,
-      currentIndex: 0,
-      isFlipped: false,
-      deck: [],
-      autoPlayTimer: null,
-      isAutoPlaying: false
-    };
-
-    function initFlashcards() {
-      const selectedTable = parseInt(document.getElementById('flashcardSelect').value);
-      flashcardState.table = selectedTable;
-      flashcardState.currentIndex = 0;
-      flashcardState.isFlipped = false;
-      
-      flashcardState.deck = [];
-      for (let i = 1; i <= 10; i++) {
-        flashcardState.deck.push({
-          a: selectedTable,
-          b: i,
-          ans: selectedTable * i,
-          chant: getCantoneseChant(selectedTable, i)
-        });
-      }
-      
-      renderFlashcard();
-    }
-
-    function renderFlashcard() {
-      const card = flashcardState.deck[flashcardState.currentIndex];
-      const frontText = document.getElementById('fcFrontText');
-      const backText = document.getElementById('fcBackText');
-      const chantText = document.getElementById('fcChantText');
-      const inner = document.getElementById('flashcardInner');
-      const progress = document.getElementById('flashcardProgress');
-
-      frontText.textContent = `${card.a} × ${card.b}`;
-      backText.textContent = card.ans;
-      chantText.innerHTML = `<i class="fa-solid fa-volume-high"></i> ${card.chant}`;
-      
-      if (flashcardState.isFlipped) {
-        inner.classList.add('flipped');
-        speakText(card.chant, 0.9);
-      } else {
-        inner.classList.remove('flipped');
-      }
-
-      progress.textContent = `${flashcardState.currentIndex + 1} / ${flashcardState.deck.length}`;
-    }
-
-    function flipFlashcard() {
-      SFX.playClick();
-      flashcardState.isFlipped = !flashcardState.isFlipped;
-      renderFlashcard();
-    }
-
-    function nextFlashcard() {
-      SFX.playClick();
-      flashcardState.isFlipped = false;
-      document.getElementById('flashcardInner').classList.remove('flipped');
-      
-      setTimeout(() => {
-        flashcardState.currentIndex = (flashcardState.currentIndex + 1) % flashcardState.deck.length;
-        renderFlashcard();
-      }, 150);
-    }
-
-    function prevFlashcard() {
-      SFX.playClick();
-      flashcardState.isFlipped = false;
-      document.getElementById('flashcardInner').classList.remove('flipped');
-      
-      setTimeout(() => {
-        flashcardState.currentIndex = (flashcardState.currentIndex - 1 + flashcardState.deck.length) % flashcardState.deck.length;
-        renderFlashcard();
-      }, 150);
-    }
-
-    function markFlashcardMastery(mastered) {
-      const card = flashcardState.deck[flashcardState.currentIndex];
-      const key = `${card.a}x${card.b}`;
-      
-      if (mastered) {
-        profile.wrongFacts = profile.wrongFacts.filter(item => item.key !== key);
-        triggerToast(`💎 已標記 ${card.a} × ${card.b} 為「已熟練」！`);
-      } else {
-        if (!profile.wrongFacts.some(item => item.key === key)) {
-          profile.wrongFacts.push({ key: key, lastWrongAt: new Date().toISOString() });
-        }
-        triggerToast(`🧠 已加至「錯題雷達」加強溫習！`);
-      }
-      safeSave();
-      nextFlashcard();
-    }
-
-    function toggleFlashcardAutoPlay() {
-      const btn = document.getElementById('flashcardAutoBtn');
-      if (flashcardState.isAutoPlaying) {
-        clearInterval(flashcardState.autoPlayTimer);
-        flashcardState.isAutoPlaying = false;
-        btn.innerHTML = `<i class="fa-solid fa-play"></i> 自動播放`;
-        btn.classList.remove('bg-cyberMagenta/20', 'text-cyberMagenta', 'border-cyberMagenta/40');
-        btn.classList.add('bg-cyberCyan/10', 'text-cyberCyan', 'border-cyberCyan/20');
-      } else {
-        flashcardState.isAutoPlaying = true;
-        btn.innerHTML = `<i class="fa-solid fa-pause"></i> 停止自動播放`;
-        btn.classList.add('bg-cyberMagenta/20', 'text-cyberMagenta', 'border-cyberMagenta/40');
-        btn.classList.remove('bg-cyberCyan/10', 'text-cyberCyan', 'border-cyberCyan/20');
-        
-        flashcardState.autoPlayTimer = setInterval(() => {
-          if (!flashcardState.isFlipped) {
-            flipFlashcard();
-          } else {
-            nextFlashcard();
-          }
-        }, 3200);
-      }
-    }
-
-    // ACTIVE QUIZ ACTION ENGINE
-    let quizState = {
-      mode: 'level',
-      currentLevel: null,
-      questions: [],
-      currentIndex: 0,
-      streak: 0,
-      points: 0,
-      timer: null,
-      timeLeft: 20,
-      correctCount: 0,
-      sessionWrongs: []
-    };
-
-    function startQuiz(mode, level = null) {
-      SFX.playClick();
-      
-      if (!profile.hero) {
-        triggerToast("請先選擇一位獵魔特攻主角開始戰鬥！", true);
-        return;
-      }
-
-      let deck = [];
-      if (mode === 'level') {
-        quizState.currentLevel = level;
-        for (let i = 0; i < 30; i++) {
-          const randMultiplier = Math.floor(Math.random() * 10) + 1;
-          deck.push({ a: level, b: randMultiplier, ans: level * randMultiplier });
-        }
-      } else if (mode === 'mixed') {
-        for (let i = 0; i < 30; i++) {
-          const a = Math.floor(Math.random() * 10) + 1;
-          const b = Math.floor(Math.random() * 10) + 1;
-          deck.push({ a, b, ans: a * b });
-        }
-      } else if (mode === 'daily') {
-        const todaySeed = new Date().getDate();
-        for (let i = 0; i < 30; i++) {
-          const a = ((todaySeed + i) % 9) + 1;
-          const b = Math.floor(Math.random() * 10) + 1;
-          deck.push({ a, b, ans: a * b });
-        }
-      } else if (mode === 'weak') {
-        if (profile.wrongFacts.length === 0) {
-          triggerToast("你的錯題本很乾淨！先去關卡地圖冒險一下吧。");
-          return;
-        }
-        const wrongs = [...profile.wrongFacts];
-        for (let i = 0; i < 30; i++) {
-          const rawFact = wrongs[i % wrongs.length];
-          const parts = rawFact.key.split('x');
-          const a = parseInt(parts[0]);
-          const b = parseInt(parts[1]);
-          deck.push({ a, b, ans: a * b });
-        }
-        deck.sort(() => Math.random() - 0.5);
-      }
-
-      quizState.mode = mode;
-      quizState.questions = deck;
-      quizState.currentIndex = 0;
-      quizState.streak = 0;
-      quizState.points = 0;
-      quizState.correctCount = 0;
-      quizState.sessionWrongs = [];
-
-      const titlesMap = {
-        level: `${level} 的乘數星系關卡`,
-        mixed: `終極混合乘數星系`,
-        daily: `星際每日獵魔任務`,
-        weak: `大腦記憶盲區淨化任務`
-      };
-      document.getElementById('activeQuizTitle').textContent = titlesMap[mode];
-      document.getElementById('quizModeBadge').textContent = `🚀 挑戰中`;
-      
-      // Dynamic Hunter crop binding for the combat header
-      const currentHero = heroes[profile.hero];
-      const iconBox = document.getElementById('quizHunterIcon');
-      iconBox.className = `w-7 h-7 rounded-full hero-avatar avatar-${profile.hero} border border-white/30 inline-block relative overflow-hidden`;
-      document.getElementById('quizHunterName').textContent = `${currentHero.name} (${currentHero.power})`;
-
-      switchView('quiz');
-      document.getElementById('quizScoreResult').classList.add('hidden');
-      
-      renderQuizQuestion();
-    }
-
-    function renderQuizQuestion() {
-      clearInterval(quizState.timer);
-      
-      if (quizState.currentIndex >= quizState.questions.length) {
-        finishQuiz();
-        return;
-      }
-
-      document.getElementById('currentQuestionNum').textContent = quizState.currentIndex + 1;
-      document.getElementById('totalQuestionsNum').textContent = quizState.questions.length;
-
-      const q = quizState.questions[quizState.currentIndex];
-      document.getElementById('currentQuestionText').textContent = `${q.a} × ${q.b}`;
-
-      const currentHero = heroes[profile.hero];
-      let bonusLabel = "⚡️ 答對獲取 1 💎";
-      if (quizState.streak >= 3) {
-        bonusLabel = `🔥 連擊狂熱！獲得額外連擊寶石！(Active: ${currentHero.power})`;
-      }
-      document.getElementById('streakBonusLabel').textContent = bonusLabel;
-
-      let choices = [q.ans];
-      while (choices.length < 4) {
-        const sign = Math.random() > 0.5 ? 1 : -1;
-        const deviation = (Math.floor(Math.random() * 10) + 1) * sign;
-        const fakeValue = Math.max(0, q.ans + deviation);
-        if (!choices.includes(fakeValue)) {
-          choices.push(fakeValue);
-        }
-      }
-      choices.sort(() => Math.random() - 0.5);
-
-      const answersBox = document.getElementById('quizAnswersContainer');
-      answersBox.innerHTML = '';
-      choices.forEach(val => {
-        const btn = document.createElement('button');
-        btn.className = "py-4 px-6 rounded-2xl bg-cyberCard/80 border border-white/10 hover:border-cyberCyan text-2xl font-cyber font-black text-white hover:bg-cyberCard transition-all transform active:scale-95 flex items-center justify-center glow-cyan/10";
-        btn.textContent = val;
-        btn.onclick = () => submitAnswer(val, btn);
-        answersBox.appendChild(btn);
-      });
-
-      quizState.timeLeft = 20;
-      const fill = document.getElementById('quizTimerFill');
-      fill.style.width = '100%';
-      
-      quizState.timer = setInterval(() => {
-        quizState.timeLeft -= 0.1;
-        const percentage = (quizState.timeLeft / 20) * 100;
-        fill.style.width = `${percentage}%`;
-
-        if (quizState.timeLeft <= 0) {
-          clearInterval(quizState.timer);
-          triggerWrongAnswer();
-        }
-      }, 100);
-    }
-
-    function submitAnswer(chosenValue, selectedBtn) {
-      clearInterval(quizState.timer);
-      const q = quizState.questions[quizState.currentIndex];
-      const answersBox = document.getElementById('quizAnswersContainer');
-      
-      const buttons = answersBox.getElementsByTagName('button');
-      for(let b of buttons) {
-        b.disabled = true;
-      }
-
-      if (chosenValue === q.ans) {
-        SFX.playCorrect();
-        selectedBtn.classList.add('bg-green-600', 'border-green-400', 'text-white');
-        
-        quizState.correctCount++;
-        quizState.streak++;
-        
-        let awardedGems = 1;
-        if (profile.hero === 'zoey' && quizState.streak >= 3) {
-          awardedGems += 2;
-        } else if (profile.hero === 'mira' && quizState.currentLevel >= 7) {
-          awardedGems += 2;
-        } else if (quizState.streak >= 3) {
-          awardedGems += 1;
-        }
-
-        quizState.points += awardedGems;
-        profile.totalGems += awardedGems;
-        profile.bestStreak = Math.max(profile.bestStreak, quizState.streak);
-        profile.solvedCount++;
-      } else {
-        SFX.playWrong();
-        selectedBtn.classList.add('bg-red-600', 'border-red-400', 'text-white');
-        
-        for(let b of buttons) {
-          if (parseInt(b.textContent) === q.ans) {
-            b.classList.add('bg-green-600', 'border-green-400');
-          }
-        }
-        triggerWrongAnswer(q);
-      }
-
-      setTimeout(() => {
-        quizState.currentIndex++;
-        renderQuizQuestion();
-      }, 1000);
-    }
-
-    function triggerWrongAnswer(q = null) {
-      let isProtectedByVocalShield = false;
-      if (profile.hero === 'rumi' && quizState.streak > 0 && Math.random() > 0.6) {
-        isProtectedByVocalShield = true;
-        triggerToast("🔮 Rumi 聲波護盾啟動！答錯保護免罰連對中斷！");
-      }
-
-      if (!isProtectedByVocalShield) {
-        quizState.streak = 0;
-      }
-
-      if (q) {
-        const factKey = `${q.a}x${q.b}`;
-        quizState.sessionWrongs.push(factKey);
-        
-        if (!profile.wrongFacts.some(f => f.key === factKey)) {
-          profile.wrongFacts.push({
-            key: factKey,
-            lastWrongAt: new Date().toISOString()
-          });
-        }
-      }
-    }
-
-    function finishQuiz() {
-      SFX.playLevelComplete();
-      
-      const rate = Math.round((quizState.correctCount / quizState.questions.length) * 100);
-      let calculatedStars = 0;
-      if (rate >= 95) calculatedStars = 3;
-      else if (rate >= 80) calculatedStars = 2;
-      else if (rate >= 60) calculatedStars = 1;
-
-      if (quizState.mode === 'level') {
-        const level = quizState.currentLevel;
-        profile.levelHighScores[level] = Math.max(profile.levelHighScores[level] || 0, quizState.points);
-        profile.levelStars[level] = Math.max(profile.levelStars[level] || 0, calculatedStars);
-        
-        if (!profile.completed.includes(level)) {
-          profile.completed.push(level);
-        }
-
-        const logicalUnlockMapping = {
-          1: [2, 5],
-          2: [3, 4],
-          5: [10, 6],
-          10: [7],
-          3: [6],
-          4: [7],
-          6: [8],
-          7: [8],
-          8: [9],
-          9: []
-        };
-        const itemsToUnlock = logicalUnlockMapping[level] || [];
-        itemsToUnlock.forEach(unlockLvl => {
-          if (!profile.unlocked.includes(unlockLvl)) {
-            profile.unlocked.push(unlockLvl);
-            triggerToast(`🌟 星系解鎖：${unlockLvl} 的乘數表開放！`);
-          }
-        });
-      }
-
-      const box = document.getElementById('quizScoreResult');
-      box.classList.remove('hidden');
-
-      let starString = '★'.repeat(calculatedStars) + '☆'.repeat(3 - calculatedStars);
-      document.getElementById('quizResultText').innerHTML = `
-        <div class="text-3xl text-cyberYellow font-cyber font-black mb-3">${starString}</div>
-        你的獵魔特攻歌手本場共答對了 <span class="text-cyberCyan font-bold">${quizState.correctCount}</span> / 30 題。<br>
-        正確率達 <span class="text-cyberMagenta font-bold">${rate}%</span>。<br>
-        本次冒險賺取了 <span class="text-cyberYellow font-bold">${quizState.points} 💎 寶石</span>！<br>
-        已歸入你的星際獵魔人總庫。
-      `;
-
-      safeSave();
-      updateParentDashboardWidgets();
-    }
-
-    function renderAdventureLevels() {
-      const levelsBox = document.getElementById('adventureLevels');
-      levelsBox.innerHTML = '';
-
-      for (let i = 1; i <= 10; i++) {
-        const isUnlocked = profile.unlocked.includes(i);
-        const stars = profile.levelStars[i] || 0;
-        const topScore = profile.levelHighScores[i] || 0;
-        
-        const card = document.createElement('div');
-        card.className = `p-4 rounded-xl flex flex-col justify-between transition-all ${
-          isUnlocked 
-            ? 'bg-cyberCard/90 border border-cyberCyan/30 hover:border-cyberCyan cursor-pointer hover:-translate-y-1' 
-            : 'bg-cyberCard/40 border border-white/5 opacity-50 cursor-not-allowed'
-        }`;
-
-        const starsLine = '★'.repeat(stars) + '☆'.repeat(3 - stars);
-
-        card.innerHTML = `
-          <div>
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] font-cyber font-bold tracking-widest ${isUnlocked ? 'text-cyberCyan' : 'text-gray-500'}">
-                ${isUnlocked ? '🟢 AVAILABLE' : '🔒 LOCKED'}
-              </span>
-              <span class="text-cyberYellow font-fun text-sm">${isUnlocked ? starsLine : ''}</span>
-            </div>
-            <h3 class="text-lg font-black font-cyber mt-1 text-white">${i} 的乘數表</h3>
-            <p class="text-xs text-gray-400 mt-0.5">最高得分：${topScore} 💎</p>
-          </div>
-          <button ${isUnlocked ? '' : 'disabled'} class="w-full mt-4 py-2 text-xs font-bold font-cyber rounded-lg ${
-            isUnlocked 
-              ? 'bg-cyberCyan text-slate-950 hover:opacity-90' 
-              : 'bg-slate-800 text-gray-500'
-          } transition-all">
-            ${isUnlocked ? 'ENTER SECTOR' : '星系已被魔物封鎖'}
-          </button>
-        `;
-
-        if (isUnlocked) {
-          card.onclick = () => startQuiz('level', i);
-        }
-        levelsBox.appendChild(card);
-      }
-    }
-
-    function selectHero(heroId) {
-      SFX.playClick();
-      profile.hero = heroId;
-      safeSave();
-      
-      document.querySelectorAll('.hero-selector-card').forEach(card => {
-        card.classList.remove('border-cyberCyan', 'border-cyberPurple', 'border-cyberMagenta', 'glow-cyan', 'glow-purple', 'glow-magenta');
-      });
-
-      const activeCard = document.getElementById(`hero-card-${heroId}`);
-      if (heroId === 'zoey') {
-        activeCard.classList.add('border-cyberCyan', 'glow-cyan');
-      } else if (heroId === 'rumi') {
-        activeCard.classList.add('border-cyberPurple', 'glow-purple');
-      } else if (heroId === 'mira') {
-        activeCard.classList.add('border-cyberMagenta', 'glow-magenta');
-      }
-
-      triggerToast(`🎧 已召喚 K-pop 歌手 ${heroes[heroId].name} 為獵魔領隊！`);
-    }
-
-    function renderGlobalScoreboards() {
-      const board = document.getElementById('starsBoard');
-      board.innerHTML = '';
-      let earnedAnything = false;
-      
-      for (let i = 1; i <= 10; i++) {
-        const star = profile.levelStars[i] || 0;
-        if (star > 0) {
-          earnedAnything = true;
-          const item = document.createElement('div');
-          item.className = "flex items-center justify-between p-2.5 rounded-lg bg-cyberCard border border-white/5 text-xs";
-          item.innerHTML = `
-            <span class="font-bold text-white">${i} 的乘數星系</span>
-            <span class="text-cyberYellow font-fun text-sm">${'★'.repeat(star)}</span>
-          `;
-          board.appendChild(item);
-        }
-      }
-      if (!earnedAnything) {
-        board.innerHTML = `<div class="text-xs text-gray-500 text-center py-4">暫未獲得任何通關星星</div>`;
-      }
-
-      const wrongBox = document.getElementById('wrongBook');
-      wrongBox.innerHTML = '';
-      if (profile.wrongFacts.length === 0) {
-        wrongBox.innerHTML = `<div class="text-xs text-cyberGreen text-center py-4"><i class="fa-solid fa-circle-check"></i> 暫時沒有錯題，超棒！</div>`;
-      } else {
-        profile.wrongFacts.slice(0, 5).forEach(item => {
-          const parts = item.key.split('x');
-          const element = document.createElement('div');
-          element.className = "flex items-center justify-between p-2.5 rounded-lg bg-cyberCard/70 border border-cyberMagenta/20 text-xs";
-          element.innerHTML = `
-            <span class="font-cyber font-bold text-white">${parts[0]} × ${parts[1]} = ${parseInt(parts[0]) * parseInt(parts[1])}</span>
-            <button onclick="playQuickChant(${parts[0]}, ${parts[1]})" class="px-2 py-1 rounded bg-cyberPurple/20 hover:bg-cyberPurple/30 text-cyberPurple font-bold transition-all text-[10px]">
-              <i class="fa-solid fa-volume-high"></i> 口訣
-            </button>
-          `;
-          wrongBox.appendChild(element);
-        });
-      }
-    }
-
-    let activeChantSelectedTable = 2;
-    function renderCantoneseInteractiveZone() {
-      const container = document.getElementById('cantoneseChantsContainer');
-      const tabs = document.getElementById('chantTableSelector');
-      
-      tabs.innerHTML = '';
-      for (let i = 1; i <= 10; i++) {
-        const tab = document.createElement('button');
-        tab.className = `flex-shrink-0 px-4 py-2 text-xs font-black rounded-lg transition-all ${
-          activeChantSelectedTable === i
-            ? 'bg-cyberPurple text-white glow-purple'
-            : 'bg-cyberCard text-gray-400 hover:text-white border border-white/5'
-        }`;
-        tab.textContent = `${i} 的九因歌`;
-        tab.onclick = () => {
-          SFX.playClick();
-          activeChantSelectedTable = i;
-          renderCantoneseInteractiveZone();
-        };
-        tabs.appendChild(tab);
-      }
-
-      container.innerHTML = '';
-      for (let j = 1; j <= 10; j++) {
-        const a = activeChantSelectedTable;
-        const b = j;
-        const chant = getCantoneseChant(a, b);
-        
-        const cell = document.createElement('div');
-        cell.className = "p-4 rounded-xl bg-cyberCard border border-white/5 hover:border-cyberPurple/50 hover:bg-cyberPurple/5 transition-all cursor-pointer flex flex-col justify-between group";
-        cell.onclick = () => {
-          SFX.playClick();
-          speakText(chant, 0.9);
-          cell.classList.add('glow-purple');
-          setTimeout(() => cell.classList.remove('glow-purple'), 500);
+    <!-- SOUND & GAME LOGIC -->
+    <script>
+        // Game level data - Updated to use highly compatible youtube-nocookie and reliable embedding configuration
+        const LEVELS = {
+            1: {
+                id: 1,
+                title: "1 與 2 的乘法樂園 🍄",
+                multiplierSet: [1, 2],
+                formulaKey: "1, 2",
+                // Specific high-compatibility educational video ID for 1&2 times tables
+                youtubeUrl: "https://www.youtube-nocookie.com/embed/y838_gL1_8c?enablejsapi=1&rel=0",
+                externalUrl: "https://www.youtube.com/watch?v=y838_gL1_8c&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ",
+                formulas: [
+                    "1 × 1 = 1", "1 × 2 = 2", "1 × 3 = 3", "1 × 4 = 4", "1 × 5 = 5", "1 × 6 = 6", "1 × 7 = 7", "1 × 8 = 8", "1 × 9 = 9",
+                    "2 × 1 = 2", "2 × 2 = 4", "2 × 3 = 6", "2 × 4 = 8", "2 × 5 = 10", "2 × 6 = 12", "2 × 7 = 14", "2 × 8 = 16", "2 × 9 = 18"
+                ],
+                apps: [
+                    {
+                        text: "一個美味的紅蘋果售價 $2 元，小奇諾比奧買了 5 個，他總共需要付多少元呢？",
+                        options: [
+                            { label: "2 × 5 = 10 元", isCorrect: true },
+                            { label: "2 + 5 = 7 元", isCorrect: false },
+                            { label: "2 × 4 = 8 元", isCorrect: false }
+                        ]
+                    },
+                    {
+                        text: "耀西每次可以馱著 2 個好朋友。如果 4 隻耀西一起排隊，一共可以馱多少個好朋友呢？",
+                        options: [
+                            { label: "2 × 2 = 4 個", isCorrect: false },
+                            { label: "2 × 4 = 8 個", isCorrect: true },
+                            { label: "4 - 2 = 2 個", isCorrect: false }
+                        ]
+                    },
+                    {
+                        text: "每名水管工有一頂紅色的 M 號帽子。瑪利歐有 2 個衣櫃，每個衣櫃裡整齊地放了 9 頂帽子，總共有幾頂帽子？",
+                        options: [
+                            { label: "2 + 9 = 11 頂", isCorrect: false },
+                            { label: "2 × 8 = 16 頂", isCorrect: false },
+                            { label: "2 × 9 = 18 頂", isCorrect: true }
+                        ]
+                    }
+                ]
+            },
+            2: {
+                id: 2,
+                title: "3 與 4 的森林迷宮 🌳",
+                multiplierSet: [3, 4],
+                formulaKey: "3, 4",
+                youtubeUrl: "https://www.youtube-nocookie.com/embed/S2o8u60-9V8?enablejsapi=1&rel=0",
+                externalUrl: "https://www.youtube.com/watch?v=S2o8u60-9V8&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ",
+                formulas: [
+                    "3 × 1 = 3", "3 × 2 = 6", "3 × 3 = 9", "3 × 4 = 12", "3 × 5 = 15", "3 × 6 = 18", "3 × 7 = 21", "3 × 8 = 24", "3 × 9 = 27",
+                    "4 × 1 = 4", "4 × 2 = 8", "4 × 3 = 12", "4 × 4 = 16", "4 × 5 = 20", "4 × 6 = 24", "4 × 7 = 28", "4 × 8 = 32", "4 × 9 = 36"
+                ],
+                apps: [
+                    {
+                        text: "一朵火焰花需要 3 顆小星星才能召喚。如果碧姬公主召喚了 6 朵火焰花，總共需要多少顆小星星？",
+                        options: [
+                            { label: "3 × 5 = 15 顆", isCorrect: false },
+                            { label: "3 × 6 = 18 顆", isCorrect: true },
+                            { label: "3 + 6 = 9 顆", isCorrect: false }
+                        ]
+                    },
+                    {
+                        text: "一輛庫巴越野車有 4 個巨大的黑色車輪。如果有 5 輛越野車在賽道上，一共有多少個車輪？",
+                        options: [
+                            { label: "4 × 5 = 20 個", isCorrect: true },
+                            { label: "4 × 4 = 16 個", isCorrect: false },
+                            { label: "5 + 4 = 9 個", isCorrect: false }
+                        ]
+                    },
+                    {
+                        text: "水管工瑪利歐今天修復了 4 個損壞的水管口，每個水管口會噴出 8 枚金幣。他總共收集了幾枚金幣？",
+                        options: [
+                            { label: "4 × 7 = 28 枚", isCorrect: false },
+                            { label: "4 + 8 = 12 枚", isCorrect: false },
+                            { label: "4 × 8 = 32 枚", isCorrect: true }
+                        ]
+                    }
+                ]
+            },
+            3: {
+                id: 3,
+                title: "5 與 6 的黃金沙漠 🌵",
+                multiplierSet: [5, 6],
+                formulaKey: "5, 6",
+                youtubeUrl: "https://www.youtube-nocookie.com/embed/9_I7xO_oP_8?enablejsapi=1&rel=0",
+                externalUrl: "https://www.youtube.com/watch?v=9_I7xO_oP_8&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ",
+                formulas: [
+                    "5 × 1 = 5", "5 × 2 = 10", "5 × 3 = 15", "5 × 4 = 20", "5 × 5 = 25", "5 × 6 = 30", "5 × 7 = 35", "5 × 8 = 40", "5 × 9 = 45",
+                    "6 × 1 = 6", "6 × 2 = 12", "6 × 3 = 18", "6 × 4 = 24", "6 × 5 = 30", "6 × 6 = 36", "6 × 7 = 42", "6 × 8 = 48", "6 × 9 = 54"
+                ],
+                apps: [
+                    {
+                        text: "一盒美味的香菇曲奇餅乾有 6 塊。媽媽買了 3 盒給小朋友吃，一共有多少塊香菇曲奇？",
+                        options: [
+                            { label: "6 × 3 = 18 塊", isCorrect: true },
+                            { label: "6 + 3 = 9 塊", isCorrect: false },
+                            { label: "6 × 4 = 24 塊", isCorrect: false }
+                        ]
+                    },
+                    {
+                        text: "每條恐龍街有 5 個香蕉補給站。路易吉跑過 7 條街，一共可以遇到多少個香蕉補給站？",
+                        options: [
+                            { label: "5 × 6 = 30 個", isCorrect: false },
+                            { label: "5 × 7 = 35 個", isCorrect: true },
+                            { label: "5 + 7 = 12 個", isCorrect: false }
+                        ]
+                    },
+                    {
+                        text: "一個五角星有 5 個尖角。星空背景上有 9 個五角星，一共有多少個尖角？",
+                        options: [
+                            { label: "5 × 9 = 45 個", isCorrect: true },
+                            { label: "5 × 8 = 40 個", isCorrect: false },
+                            { label: "5 + 9 = 14 個", isCorrect: false }
+                        ]
+                    }
+                ]
+            },
+            4: {
+                id: 4,
+                title: "7 與 8 的雲中城堡 ☁️",
+                multiplierSet: [7, 8],
+                formulaKey: "7, 8",
+                youtubeUrl: "https://www.youtube-nocookie.com/embed/W_Xz88_b3k8?enablejsapi=1&rel=0",
+                externalUrl: "https://www.youtube.com/watch?v=W_Xz88_b3k8&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ",
+                formulas: [
+                    "7 × 1 = 7", "7 × 2 = 14", "7 × 3 = 21", "7 × 4 = 28", "7 × 5 = 35", "7 × 6 = 42", "7 × 7 = 49", "7 × 8 = 56", "7 × 9 = 63",
+                    "8 × 1 = 8", "8 × 2 = 16", "8 × 3 = 24", "8 × 4 = 32", "8 × 5 = 40", "8 × 6 = 48", "8 × 7 = 56", "8 × 8 = 64", "8 × 9 = 72"
+                ],
+                apps: [
+                    {
+                        text: "耀西種植了 7 行神奇種子，每行種子都長出了 4 個彩虹西瓜。總共有幾個西瓜？",
+                        options: [
+                            { label: "7 × 4 = 28 個", isCorrect: true },
+                            { label: "7 × 3 = 21 個", isCorrect: false },
+                            { label: "7 + 4 = 11 個", isCorrect: false }
+                        ]
+                    },
+                    {
+                        text: "庫巴的手下一天需要吃 8 條小魚。如果這群手下連續吃了一個星期（7天），共要消耗多少條小魚？",
+                        options: [
+                            { label: "8 × 6 = 48 條", isCorrect: false },
+                            { label: "8 × 7 = 56 條", isCorrect: true },
+                            { label: "8 + 7 = 15 條", isCorrect: false }
+                        ]
+                    },
+                    {
+                        text: "在雲中城堡有 8 個神秘的磚塊，每個磚塊撞擊後會吐出 9 顆耀眼的鑽石。一共有多少顆鑽石？",
+                        options: [
+                            { label: "8 × 9 = 72 顆", isCorrect: true },
+                            { label: "8 × 8 = 64 顆", isCorrect: false },
+                            { label: "8 + 9 = 17 顆", isCorrect: false }
+                        ]
+                    }
+                ]
+            },
+            5: {
+                id: 5,
+                title: "9 的庫巴大魔王終極戰 🏰",
+                multiplierSet: [9],
+                formulaKey: "9",
+                youtubeUrl: "https://www.youtube-nocookie.com/embed/U8M30_EaO4A?enablejsapi=1&rel=0",
+                externalUrl: "https://www.youtube.com/watch?v=U8M30_EaO4A&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ",
+                formulas: [
+                    "9 × 1 = 9", "9 × 2 = 18", "9 × 3 = 27", "9 × 4 = 36", "9 × 5 = 45", "9 × 6 = 54", "9 × 7 = 63", "9 × 8 = 72", "9 × 9 = 81"
+                ],
+                apps: [
+                    {
+                        text: "庫巴大魔王城堡周圍有 9 條火柱，每條火柱有 3 隻噴火龜看守。總共有幾隻噴火龜在看守？",
+                        options: [
+                            { label: "9 × 3 = 27 隻", isCorrect: true },
+                            { label: "9 + 3 = 12 隻", isCorrect: false },
+                            { label: "9 × 4 = 36 隻", isCorrect: false }
+                        ]
+                    },
+                    {
+                        text: "奇諾比奧小郵差每天派發 9 封愛心信件給村民。一個星期（7天）裡，他共派發了多少封信件？",
+                        options: [
+                            { label: "9 + 7 = 16 封", isCorrect: false },
+                            { label: "9 × 7 = 63 封", isCorrect: true },
+                            { label: "9 × 8 = 72 封", isCorrect: false }
+                        ]
+                    },
+                    {
+                        text: "最後的大決戰！瑪利歐需要投擲 9 次火球，每次火球會分裂成 9 個小火焰。一共會爆發多少個小火焰？",
+                        options: [
+                            { label: "9 × 8 = 72 個", isCorrect: false },
+                            { label: "9 + 9 = 18 個", isCorrect: false },
+                            { label: "9 × 9 = 81 個", isCorrect: true }
+                        ]
+                    }
+                ]
+            }
         };
 
-        cell.innerHTML = `
-          <div class="flex items-center justify-between">
-            <span class="text-sm font-cyber text-gray-400 font-bold">${a} × ${b}</span>
-            <i class="fa-solid fa-volume-high text-xs text-cyberPurple opacity-60 group-hover:opacity-100 transition-opacity"></i>
-          </div>
-          <div class="text-xl font-bold text-white mt-2">${chant}</div>
-          <div class="text-right text-xs text-cyberCyan font-cyber font-bold mt-1">= ${a * b}</div>
-        `;
-        container.appendChild(cell);
-      }
-    }
+        // --- STABLE VECTOR SVG CHARACTER DATA (100% RELIABLE, OFFLINE-READY) ---
+        const CHARACTERS = {
+            mario: { 
+                name: "瑪利歐 (Mario)", 
+                shortName: "瑪利歐",
+                colorClass: "text-marioRed",
+                borderColor: "border-marioRed",
+                bgColor: "bg-red-50",
+                badge: "🔴",
+                desc: "系列的靈魂人物。頭戴 M 字標誌紅帽與吊帶褲。充滿正義感與活力，多次拯救蘑菇王國。",
+                // Beautiful high-fidelity SVG illustration
+                svg: `
+                <svg viewBox="0 0 120 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="60" cy="60" r="56" fill="#FEEAE6" stroke="#E52521" stroke-width="4"/>
+                    <ellipse cx="60" cy="70" rx="30" ry="25" fill="#FFE0B2"/>
+                    <circle cx="60" cy="72" r="10" fill="#FFCC80"/>
+                    <circle cx="48" cy="62" r="5" fill="#002FBE"/>
+                    <circle cx="49" cy="61" r="2" fill="#FFF"/>
+                    <circle cx="72" cy="62" r="5" fill="#002FBE"/>
+                    <circle cx="73" cy="61" r="2" fill="#FFF"/>
+                    <path d="M 35 78 C 45 70, 55 82, 60 78 C 65 82, 75 70, 85 78 C 88 84, 82 86, 60 84 C 38 86, 32 84, 35 78 Z" fill="#3E2723"/>
+                    <path d="M 24 55 C 24 25, 96 25, 96 55 Z" fill="#E52521"/>
+                    <path d="M 16 56 C 30 48, 90 48, 104 56 Z" fill="#D32F2F"/>
+                    <circle cx="60" cy="38" r="14" fill="#FFF" stroke="#E52521" stroke-width="1.5"/>
+                    <text x="60" y="45" font-family="'Comic Sans MS', sans-serif" font-weight="900" font-size="20" fill="#E52521" text-anchor="middle">M</text>
+                </svg>`
+            },
+            luigi: { 
+                name: "路易吉 (Luigi)", 
+                shortName: "路易吉",
+                colorClass: "text-luigiGreen",
+                borderColor: "border-luigiGreen",
+                bgColor: "bg-green-50",
+                badge: "🟢",
+                desc: "瑪利歐的雙胞胎弟弟。身穿綠色服裝，雖然性格較為膽小，但跳躍力極佳，極具搞笑與勇氣！",
+                svg: `
+                <svg viewBox="0 0 120 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="60" cy="60" r="56" fill="#E8F5E9" stroke="#43B047" stroke-width="4"/>
+                    <ellipse cx="60" cy="72" rx="26" ry="24" fill="#FFE0B2"/>
+                    <circle cx="60" cy="74" r="9" fill="#FFCC80"/>
+                    <circle cx="49" cy="64" r="5" fill="#002FBE"/>
+                    <circle cx="50" cy="63" r="2" fill="#FFF"/>
+                    <circle cx="71" cy="64" r="5" fill="#002FBE"/>
+                    <circle cx="72" cy="63" r="2" fill="#FFF"/>
+                    <path d="M 38 78 C 46 72, 54 84, 60 80 C 66 84, 74 72, 82 78 C 85 83, 80 85, 60 83 C 40 85, 35 83, 38 78 Z" fill="#1A0C00"/>
+                    <path d="M 28 55 C 28 25, 92 25, 92 55 Z" fill="#43B047"/>
+                    <path d="M 18 56 C 30 48, 90 48, 102 56 Z" fill="#2E7D32"/>
+                    <circle cx="60" cy="38" r="14" fill="#FFF" stroke="#43B047" stroke-width="1.5"/>
+                    <text x="60" y="45" font-family="'Comic Sans MS', sans-serif" font-weight="900" font-size="20" fill="#43B047" text-anchor="middle">L</text>
+                </svg>`
+            },
+            toad: { 
+                name: "奇諾比奧 (Toad)", 
+                shortName: "奇諾比奧",
+                colorClass: "text-toadRed",
+                borderColor: "border-toadRed",
+                bgColor: "bg-blue-50",
+                badge: "🍄",
+                desc: "蘑菇王國的忠心僕人。頭戴紅白相間的蘑菇帽，性格熱情開朗，是大家最喜愛的吉祥物。",
+                svg: `
+                <svg viewBox="0 0 120 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="60" cy="60" r="56" fill="#E3F2FD" stroke="#E93D2C" stroke-width="4"/>
+                    <ellipse cx="60" cy="74" rx="28" ry="22" fill="#FFE0B2"/>
+                    <ellipse cx="48" cy="72" rx="3.5" ry="7.5" fill="#000"/>
+                    <ellipse cx="72" cy="72" rx="3.5" ry="7.5" fill="#000"/>
+                    <path d="M 52 82 Q 60 90, 68 82" stroke="#D32F2F" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                    <path d="M 36 96 L 44 110 L 76 110 L 84 96 Z" fill="#0D47A1"/>
+                    <path d="M 22 66 C 14 30, 106 30, 98 66 C 80 72, 40 72, 22 66 Z" fill="#FFF" stroke="#E0E0E0" stroke-width="1"/>
+                    <circle cx="60" cy="42" r="14" fill="#E93D2C"/>
+                    <path d="M 22 56 C 24 45, 36 45, 34 58 Z" fill="#E93D2C"/>
+                    <path d="M 98 56 C 96 45, 84 45, 86 58 Z" fill="#E93D2C"/>
+                </svg>`
+            },
+            peach: { 
+                name: "碧姬公主 (Peach)", 
+                shortName: "碧姬公主",
+                colorClass: "text-pink-500",
+                borderColor: "border-peachPink",
+                bgColor: "bg-pink-50",
+                badge: "👸🏼",
+                desc: "蘑菇王國的統治者與象徵。擁有神奇的魔法，非常優雅，在重要冒險中也是核心參戰角色！",
+                svg: `
+                <svg viewBox="0 0 120 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="60" cy="60" r="56" fill="#FCE4EC" stroke="#F3A1C2" stroke-width="4"/>
+                    <path d="M 25 80 C 10 50, 110 50, 95 80 C 105 100, 15 100, 25 80 Z" fill="#FBC02D"/>
+                    <ellipse cx="60" cy="68" rx="26" ry="24" fill="#FFE0B2"/>
+                    <ellipse cx="48" cy="62" rx="4" ry="6" fill="#0288D1"/>
+                    <circle cx="48" cy="60" r="2" fill="#FFF"/>
+                    <ellipse cx="72" cy="62" rx="4" ry="6" fill="#0288D1"/>
+                    <circle cx="72" cy="60" r="2" fill="#FFF"/>
+                    <path d="M 52 76 Q 60 82, 68 76" stroke="#D81B60" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <circle cx="40" cy="72" r="4" fill="#FF8A80" opacity="0.6"/>
+                    <circle cx="80" cy="72" r="4" fill="#FF8A80" opacity="0.6"/>
+                    <path d="M 32 50 Q 60 62, 88 50 Q 80 40, 60 42 Q 40 40, 32 50 Z" fill="#FDD835"/>
+                    <path d="M 42 38 L 46 22 L 53 28 L 60 16 L 67 28 L 74 22 L 78 38 Z" fill="#FFD54F" stroke="#F57C00" stroke-width="1.5"/>
+                    <circle cx="60" cy="22" r="2" fill="#D32F2F"/>
+                    <circle cx="46" cy="26" r="1.5" fill="#1976D2"/>
+                    <circle cx="74" cy="26" r="1.5" fill="#1976D2"/>
+                </svg>`
+            },
+            yoshi: { 
+                name: "耀西 (Yoshi)", 
+                shortName: "耀西",
+                colorClass: "text-yoshiGreen",
+                borderColor: "border-yoshiGreen",
+                bgColor: "bg-lime-50",
+                badge: "🦖",
+                desc: "瑪利歐的恐龍夥伴。擁有伸縮自如的長舌頭，擅長吞下敵人產卵攻擊，元氣滿滿！",
+                svg: `
+                <svg viewBox="0 0 120 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="60" cy="60" r="56" fill="#F1F8E9" stroke="#73C83D" stroke-width="4"/>
+                    <circle cx="60" cy="64" r="28" fill="#73C83D"/>
+                    <circle cx="60" cy="76" r="22" fill="#FFF"/>
+                    <circle cx="60" cy="72" r="22" fill="#73C83D" opacity="0.15"/>
+                    <circle cx="60" cy="72" r="22" fill="#73C83D"/>
+                    <ellipse cx="46" cy="80" rx="12" ry="10" fill="#FFF"/>
+                    <ellipse cx="74" cy="80" rx="12" ry="10" fill="#FFF"/>
+                    <ellipse cx="50" cy="46" rx="8" ry="14" fill="#FFF" stroke="#73C83D" stroke-width="2"/>
+                    <ellipse cx="50" cy="48" rx="4" ry="8" fill="#0288D1"/>
+                    <circle cx="50" cy="44" r="2" fill="#FFF"/>
+                    <ellipse cx="70" cy="46" rx="8" ry="14" fill="#FFF" stroke="#73C83D" stroke-width="2"/>
+                    <ellipse cx="70" cy="48" rx="4" ry="8" fill="#0288D1"/>
+                    <circle cx="70" cy="44" r="2" fill="#FFF"/>
+                    <path d="M 32 40 L 26 30 L 38 34 Z M 36 34 L 32 22 L 44 28 Z" fill="#FF5722"/>
+                    <circle cx="54" cy="68" r="2" fill="#3E2723"/>
+                    <circle cx="66" cy="68" r="2" fill="#3E2723"/>
+                </svg>`
+            }
+        };
 
-    function autoPlayChants() {
-      SFX.playClick();
-      let index = 1;
-      triggerToast(`🎙️ 開始播放 ${activeChantSelectedTable} 的乘數表整表廣東話朗讀...`);
-      
-      function speakNext() {
-        if (index > 10) return;
-        const chant = getCantoneseChant(activeChantSelectedTable, index);
-        speakText(chant, 0.85);
-        index++;
-        setTimeout(speakNext, 1800);
-      }
-      speakNext();
-    }
+        // --- RETRO SYNTH AUDIO ENGINE (STANDALONE Web Audio API) ---
+        const AudioEngine = {
+            ctx: null,
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            },
+            playCoin() {
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = "sine";
+                osc.frequency.setValueAtTime(987.77, now); // B5
+                osc.frequency.setValueAtTime(1318.51, now + 0.08); // E6
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.35);
+            },
+            playLevelUp() {
+                this.init();
+                const now = this.ctx.currentTime;
+                const notes = [330, 392, 659, 523, 587, 784];
+                notes.forEach((freq, i) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = "square";
+                    osc.frequency.setValueAtTime(freq, now + i * 0.1);
+                    gain.gain.setValueAtTime(0.08, now + i * 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.15);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now + i * 0.1);
+                    osc.stop(now + i * 0.1 + 0.2);
+                });
+            },
+            playError() {
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = "sawtooth";
+                osc.frequency.setValueAtTime(160, now);
+                osc.frequency.linearRampToValueAtTime(70, now + 0.25);
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.28);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            },
+            playJump() {
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = "triangle";
+                osc.frequency.setValueAtTime(130, now);
+                osc.frequency.exponentialRampToValueAtTime(650, now + 0.16);
+                gain.gain.setValueAtTime(0.18, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            }
+        };
 
-    function playQuickChant(a, b) {
-      SFX.playClick();
-      const chant = getCantoneseChant(a, b);
-      speakText(chant, 0.95);
-    }
+        // --- GAME INSTANCE STATE ---
+        let state = {
+            playerName: "快樂小勇士",
+            selectedChar: "mario",
+            totalGems: 0,
+            gemsByLevel: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+            activeLevel: 1,
 
-    function updateParentDashboardWidgets() {
-      document.getElementById('dashCompletedLevels').textContent = `${profile.completed.length} / 10`;
-      document.getElementById('dashTotalSolved').textContent = profile.solvedCount;
-      document.getElementById('dashStreakRecord').textContent = profile.bestStreak;
+            combatQuestions: [],
+            combatIndex: 0,
+            combatAnswersCorrect: 0,
+            combatScores: {}, // track per level
 
-      let completedTiers = Object.keys(profile.levelStars).length;
-      let totalStars = Object.values(profile.levelStars).reduce((s, c) => s + c, 0);
-      let avgAcc = completedTiers > 0 ? Math.round((totalStars / (completedTiers * 3)) * 100) : 0;
-      document.getElementById('dashAvgAccuracy').textContent = `${avgAcc}%`;
+            appQuestions: [],
+            appIndex: 0,
+            appAnswersCorrect: 0,
 
-      const mapBox = document.getElementById('dashboardHeatmap');
-      mapBox.innerHTML = '';
-      for (let i = 1; i <= 10; i++) {
-        const topScore = profile.levelHighScores[i] || 0;
-        let bgStyle = 'bg-slate-900 border-white/5 text-gray-600';
-        if (topScore > 0) {
-          if (topScore >= 25) bgStyle = 'bg-green-950/80 border-green-500/40 text-green-400 glow-cyan';
-          else if (topScore >= 15) bgStyle = 'bg-teal-950/60 border-teal-500/30 text-teal-300';
-          else bgStyle = 'bg-emerald-950/20 border-emerald-500/20 text-emerald-500';
-        }
+            leaderboard: []
+        };
 
-        const cell = document.createElement('div');
-        cell.className = `p-3 rounded-xl border text-center transition-all ${bgStyle}`;
-        cell.innerHTML = `
-          <div class="text-xs font-bold">${i}x</div>
-          <div class="text-lg font-black mt-1">${topScore}</div>
-          <div class="text-[9px] text-gray-500">Max Pts</div>
-        `;
-        mapBox.appendChild(cell);
-      }
-
-      const parentWeakList = document.getElementById('parentWeakList');
-      parentWeakList.innerHTML = '';
-      if (profile.wrongFacts.length === 0) {
-        parentWeakList.innerHTML = `<div class="text-xs text-cyberGreen py-8 text-center">🎉 非常棒！孩子目前沒有記錄任何公式錯誤。</div>`;
-      } else {
-        profile.wrongFacts.slice(0, 5).forEach(item => {
-          const parts = item.key.split('x');
-          const element = document.createElement('div');
-          element.className = "p-3 rounded-lg bg-cyberCard/40 border border-cyberMagenta/20 flex items-center justify-between text-xs";
-          element.innerHTML = `
-            <span class="font-cyber font-bold text-white">${parts[0]} × ${parts[1]} = ${parseInt(parts[0]) * parseInt(parts[1])}</span>
-            <span class="text-cyberMagenta font-bold uppercase text-[10px]">需要重點加強 ⚠️</span>
-          `;
-          parentWeakList.appendChild(element);
+        // --- APP INITIALIZATION ---
+        window.addEventListener('load', () => {
+            initLeaderboard();
+            renderCharacterSelectionGrid();
+            updateUIGems();
+            selectCharacter('mario');
         });
-      }
-    }
 
-    function clearAnalytics() {
-      if (confirm("⚠️ 確定要清除所有家長監督進度和測驗記錄嗎？這將不會影響您的寶石。")) {
-        profile.levelHighScores = {};
-        profile.levelStars = {};
-        profile.wrongFacts = [];
-        profile.completed = [];
-        profile.solvedCount = 0;
-        profile.bestStreak = 0;
-        safeSave();
-        updateParentDashboardWidgets();
-        renderGlobalScoreboards();
-        renderAdventureLevels();
-        triggerToast("🗑️ 已成功清除所有家長分析記錄。");
-      }
-    }
+        // Dynamic builder for Character Cards to securely render custom vector SVGs
+        function renderCharacterSelectionGrid() {
+            const grid = document.getElementById('character-grid');
+            grid.innerHTML = '';
 
-    function exportProgress() {
-      const summaryText = `星際乘數測驗 - 獵魔家長報告 📝\n` +
-                          `=========================\n` +
-                          `👾 獵魔領隊: ${heroes[profile.hero].name}\n` +
-                          `💎 總寶石庫存: ${profile.totalGems}\n` +
-                          `🌟 已通關星系數: ${profile.completed.length}/10\n` +
-                          `🔥 答題最大連擊: ${profile.bestStreak}\n` +
-                          `🧠 待加強盲區公式數: ${profile.wrongFacts.length} 個\n` +
-                          `家長簽署備忘，引導高效學習！加油！`;
-      
-      const tempArea = document.createElement('textarea');
-      tempArea.value = summaryText;
-      document.body.appendChild(tempArea);
-      tempArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(tempArea);
-      
-      triggerToast("📋 已複製完整的文字學習報告至剪貼簿！可直接貼上傳給老師。");
-    }
+            Object.keys(CHARACTERS).forEach(key => {
+                const char = CHARACTERS[key];
+                const card = document.createElement('div');
+                card.id = `char-card-${key}`;
+                card.className = "cursor-pointer border-4 border-gray-200 rounded-xl p-4 text-center hover:shadow-lg transition-all transform hover:-translate-y-1 flex flex-col justify-between bg-white";
+                card.onclick = () => selectCharacter(key);
 
-    function switchView(viewId) {
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('text-cyberCyan', 'bg-cyberCyan/10');
-        btn.classList.add('text-gray-400', 'hover:text-white');
-      });
-      const activeNav = document.getElementById(`nav-${viewId}`);
-      if (activeNav) {
-        activeNav.classList.remove('text-gray-400', 'hover:text-white');
-        activeNav.classList.add('text-cyberCyan', 'bg-cyberCyan/10');
-      }
-
-      document.querySelectorAll('.view-panel').forEach(panel => {
-        panel.classList.add('hidden');
-        panel.classList.remove('block');
-      });
-
-      const targetPanel = document.getElementById(`view-${viewId}`);
-      if (targetPanel) {
-        targetPanel.classList.remove('hidden');
-        targetPanel.classList.add('block');
-      }
-
-      if (viewId === 'cantonese') {
-        renderCantoneseInteractiveZone();
-      } else if (viewId === 'flashcards') {
-        initFlashcards();
-      } else if (viewId === 'dashboard') {
-        updateParentDashboardWidgets();
-      } else if (viewId === 'home') {
-        renderGlobalScoreboards();
-        renderAdventureLevels();
-      }
-    }
-
-    function triggerToast(message, isError = false) {
-      const alertBox = document.getElementById('customAlert');
-      alertBox.textContent = message;
-      alertBox.className = `fixed top-6 left-1/2 -translate-x-1/2 z-50 p-4 rounded-xl border font-black text-sm shadow-2xl backdrop-blur-xl transition-all duration-300 pointer-events-none ${
-        isError 
-          ? 'bg-red-950/90 border-red-500 text-red-400' 
-          : 'bg-cyberDark/90 border-cyberCyan text-cyberCyan'
-      }`;
-      alertBox.style.opacity = '1';
-      alertBox.style.transform = 'translateX(-50%) translateY(10px)';
-
-      setTimeout(() => {
-        alertBox.style.opacity = '0';
-        alertBox.style.transform = 'translateX(-50%) translateY(-20px)';
-      }, 2500);
-    }
-
-    function confirmReset() {
-      if (confirm("⚠️ 確定要重設所有遊戲進度嗎？所有寶石、星星、英雄選擇和歷史記錄都會被刪除。")) {
-        profile = { ...fallbackProfile };
-        safeSave();
-        switchView('home');
-        triggerToast("🗑️ 遊戲已被完全重置。");
-      }
-    }
-
-    function updateGlobalStatusIndicators() {
-      document.getElementById('headerGems').textContent = profile.totalGems;
-      document.getElementById('headerStreak').textContent = profile.bestStreak;
-      
-      // Dynamic rendering of miniature round crop on top header
-      const badge = document.getElementById('activeHeroBadge');
-      badge.innerHTML = `
-        <span class="inline-flex items-center gap-1.5 font-cyber">
-          <span class="w-5 h-5 rounded-full hero-avatar avatar-${profile.hero} border border-white/30 inline-block relative overflow-hidden">
-            <!-- Overlay visual fallback inside status bar avatar -->
-            <span class="absolute inset-0 bg-cyberCyan/10"></span>
-          </span>
-          <span>${heroes[profile.hero].name.toUpperCase()}</span>
-        </span>
-      `;
-    }
-
-    // DYNAMIC BACKGROUND PARTICLES
-    function initBackgroundParticles() {
-      const canvas = document.getElementById('starfield');
-      const ctx = canvas.getContext('2d');
-      let particles = [];
-
-      function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }
-      resize();
-      window.addEventListener('resize', resize);
-
-      class Particle {
-        constructor() {
-          this.reset();
+                card.innerHTML = `
+                    <div class="space-y-2">
+                        <!-- High reliability Vector SVG block -->
+                        <div class="h-32 flex items-center justify-center relative overflow-hidden bg-slate-50 rounded-lg p-2">
+                            ${char.svg}
+                        </div>
+                        <h4 class="font-black text-lg ${char.colorClass}">${char.name}</h4>
+                        <p class="text-xs text-gray-500 font-bold leading-relaxed">${char.desc}</p>
+                    </div>
+                    <span id="char-badge-${key}" class="mt-3 block text-xs bg-gray-200 text-black font-black py-1 px-2 rounded-full">選取</span>
+                `;
+                grid.appendChild(card);
+            });
         }
-        reset() {
-          this.x = Math.random() * canvas.width;
-          this.y = Math.random() * canvas.height;
-          this.size = Math.random() * 2 + 0.5;
-          this.speedX = (Math.random() - 0.5) * 0.3;
-          this.speedY = (Math.random() - 0.5) * 0.3;
-          this.color = Math.random() > 0.5 ? '#00f0ff' : '#ff007f';
-          this.alpha = Math.random();
+
+        // --- LEADERBOARD LOGIC ---
+        function initLeaderboard() {
+            const stored = localStorage.getItem('mario_multi_leaderboard');
+            if (stored) {
+                state.leaderboard = JSON.parse(stored);
+            } else {
+                state.leaderboard = [
+                    { name: "瑪利歐老師", char: "mario", gems: 40, date: "2026-06-01" },
+                    { name: "路易吉小隊", char: "luigi", gems: 32, date: "2026-06-05" },
+                    { name: "碧姬公主粉", char: "peach", gems: 24, date: "2026-06-09" },
+                    { name: "奇諾小天使", char: "toad", gems: 15, date: "2026-06-10" },
+                    { name: "快樂耀西", char: "yoshi", gems: 8, date: "2026-06-10" }
+                ];
+                saveLeaderboard();
+            }
         }
-        update() {
-          this.x += this.speedX;
-          this.y += this.speedY;
-          this.alpha += (Math.random() - 0.5) * 0.05;
-          if (this.alpha < 0) this.alpha = 0;
-          if (this.alpha > 1) this.alpha = 1;
 
-          if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
-            this.reset();
-          }
+        function saveLeaderboard() {
+            localStorage.setItem('mario_multi_leaderboard', JSON.stringify(state.leaderboard));
         }
-        draw() {
-          ctx.save();
-          ctx.globalAlpha = this.alpha;
-          ctx.fillStyle = this.color;
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
+
+        function showLeaderboard() {
+            AudioEngine.playCoin();
+            const listContainer = document.getElementById('leaderboard-list');
+            listContainer.innerHTML = '';
+
+            state.leaderboard.sort((a, b) => b.gems - a.gems);
+
+            state.leaderboard.forEach((entry, i) => {
+                const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}`;
+                const charObj = CHARACTERS[entry.char] || { name: '匿名', svg: '' };
+
+                const item = document.createElement('div');
+                item.className = `flex justify-between items-center p-3 border-2 border-black rounded-lg ${i < 3 ? 'bg-yellow-50 border-marioYellow' : 'bg-gray-50'}`;
+                item.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span class="font-black text-lg w-6 text-center">${medal}</span>
+                        <div class="w-10 h-10 flex items-center justify-center">
+                            ${charObj.svg}
+                        </div>
+                        <div>
+                            <span class="font-bold text-gray-800">${escapeHTML(entry.name)}</span>
+                            <span class="text-xs text-gray-400 block">${entry.date}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-1 font-black text-marioRed">
+                        <span>💎</span>
+                        <span>${entry.gems}</span>
+                    </div>
+                `;
+                listContainer.appendChild(item);
+            });
+
+            document.getElementById('modal-leaderboard').classList.remove('hidden');
         }
-      }
 
-      for (let i = 0; i < 75; i++) {
-        particles.push(new Particle());
-      }
-
-      function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-          p.update();
-          p.draw();
-        });
-        requestAnimationFrame(animate);
-      }
-      animate();
-    }
-
-    // Keyboard Event listener for Flashcards
-    window.addEventListener('keydown', (e) => {
-      const fcView = document.getElementById('view-flashcards');
-      if (fcView && !fcView.classList.contains('hidden')) {
-        if (e.code === 'Space') {
-          e.preventDefault();
-          flipFlashcard();
-        } else if (e.code === 'ArrowRight') {
-          nextFlashcard();
-        } else if (e.code === 'ArrowLeft') {
-          prevFlashcard();
+        function closeLeaderboard() {
+            document.getElementById('modal-leaderboard').classList.add('hidden');
         }
-      }
-    });
 
-    // Startup script
-    window.onload = function() {
-      initBackgroundParticles();
-      updateGlobalStatusIndicators();
-      selectHero(profile.hero);
-      switchView('home');
-    };
-  </script>
+        function resetLeaderboard() {
+            localStorage.removeItem('mario_multi_leaderboard');
+            state.leaderboard = [];
+            initLeaderboard();
+            showLeaderboard();
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        // --- NAVIGATION CONTROLLER ---
+        function navigateTo(screenId) {
+            AudioEngine.playJump();
+            document.querySelectorAll('main > section').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+            const target = document.getElementById(screenId);
+            if (target) {
+                target.classList.remove('hidden');
+            }
+        }
+
+        // --- SELECT CHARACTER ---
+        function selectCharacter(charKey) {
+            AudioEngine.playCoin();
+            state.selectedChar = charKey;
+
+            // Reset selection UI
+            Object.keys(CHARACTERS).forEach(key => {
+                const card = document.getElementById(`char-card-${key}`);
+                const badge = document.getElementById(`char-badge-${key}`);
+                const char = CHARACTERS[key];
+                if (card) {
+                    card.className = "cursor-pointer border-4 border-gray-200 rounded-xl p-4 text-center hover:shadow-lg transition-all transform hover:-translate-y-1 flex flex-col justify-between bg-white";
+                    badge.className = "mt-3 block text-xs bg-gray-200 text-black font-black py-1 px-2 rounded-full";
+                    badge.textContent = "選取";
+                }
+            });
+
+            // Highlight selected
+            const card = document.getElementById(`char-card-${charKey}`);
+            const badge = document.getElementById(`char-badge-${charKey}`);
+            const char = CHARACTERS[charKey];
+            if (card && badge) {
+                card.className = `cursor-pointer border-4 ${char.borderColor} rounded-xl p-4 text-center shadow-lg transition-all transform hover:-translate-y-1 flex flex-col justify-between ${char.bgColor}`;
+                badge.className = `mt-3 block text-xs bg-black text-white font-black py-1 px-2 rounded-full`;
+                badge.textContent = "🟢 已選定夥伴";
+            }
+        }
+
+        function confirmCharacterSelection() {
+            const inputName = document.getElementById('player-name').value.trim();
+            if (!inputName) {
+                alert("請填寫你的冒險大名唷！");
+                return;
+            }
+            state.playerName = inputName;
+
+            // Header status update with Vector SVG
+            const char = CHARACTERS[state.selectedChar];
+            const headerBox = document.getElementById('header-char-svg-box');
+            headerBox.innerHTML = char.svg;
+
+            document.getElementById('header-character').classList.remove('hidden');
+            document.getElementById('header-char-name').textContent = `${state.playerName}`;
+
+            // Build map level walk avatars
+            updateMapScreen();
+            navigateTo('screen-level-select');
+        }
+
+        // --- UPDATE MAP PATHS AND LOCK STATES ---
+        function updateMapScreen() {
+            const thresholds = { 2: 5, 3: 10, 4: 15, 5: 20 };
+            const selectedCharObj = CHARACTERS[state.selectedChar];
+
+            // Render position indicators on Map
+            for (let lvl = 1; lvl <= 5; lvl++) {
+                const indicator = document.getElementById(`map-char-indicator-${lvl}`);
+                if (indicator) {
+                    const svgContainer = indicator.querySelector('.char-svg-container');
+                    svgContainer.innerHTML = selectedCharObj.svg;
+
+                    // Place the indicator on the furthest unlocked level the player is on
+                    const threshold = thresholds[lvl] || 0;
+                    if (state.totalGems >= threshold && (lvl === 5 || state.totalGems < (thresholds[lvl+1] || 999))) {
+                        indicator.classList.remove('hidden');
+                    } else {
+                        indicator.classList.add('hidden');
+                    }
+                }
+            }
+
+            // Standard locks update
+            for (let lvl = 2; lvl <= 5; lvl++) {
+                const threshold = thresholds[lvl];
+                const row = document.getElementById(`lvl-row-${lvl}`);
+                const badge = document.getElementById(`lvl-badge-${lvl}`);
+                const btn = document.getElementById(`lvl-btn-${lvl}`);
+
+                if (state.totalGems >= threshold) {
+                    row.className = "level-row flex flex-col sm:flex-row items-center justify-between p-4 border-4 border-black rounded-xl bg-gradient-to-r from-red-100 to-amber-50 hover:scale-[1.01] transition-transform opacity-100";
+                    badge.className = "text-4xl bg-white p-2 rounded-lg border-2 border-black font-black text-marioRed";
+                    badge.innerHTML = `${lvl}`;
+                    
+                    btn.className = "retro-btn-red px-6 py-2 font-bold text-sm rounded";
+                    btn.disabled = false;
+                    btn.innerHTML = `進入關卡 ⭐️`;
+                } else {
+                    row.className = "level-row flex flex-col sm:flex-row items-center justify-between p-4 border-4 border-gray-300 rounded-xl bg-gray-50 opacity-60";
+                    badge.className = "text-4xl bg-white p-2 rounded-lg border-2 border-gray-300 font-black text-gray-400";
+                    badge.innerHTML = "🔒";
+                    
+                    btn.className = "bg-gray-400 border-2 border-gray-500 text-white cursor-not-allowed mt-3 sm:mt-0 px-6 py-2 font-bold text-sm rounded";
+                    btn.disabled = true;
+                    btn.innerHTML = `🔒 差 ${threshold - state.totalGems} 💎`;
+                }
+            }
+        }
+
+        // --- LEVEL WORKSPACE CONTROLLER ---
+        function startLevel(lvlIndex) {
+            state.activeLevel = lvlIndex;
+            const lvlObj = LEVELS[lvlIndex];
+            const char = CHARACTERS[state.selectedChar];
+
+            // Render title/header
+            document.getElementById('active-lvl-label').textContent = `第 ${lvlIndex} 關`;
+            document.getElementById('active-lvl-title').textContent = lvlObj.title;
+            document.getElementById('active-lvl-gems').textContent = state.gemsByLevel[lvlIndex];
+
+            // Render workspace avatar
+            const avatarBox = document.getElementById('workspace-char-avatar-box');
+            avatarBox.innerHTML = char.svg;
+
+            // Setup sub elements
+            loadFormulaCards(lvlObj.formulas);
+            document.getElementById('youtube-player').src = lvlObj.youtubeUrl;
+            document.getElementById('youtube-external-btn').href = lvlObj.externalUrl;
+
+            // Combat & Apps init
+            initCombatQuestions(lvlObj.multiplierSet);
+            initAppQuestions(lvlObj.apps);
+
+            // Default view
+            switchSubTab('formulas');
+            navigateTo('screen-level-workspace');
+        }
+
+        // --- SWITCH SUB TABS ---
+        function switchSubTab(tabName) {
+            AudioEngine.playJump();
+            const tabs = ['formulas', 'video', 'combat', 'application'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tabName) {
+                    btn.className = "py-2.5 px-1 md:px-4 text-xs md:text-sm font-black border-b-4 border-marioRed text-marioRed focus:outline-none";
+                } else {
+                    btn.className = "py-2.5 px-1 md:px-4 text-xs md:text-sm font-black border-b-4 border-transparent text-gray-500 hover:text-black focus:outline-none";
+                }
+            });
+
+            tabs.forEach(t => {
+                const div = document.getElementById(`sub-content-${t}`);
+                if (t === tabName) {
+                    div.classList.remove('hidden');
+                } else {
+                    div.classList.add('hidden');
+                }
+            });
+
+            // Turn off audio when leaving video tab
+            if (tabName !== 'video') {
+                const iframe = document.getElementById('youtube-player');
+                const src = iframe.src;
+                iframe.src = '';
+                iframe.src = src;
+            }
+        }
+
+        // --- WORKSPACE TAB 1: FORMULAS CARD ENGINE ---
+        function loadFormulaCards(formulas) {
+            const container = document.getElementById('formula-cards-container');
+            container.innerHTML = '';
+
+            formulas.forEach(formula => {
+                const card = document.createElement('div');
+                card.className = "bg-white border-2 border-black rounded-xl p-3 text-center font-black text-lg shadow-sm hover:scale-105 active:scale-95 transition-transform cursor-pointer hover:bg-yellow-50 flex flex-col justify-center items-center h-20";
+                card.onclick = () => {
+                    AudioEngine.playCoin();
+                    card.classList.add('animate__animated', 'animate__pulse');
+                    setTimeout(() => card.classList.remove('animate__animated', 'animate__pulse'), 400);
+                };
+                card.innerHTML = `
+                    <div class="text-marioBlue font-black">${formula}</div>
+                    <div class="text-[10px] text-marioRed font-bold mt-1">⭐️ 點擊發聲</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // --- WORKSPACE TAB 3: COMBAT CONTROLLER ---
+        function initCombatQuestions(multiplierSet) {
+            state.combatQuestions = [];
+            state.combatIndex = 0;
+            state.combatAnswersCorrect = 0;
+
+            document.getElementById('combat-completed-panel').classList.add('hidden');
+            document.getElementById('combat-card').classList.remove('hidden');
+            document.getElementById('combat-score-live').textContent = "0";
+
+            // Support character decoration inside card
+            const helperBox = document.getElementById('combat-char-helper-box');
+            const char = CHARACTERS[state.selectedChar];
+            helperBox.innerHTML = char.svg;
+
+            // Build 5 random equations
+            for (let i = 0; i < 5; i++) {
+                const n1 = multiplierSet[Math.floor(Math.random() * multiplierSet.length)];
+                const n2 = Math.floor(Math.random() * 9) + 1;
+                const ans = n1 * n2;
+
+                const choices = new Set([ans]);
+                while (choices.size < 4) {
+                    const offset = (Math.floor(Math.random() * 3) + 1) * (Math.random() > 0.5 ? 1 : -1);
+                    const wrong = Math.max(1, ans + offset);
+                    choices.add(wrong);
+                }
+
+                state.combatQuestions.push({
+                    num1: n1,
+                    num2: n2,
+                    answer: ans,
+                    choices: Array.from(choices).sort(() => Math.random() - 0.5)
+                });
+            }
+
+            renderCombatQuestion();
+        }
+
+        function renderCombatQuestion() {
+            if (state.combatIndex >= 5) {
+                concludeCombat();
+                return;
+            }
+
+            const q = state.combatQuestions[state.combatIndex];
+            document.getElementById('combat-progress').textContent = `${state.combatIndex + 1} / 5`;
+            document.getElementById('combat-score-live').textContent = state.combatAnswersCorrect;
+
+            document.getElementById('combat-num1').textContent = q.num1;
+            document.getElementById('combat-num2').textContent = q.num2;
+
+            const grid = document.getElementById('combat-choices');
+            grid.innerHTML = '';
+
+            q.choices.forEach(val => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white border-4 border-black font-black text-2xl py-4 rounded-xl hover:bg-marioYellow/20 active:scale-95 transition-all text-center";
+                btn.textContent = val;
+                btn.onclick = () => evaluateCombatAnswer(val);
+                grid.appendChild(btn);
+            });
+        }
+
+        function evaluateCombatAnswer(selectedVal) {
+            const q = state.combatQuestions[state.combatIndex];
+            const isCorrect = selectedVal === q.answer;
+
+            if (isCorrect) {
+                state.combatAnswersCorrect++;
+                showFeedback(true, `<b>完美解答！</b><br>你成功算對了：<br>${q.num1} × ${q.num2} = ${q.answer}！`);
+            } else {
+                showFeedback(false, `<b>就差一點點！</b><br>正確答案其實是：<br>${q.num1} × ${q.num2} = <b>${q.answer}</b>`);
+            }
+            state.combatIndex++;
+        }
+
+        function concludeCombat() {
+            document.getElementById('combat-card').classList.add('hidden');
+            const panel = document.getElementById('combat-completed-panel');
+            panel.classList.remove('hidden');
+
+            document.getElementById('combat-score').textContent = state.combatAnswersCorrect;
+
+            // Earn up to 5 gems
+            const gemsEarned = state.combatAnswersCorrect;
+            state.combatScores[state.activeLevel] = gemsEarned;
+
+            const appGems = state.appAnswersCorrect || 0;
+            const newTotal = gemsEarned + appGems;
+
+            const previousLvlGems = state.gemsByLevel[state.activeLevel];
+            if (newTotal > previousLvlGems) {
+                const diff = newTotal - previousLvlGems;
+                state.gemsByLevel[state.activeLevel] = newTotal;
+                state.totalGems += diff;
+                updateUIGems();
+            }
+
+            document.getElementById('active-lvl-gems').textContent = state.gemsByLevel[state.activeLevel];
+            document.getElementById('combat-gems-feedback').innerHTML = `獲得寶石：💎 + ${gemsEarned} 顆！`;
+            AudioEngine.playLevelUp();
+        }
+
+        // --- WORKSPACE TAB 4: APPLICATION PROBLEMS CONTROLLER ---
+        function initAppQuestions(appsData) {
+            state.appQuestions = appsData;
+            state.appIndex = 0;
+            state.appAnswersCorrect = 0;
+
+            document.getElementById('app-completed-panel').classList.add('hidden');
+            document.getElementById('app-question-card').classList.remove('hidden');
+
+            // Render helper background
+            const helperBox = document.getElementById('app-char-helper-box');
+            const char = CHARACTERS[state.selectedChar];
+            helperBox.innerHTML = char.svg;
+
+            renderAppQuestion();
+        }
+
+        function renderAppQuestion() {
+            if (state.appIndex >= 3) {
+                concludeApps();
+                return;
+            }
+
+            const q = state.appQuestions[state.appIndex];
+            document.getElementById('app-progress').textContent = `${state.appIndex + 1} / 3`;
+            document.getElementById('app-score').textContent = state.appAnswersCorrect;
+
+            document.getElementById('app-question-text').textContent = q.text;
+
+            const container = document.getElementById('app-choices-container');
+            container.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white border-4 border-black font-bold p-4 rounded-xl text-left hover:bg-purple-100 hover:scale-[1.01] transition-all text-sm sm:text-base leading-snug";
+                btn.innerHTML = `<span class="bg-black text-white px-2 py-0.5 rounded mr-2 text-xs font-black">${idx+1}</span> ${opt.label}`;
+                btn.onclick = () => evaluateAppAnswer(opt.isCorrect);
+                container.appendChild(btn);
+            });
+        }
+
+        function evaluateAppAnswer(isCorrect) {
+            if (isCorrect) {
+                state.appAnswersCorrect++;
+                showFeedback(true, `<b>極具天賦！</b>你順利破解了這道生活應用題！🎉`);
+            } else {
+                showFeedback(false, `<b>差一點就答對了！</b>仔細核對算式與數量關係，重整旗鼓再來一次！`);
+            }
+            state.appIndex++;
+        }
+
+        function concludeApps() {
+            document.getElementById('app-question-card').classList.add('hidden');
+            const panel = document.getElementById('app-completed-panel');
+            panel.classList.remove('hidden');
+
+            document.getElementById('app-final-correct').textContent = state.appAnswersCorrect;
+
+            // Earn up to 3 gems
+            const combatGems = state.combatScores[state.activeLevel] || 0;
+            const appGems = state.appAnswersCorrect;
+            const newTotal = combatGems + appGems;
+
+            const previousLvlGems = state.gemsByLevel[state.activeLevel];
+            if (newTotal > previousLvlGems) {
+                const diff = newTotal - previousLvlGems;
+                state.gemsByLevel[state.activeLevel] = newTotal;
+                state.totalGems += diff;
+                updateUIGems();
+            }
+
+            document.getElementById('active-lvl-gems').textContent = state.gemsByLevel[state.activeLevel];
+            document.getElementById('app-gems-feedback').innerHTML = `獲得寶石：💎 + ${appGems} 顆！`;
+
+            const nextBtn = document.getElementById('workspace-next-level-btn');
+            if (state.activeLevel < 5) {
+                nextBtn.textContent = `前往關卡 ${state.activeLevel + 1} 🚀`;
+                nextBtn.classList.remove('hidden');
+            } else {
+                nextBtn.textContent = `🏆 完成全部關卡！拯救蘑菇王國！`;
+                nextBtn.classList.remove('retro-btn-red');
+                nextBtn.classList.add('retro-btn-yellow');
+            }
+
+            AudioEngine.playLevelUp();
+        }
+
+        // --- TRAVEL MAP NAVIGATION ---
+        function goToNextLevel() {
+            if (state.activeLevel < 5) {
+                const nextLvl = state.activeLevel + 1;
+                const thresholds = { 2: 5, 3: 10, 4: 15, 5: 20 };
+                if (state.totalGems >= thresholds[nextLvl]) {
+                    startLevel(nextLvl);
+                } else {
+                    alert(`寶石不夠解鎖！開啟下一關需要累積 ${thresholds[nextLvl]} 顆寶石唷。快去之前的關卡完美答對題目，贏得滿分寶石吧！`);
+                    backToMap();
+                }
+            } else {
+                concludeWholeGame();
+            }
+        }
+
+        function backToMap() {
+            updateMapScreen();
+            navigateTo('screen-level-select');
+        }
+
+        // --- CONCLUDE WHOLE GAME ---
+        function concludeWholeGame() {
+            state.leaderboard.push({
+                name: state.playerName,
+                char: state.selectedChar,
+                gems: state.totalGems,
+                date: new Date().toISOString().split('T')[0]
+            });
+            saveLeaderboard();
+
+            // Setup victory character presentation
+            const char = CHARACTERS[state.selectedChar];
+            const vicBox = document.getElementById('victory-char-svg-box');
+            vicBox.innerHTML = char.svg;
+
+            document.getElementById('victory-player-name').textContent = state.playerName;
+            document.getElementById('victory-total-gems').textContent = state.totalGems;
+
+            navigateTo('screen-game-complete');
+        }
+
+        function restartGame() {
+            state.totalGems = 0;
+            state.gemsByLevel = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+            state.combatScores = {};
+            state.activeLevel = 1;
+
+            updateUIGems();
+            navigateTo('screen-welcome');
+        }
+
+        // --- GLOBAL STATS UI ---
+        function updateUIGems() {
+            document.getElementById('total-gems').textContent = state.totalGems;
+        }
+
+        // --- ANSWER FEEDBACK MODAL ---
+        function showFeedback(isCorrect, text) {
+            const card = document.getElementById('feedback-card');
+            const emoji = document.getElementById('feedback-emoji');
+            const title = document.getElementById('feedback-title');
+            const desc = document.getElementById('feedback-text');
+
+            if (isCorrect) {
+                AudioEngine.playCoin();
+                card.className = "bg-white retro-border rounded-2xl max-w-sm w-full p-6 text-center space-y-4 border-emerald-500 animate__animated animate__bounceIn";
+                emoji.textContent = "🌟";
+                title.textContent = "回答正確！";
+                title.className = "text-2xl font-black text-emerald-600";
+            } else {
+                AudioEngine.playError();
+                card.className = "bg-white retro-border rounded-2xl max-w-sm w-full p-6 text-center space-y-4 border-marioRed animate__animated animate__shakeX";
+                emoji.textContent = "💥";
+                title.textContent = "哎呀，算錯囉！";
+                title.className = "text-2xl font-black text-marioRed";
+            }
+
+            desc.innerHTML = text;
+            document.getElementById('modal-feedback').classList.remove('hidden');
+        }
+
+        function dismissFeedback() {
+            document.getElementById('modal-feedback').classList.add('hidden');
+            if (document.getElementById('sub-content-combat').classList.contains('hidden') === false) {
+                renderCombatQuestion();
+            } else if (document.getElementById('sub-content-application').classList.contains('hidden') === false) {
+                renderAppQuestion();
+            }
+        }
+    </script>
 </body>
 </html>
