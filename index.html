@@ -140,7 +140,7 @@
                 <ul class="text-sm text-gray-600 space-y-1.5 list-disc list-inside font-semibold">
                     <li>選擇一位實力強大的<b>夥伴角色</b>（由我們純代碼手工繪製，100%完美顯示！）。</li>
                     <li>挑戰 <b>5 大乘法主題關卡</b>。</li>
-                    <li>每關完成：<b>讀口訣 ➡️ 聽本土音樂盒/看趣味影片 ➡️ 乘法實戰 ➡️ 解決應用題</b>。</li>
+                    <li>每關完成：<b>讀口訣 ➡️ 聽廣東話互動卡拉OK/看官方影片 ➡️ 乘法實戰 ➡️ 解決應用題</b>。</li>
                     <li>答對累積 💎 寶石，登上最終的<b>世界英雄排行榜</b>！</li>
                 </ul>
             </div>
@@ -354,19 +354,19 @@
                 </div>
             </div>
 
-            <!-- SUB-TAB CONTENT 2: Video & Built-in Rhythm Synthesizer (Bulletproof!) -->
+            <!-- SUB-TAB CONTENT 2: Video & Built-in Rhythm Karaoke with Cantonese TTS (Bulletproof!) -->
             <div id="sub-content-video" class="hidden space-y-6">
                 <!-- Dual Player Toggle Tabs -->
                 <div class="flex justify-center bg-gray-100 p-1.5 rounded-xl max-w-md mx-auto border-2 border-black">
-                    <button id="toggle-synth" onclick="setVideoMode('synth')" class="flex-1 py-2 px-3 text-sm font-black rounded-lg bg-marioRed text-white transition-all">
-                        🎹 瑪利歐律動音樂盒 (100% 成功)
+                    <button id="toggle-synth" onclick="setVideoMode('synth')" class="flex-1 py-2 px-3 text-sm font-black rounded-lg bg-marioRed text-white transition-all shadow">
+                        🗣️ 廣東話語音伴讀 (100% 成功)
                     </button>
                     <button id="toggle-youtube" onclick="setVideoMode('youtube')" class="flex-1 py-2 px-3 text-sm font-black rounded-lg text-gray-600 transition-all">
                         📺 觀看官方 YouTube 影片
                     </button>
                 </div>
 
-                <!-- PLAYER MODE 1: NATIVE retro beat karaoke machine (100% bug free) -->
+                <!-- PLAYER MODE 1: NATIVE retro beat karaoke machine with Cantonese Speech Synthesis (Web Speech API) -->
                 <div id="synth-player-container" class="bg-gradient-to-b from-sky-400 to-sky-600 border-4 border-black rounded-2xl p-6 text-center space-y-6 relative overflow-hidden shadow-lg">
                     <!-- Floating clouds and stars background decorations -->
                     <div class="absolute top-4 left-4 text-3xl opacity-30 select-none animate-pulse">☁️</div>
@@ -374,20 +374,20 @@
                     
                     <div class="space-y-1 relative z-10">
                         <span class="bg-black/40 text-marioYellow text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
-                            🎵 NATIVE RETRO BEAT SYNTHESIZER
+                            🎵 CANTONESE MULTIPLICATION SYNTHESIZER
                         </span>
                         <h4 class="text-2xl font-black text-white" style="text-shadow: 2px 2px 0px #000;">
-                            跟著旋律大聲讀出口訣吧！
+                            廣東話智能互動朗讀機
                         </h4>
                     </div>
 
                     <!-- Bouncing Ball Karaoke Board -->
                     <div class="bg-yellow-50 border-4 border-black rounded-xl p-6 min-h-[140px] flex flex-col items-center justify-center relative shadow-inner">
                         <p id="karaoke-text" class="text-3xl font-black text-marioBlue tracking-wide leading-relaxed animate__animated">
-                            按下播放，音樂盒將為你演奏！
+                            按下播放，瑪利歐將用廣東話為你伴讀！
                         </p>
                         <p id="karaoke-sub-text" class="text-sm font-semibold text-gray-500 mt-2">
-                            旋律響起時，會像 KTV 伴唱一樣跳動唷！
+                            旋律響起時，會自動跟隨廣東話發音變更口訣唷！
                         </p>
                     </div>
 
@@ -395,7 +395,7 @@
                     <div class="flex justify-center items-center space-x-4 relative z-10">
                         <button id="btn-play-synth" onclick="playMultiplierKaraoke()" class="retro-btn-yellow font-black text-lg px-8 py-3.5 rounded-full flex items-center space-x-2">
                             <span id="play-synth-icon">▶️</span>
-                            <span id="play-synth-text">播放口訣音樂 Beats</span>
+                            <span id="play-synth-text">播放廣東話朗讀 Beats</span>
                         </button>
                         <button id="btn-stop-synth" disabled onclick="stopMultiplierKaraoke()" class="bg-gray-300 border-3 border-black text-black opacity-50 font-black text-lg px-6 py-3.5 rounded-full">
                             ⏹️ 停止
@@ -403,29 +403,16 @@
                     </div>
                 </div>
 
-                <!-- PLAYER MODE 2: YouTube Embed Player (Safe-load setup) -->
+                <!-- PLAYER MODE 2: YouTube Embed Player -->
                 <div id="youtube-player-container" class="hidden space-y-4 animate__animated animate__fadeIn">
-                    <div class="bg-red-50 border-2 border-red-200 p-4 rounded-xl text-center">
-                        <p class="font-bold text-red-800 text-sm md:text-base">
-                            <b>提示：</b>如果您的瀏覽器有非常嚴格的防火牆、家長防護網或隔離限制，YouTube 播放器可能會加載失敗。請隨時切換回「音樂盒」或點擊大黃按鈕直接觀看！
-                        </p>
+                    <!-- Multi-video switcher for current level -->
+                    <div id="youtube-switcher" class="flex justify-center space-x-3 my-2">
+                        <!-- Switcher buttons loaded dynamically -->
                     </div>
-                    <!-- Frame -->
+                    <!-- Frame Container -->
                     <div class="relative w-full pb-[56.25%] border-4 border-black rounded-xl overflow-hidden bg-black shadow-inner">
                         <iframe id="youtube-player" class="absolute top-0 left-0 w-full h-full" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
-                </div>
-
-                <!-- Sandbox Fallback Link Button -->
-                <div class="text-center py-3 bg-yellow-50 border-2 border-marioYellow rounded-xl flex flex-col sm:flex-row items-center justify-between p-4 space-y-2 sm:space-y-0">
-                    <div class="text-left">
-                        <span class="font-bold text-sm text-yellow-800 block">🍭 官方 YouTube 直通車：</span>
-                        <span class="text-xs text-gray-600 block">如果影片加載卡住，可以直接一鍵跳轉到您的 YouTube 播放清單觀看喔！</span>
-                    </div>
-                    <a id="youtube-external-btn" href="https://youtube.com/playlist?list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ" target="_blank" class="bg-red-600 border-2 border-black text-white px-5 py-2.5 rounded-lg font-black text-sm shadow hover:bg-red-700 active:translate-y-0.5 transition-transform flex items-center space-x-2">
-                        <span>📺 在 YouTube 直接開啟 🚀</span>
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </a>
                 </div>
 
                 <div class="text-center pt-2">
@@ -619,16 +606,18 @@
 
     <!-- SOUND & GAME LOGIC -->
     <script>
-        // Game level data with your exact playlist and specific indexes
+        // Game level data with your exact custom YouTube videoseries links mapped carefully
         const LEVELS = {
             1: {
                 id: 1,
                 title: "1 與 2 的乘法樂園 🍄",
                 multiplierSet: [1, 2],
                 formulaKey: "1, 2",
-                // Official Embed Link
-                youtubeUrl: "https://www.youtube.com/embed/videoseries?list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=0",
-                externalUrl: "https://www.youtube.com/watch?v=y838_gL1_8c&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=1",
+                // Two custom high-fidelity videos corresponding to Level 1
+                videos: [
+                    { title: "1的乘法歌曲", url: "https://www.youtube-nocookie.com/embed/KHg_t25yJ-4?enablejsapi=1&rel=0" },
+                    { title: "2的乘法歌曲", url: "https://www.youtube-nocookie.com/embed/feQXV3WLHpc?enablejsapi=1&rel=0" }
+                ],
                 formulas: [
                     "一 一 如 一", "一 二 如 二", "一 三 如 三", "一 四 如 四", "一 五 如 五", "一 六 如 六", "一 七 如 七", "一 八 如 八", "一 九 如 九",
                     "二 一 如 二", "二 二 如 四", "二 三 如 六", "二 四 如 八", "二 五 一 十", "二 六 十 二", "二 七 十 四", "二 八 十 六", "二 九 十 八"
@@ -669,8 +658,10 @@
                 title: "3 與 4 的森林迷宮 🌳",
                 multiplierSet: [3, 4],
                 formulaKey: "3, 4",
-                youtubeUrl: "https://www.youtube.com/embed/videoseries?list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=1",
-                externalUrl: "https://www.youtube.com/watch?v=S2o8u60-9V8&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=2",
+                videos: [
+                    { title: "3的乘法歌曲", url: "https://www.youtube-nocookie.com/embed/qTQpd8jtuBs?enablejsapi=1&rel=0" },
+                    { title: "4的乘法歌曲", url: "https://www.youtube-nocookie.com/embed/qTQpd8jtuBs?enablejsapi=1&rel=0" }
+                ],
                 formulas: [
                     "三 一 如 三", "三 二 如 六", "三 三 如 九", "三 四 十 二", "三 五 十 五", "三 六 十 八", "三 七 廿 一", "三 八 廿 四", "三 九 廿 七",
                     "四 一 如 四", "四 二 如 八", "四 三 十 二", "四 四 十 六", "四 五 二 十", "四 六 廿 四", "四 七 廿 八", "四 八 卅 二", "四 九 卅 六"
@@ -711,8 +702,10 @@
                 title: "5 與 6 的黃金沙漠 🌵",
                 multiplierSet: [5, 6],
                 formulaKey: "5, 6",
-                youtubeUrl: "https://www.youtube.com/embed/videoseries?list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=2",
-                externalUrl: "https://www.youtube.com/watch?v=9_I7xO_oP_8&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=3",
+                videos: [
+                    { title: "5的乘法歌曲", url: "https://www.youtube-nocookie.com/embed/Tu-9qbmeAs8?enablejsapi=1&rel=0" },
+                    { title: "6的乘法歌曲", url: "https://www.youtube-nocookie.com/embed/6HqMN30Zqu8?enablejsapi=1&rel=0" }
+                ],
                 formulas: [
                     "五 一 如 五", "五 二 一 十", "五 三 十 五", "五 四 二 十", "五 五 廿 五", "五 六 三 十", "五 七 卅 五", "五 八 四 十", "五 九 卅 五",
                     "六 一 如 六", "六 二 十 二", "六 三 十 八", "六 四 廿 四", "六 五 三 十", "六 六 卅 六", "六 七 卅 二", "六 八 卅 八", "六 九 五 四"
@@ -753,8 +746,10 @@
                 title: "7 與 8 的雲中城堡 ☁️",
                 multiplierSet: [7, 8],
                 formulaKey: "7, 8",
-                youtubeUrl: "https://www.youtube.com/embed/videoseries?list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=3",
-                externalUrl: "https://www.youtube.com/watch?v=W_Xz88_b3k8&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=4",
+                videos: [
+                    { title: "7的乘法歌曲", url: "https://www.youtube-nocookie.com/embed/3C_E6FzuZH8?enablejsapi=1&rel=0" },
+                    { title: "8的乘法歌曲", url: "https://www.youtube-nocookie.com/embed/uaas61DTxYc?enablejsapi=1&rel=0" }
+                ],
                 formulas: [
                     "七 一 如 七", "七 二 十 四", "七 三 廿 一", "七 四 廿 八", "七 五 卅 五", "七 六 卅 二", "七 七 卅 九", "七 八 卅 六", "七 九 六 三",
                     "八 一 如 八", "八 二 十 六", "八 三 廿 四", "八 四 卅 二", "八 五 四 十", "八 六 卅 八", "八 七 卅 六", "八 八 卅 四", "八 九 七 二"
@@ -795,8 +790,9 @@
                 title: "9 的庫巴大魔王終極戰 🏰",
                 multiplierSet: [9],
                 formulaKey: "9",
-                youtubeUrl: "https://www.youtube.com/embed/videoseries?list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=4",
-                externalUrl: "https://www.youtube.com/watch?v=U8M30_EaO4A&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=5",
+                videos: [
+                    { title: "9的乘法歌曲", url: "https://www.youtube-nocookie.com/embed/ZraaxAuYzJA?enablejsapi=1&rel=0" }
+                ],
                 formulas: [
                     "九 一 如 九", "九 二 十 八", "九 三 廿 七", "九 四 卅 六", "九 五 四 五", "九 六 卅 四", "九 七 卅 三", "九 八 七 二", "九 九 八 一"
                 ],
@@ -962,7 +958,7 @@
             }
         };
 
-        // --- RETRO SYNTH AUDIO ENGINE (STANDALONE Web Audio API) ---
+        // --- RETRO SYNTH AUDIO ENGINE (STANDALONE Web Audio API & TTS) ---
         const AudioEngine = {
             ctx: null,
             synthInterval: null,
@@ -1033,7 +1029,7 @@
                 osc.start(now);
                 osc.stop(now + 0.2);
             },
-            // Pure synthesizer beat for multiplication karaoke (tempo beat + dynamic melody beep)
+            // Pure synthesizer beat for backing tracks
             playBeatNote(freq, type = "sine", duration = 0.25) {
                 this.init();
                 const now = this.ctx.currentTime;
@@ -1041,12 +1037,33 @@
                 const gain = this.ctx.createGain();
                 osc.type = type;
                 osc.frequency.setValueAtTime(freq, now);
-                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.setValueAtTime(0.08, now);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
                 osc.connect(gain);
                 gain.connect(this.ctx.destination);
                 osc.start(now);
                 osc.stop(now + duration);
+            },
+            // Web Speech API - Cantonese朗讀引擎
+            speakCantonese(text) {
+                if ('speechSynthesis' in window) {
+                    // 先停止當前可能正在發出的任何語音
+                    window.speechSynthesis.cancel();
+                    
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'zh-HK'; // 指定廣東話
+                    
+                    // 尋找系統內建的本地廣東話語音包
+                    const voices = window.speechSynthesis.getVoices();
+                    const cantoneseVoice = voices.find(v => v.lang === 'zh-HK' || v.lang.includes('HK') || v.name.includes('Hong Kong'));
+                    if (cantoneseVoice) {
+                        utterance.voice = cantoneseVoice;
+                    }
+                    
+                    utterance.rate = 0.9; // 稍微調慢一點，讓小朋友聽得更清楚
+                    utterance.pitch = 1.1; // 稍微調高音調，聽起來更活潑可愛
+                    window.speechSynthesis.speak(utterance);
+                }
             }
         };
 
@@ -1073,6 +1090,11 @@
             isKaraokePlaying: false,
             karaokeIndex: 0
         };
+
+        // 預載語音包 (解決 Chrome 等部分瀏覽器非同步載入 getVoices 的問題)
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.getVoices();
+        }
 
         // --- APP INITIALIZATION ---
         window.addEventListener('load', () => {
@@ -1309,15 +1331,28 @@
 
             // Setup sub elements
             loadFormulaCards(lvlObj.formulasMath);
-            document.getElementById('youtube-player').src = lvlObj.youtubeUrl;
-            document.getElementById('youtube-external-btn').href = lvlObj.externalUrl;
+
+            // Populate YouTube Videos Switcher UI
+            const switcher = document.getElementById('youtube-switcher');
+            switcher.innerHTML = '';
+            
+            lvlObj.videos.forEach((vid, vIdx) => {
+                const btn = document.createElement('button');
+                btn.className = `border-2 border-black font-black px-4 py-1.5 rounded-lg text-xs transition-all ${vIdx === 0 ? 'bg-marioYellow text-black shadow' : 'bg-white text-gray-700'}`;
+                btn.textContent = vid.title;
+                btn.onclick = () => selectYoutubeVideo(vIdx, btn);
+                switcher.appendChild(btn);
+            });
+
+            // Load the default first video in the selection list
+            document.getElementById('youtube-player').src = lvlObj.videos[0].url;
 
             // Reset karaoke synthesizer state
             stopMultiplierKaraoke();
-            document.getElementById('karaoke-text').textContent = "按下播放，音樂盒將為你演奏！";
+            document.getElementById('karaoke-text').textContent = "按下播放，瑪利歐將用廣東話為你伴讀！";
             document.getElementById('karaoke-text').className = "text-3xl font-black text-marioBlue tracking-wide leading-relaxed";
 
-            // Default Video / Synth switcher reset
+            // Default Video / Synth switcher reset to Synth (Local TTS first)
             setVideoMode('synth');
 
             // Combat & Apps init
@@ -1327,6 +1362,22 @@
             // Default view
             switchSubTab('formulas');
             navigateTo('screen-level-workspace');
+        }
+
+        // --- YOUTUBE MULTI-VIDEO SWITCHER ---
+        function selectYoutubeVideo(videoIndex, selectedBtn) {
+            AudioEngine.playCoin();
+            const lvlObj = LEVELS[state.activeLevel];
+            
+            // Update Iframe Source
+            document.getElementById('youtube-player').src = lvlObj.videos[videoIndex].url;
+
+            // Update Switcher Active Button Highlights
+            const buttons = document.getElementById('youtube-switcher').querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.className = "border-2 border-black font-black px-4 py-1.5 rounded-lg text-xs transition-all bg-white text-gray-700 shadow-none";
+            });
+            selectedBtn.className = "border-2 border-black font-black px-4 py-1.5 rounded-lg text-xs transition-all bg-marioYellow text-black shadow";
         }
 
         // --- SWITCH VIDEO SUB-TAB PLAYER (SYNTH VS YOUTUBE) ---
@@ -1358,7 +1409,7 @@
             }
         }
 
-        // --- NATIVE RETRO BEAT KARAOKE ENGINE ---
+        // --- NATIVE RETRO BEAT KARAOKE ENGINE WITH CANTONESE SPEECH ---
         function playMultiplierKaraoke() {
             AudioEngine.init();
             if (state.isKaraokePlaying) {
@@ -1377,15 +1428,12 @@
             document.getElementById('btn-stop-synth').disabled = false;
             document.getElementById('btn-stop-synth').classList.remove('opacity-50');
 
-            // Sound Beep definitions (Upbeat scale)
-            const synthScales = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25, 587.33];
-
             function tick() {
                 if (!state.isKaraokePlaying) return;
 
                 if (state.karaokeIndex >= formulas.length) {
                     stopMultiplierKaraoke();
-                    document.getElementById('karaoke-text').textContent = "🌟 學習完成！你真棒！";
+                    document.getElementById('karaoke-text').textContent = "🌟 廣東話學習完成！你太棒了！";
                     AudioEngine.playLevelUp();
                     return;
                 }
@@ -1395,21 +1443,15 @@
                 box.innerHTML = `<span class="text-marioRed text-lg block tracking-widest animate-bounce mb-2">⭐ ${formulasMath[state.karaokeIndex]} ⭐</span>` + formulas[state.karaokeIndex];
                 box.className = "text-4xl font-black text-marioRed tracking-wider leading-relaxed animate__animated animate__pulse";
 
-                // NES Audio Beat trigger
-                const freq = synthScales[state.karaokeIndex % synthScales.length];
-                // Bass backing track
-                AudioEngine.playBeatNote(110, "sawtooth", 0.4); 
-                // Sparkly melody node
-                setTimeout(() => {
-                    AudioEngine.playBeatNote(freq, "triangle", 0.18);
-                }, 100);
-                setTimeout(() => {
-                    AudioEngine.playBeatNote(freq * 1.5, "sine", 0.12);
-                }, 220);
+                // 1. Play high-compatibility retro background audio beats
+                AudioEngine.playBeatNote(150, "triangle", 0.3); // Rhythm beats
+
+                // 2. TTS Voice Broadcast in pure Cantonese!
+                AudioEngine.speakCantonese(formulas[state.karaokeIndex]);
 
                 state.karaokeIndex++;
-                // Play next beat in 1.4 seconds (Perfect pacing for children)
-                state.synthInterval = setTimeout(tick, 1400);
+                // Play next beat in 1.7 seconds (Perfect pacing for Cantonese pronunciation)
+                state.synthInterval = setTimeout(tick, 1700);
             }
 
             tick();
@@ -1421,12 +1463,15 @@
                 clearTimeout(state.synthInterval);
                 state.synthInterval = null;
             }
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
 
             document.getElementById('play-synth-icon').textContent = "▶️";
-            document.getElementById('play-synth-text').textContent = "播放口訣音樂 Beats";
+            document.getElementById('play-synth-text').textContent = "播放廣東話朗讀 Beats";
             document.getElementById('btn-stop-synth').disabled = true;
             document.getElementById('btn-stop-synth').classList.add('opacity-50');
-            document.getElementById('karaoke-text').textContent = "按下播放，音樂盒將為你演奏！";
+            document.getElementById('karaoke-text').textContent = "按下播放，瑪利歐將用廣東話為你伴讀！";
             document.getElementById('karaoke-text').className = "text-3xl font-black text-marioBlue tracking-wide leading-relaxed";
         }
 
@@ -1459,7 +1504,7 @@
                 iframe.src = '';
                 iframe.src = src;
                 
-                // Also stop local karaoke beats
+                // Also stop local karaoke beats & speech synthesis
                 stopMultiplierKaraoke();
             }
         }
@@ -1469,17 +1514,20 @@
             const container = document.getElementById('formula-cards-container');
             container.innerHTML = '';
 
-            formulas.forEach(formula => {
+            formulas.forEach((formula, idx) => {
                 const card = document.createElement('div');
                 card.className = "bg-white border-2 border-black rounded-xl p-3 text-center font-black text-lg shadow-sm hover:scale-105 active:scale-95 transition-transform cursor-pointer hover:bg-yellow-50 flex flex-col justify-center items-center h-20";
+                
+                const verbalText = LEVELS[state.activeLevel].formulas[idx];
                 card.onclick = () => {
                     AudioEngine.playCoin();
+                    AudioEngine.speakCantonese(verbalText);
                     card.classList.add('animate__animated', 'animate__pulse');
                     setTimeout(() => card.classList.remove('animate__animated', 'animate__pulse'), 400);
                 };
                 card.innerHTML = `
                     <div class="text-marioBlue font-black">${formula}</div>
-                    <div class="text-[10px] text-marioRed font-bold mt-1">⭐️ 點擊發聲</div>
+                    <div class="text-[10px] text-marioRed font-bold mt-1">🗣️ 廣東話朗讀</div>
                 `;
                 container.appendChild(card);
             });
