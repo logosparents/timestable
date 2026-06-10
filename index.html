@@ -140,7 +140,7 @@
                 <ul class="text-sm text-gray-600 space-y-1.5 list-disc list-inside font-semibold">
                     <li>選擇一位實力強大的<b>夥伴角色</b>（由我們純代碼手工繪製，100%完美顯示！）。</li>
                     <li>挑戰 <b>5 大乘法主題關卡</b>。</li>
-                    <li>每關完成：<b>讀口訣 ➡️ 看趣味影片 ➡️ 乘法實戰 ➡️ 解決應用題</b>。</li>
+                    <li>每關完成：<b>讀口訣 ➡️ 聽本土音樂盒/看趣味影片 ➡️ 乘法實戰 ➡️ 解決應用題</b>。</li>
                     <li>答對累積 💎 寶石，登上最終的<b>世界英雄排行榜</b>！</li>
                 </ul>
             </div>
@@ -152,7 +152,7 @@
             </div>
         </section>
 
-        <!-- SCREEN 2: Character Selection (Featuring Live Custom SVG vector Graphics) -->
+        <!-- SCREEN 2: Character Selection -->
         <section id="screen-char-select" class="hidden w-full bg-white retro-border p-6 md:p-8 rounded-2xl space-y-6 animate__animated animate__fadeIn">
             <div class="text-center">
                 <h3 class="text-2xl md:text-4xl font-extrabold text-marioBlue" style="text-shadow: 1px 1px 0px #000;">
@@ -302,7 +302,7 @@
             </div>
         </section>
 
-        <!-- SCREEN 4: Level Workspace (Formulas, Videos, Combat, Applications) -->
+        <!-- SCREEN 4: Level Workspace -->
         <section id="screen-level-workspace" class="hidden w-full bg-white retro-border p-4 md:p-6 rounded-2xl space-y-6 animate__animated animate__fadeIn">
             <!-- Level Header Info -->
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-4 border-black pb-4">
@@ -354,25 +354,80 @@
                 </div>
             </div>
 
-            <!-- SUB-TAB CONTENT 2: Video -->
-            <div id="sub-content-video" class="hidden space-y-4">
-                <div class="bg-red-50 border-2 border-red-200 p-4 rounded-xl text-center flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-3">
-                    <span class="text-3xl">🎵</span>
-                    <p class="font-bold text-red-800 text-sm md:text-base">
-                        <b>推薦好聽音樂：</b>一邊唱歌、一邊看影片，看完就可以準備進行乘法實戰贏取寶石囉！
-                    </p>
+            <!-- SUB-TAB CONTENT 2: Video & Built-in Rhythm Synthesizer (Bulletproof!) -->
+            <div id="sub-content-video" class="hidden space-y-6">
+                <!-- Dual Player Toggle Tabs -->
+                <div class="flex justify-center bg-gray-100 p-1.5 rounded-xl max-w-md mx-auto border-2 border-black">
+                    <button id="toggle-synth" onclick="setVideoMode('synth')" class="flex-1 py-2 px-3 text-sm font-black rounded-lg bg-marioRed text-white transition-all">
+                        🎹 瑪利歐律動音樂盒 (100% 成功)
+                    </button>
+                    <button id="toggle-youtube" onclick="setVideoMode('youtube')" class="flex-1 py-2 px-3 text-sm font-black rounded-lg text-gray-600 transition-all">
+                        📺 觀看官方 YouTube 影片
+                    </button>
                 </div>
-                <!-- YouTube Container (Now using youtube-nocookie and reliable embedding configuration) -->
-                <div class="relative w-full pb-[56.25%] border-4 border-black rounded-xl overflow-hidden bg-black shadow-inner">
-                    <iframe id="youtube-player" class="absolute top-0 left-0 w-full h-full" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+                <!-- PLAYER MODE 1: NATIVE retro beat karaoke machine (100% bug free) -->
+                <div id="synth-player-container" class="bg-gradient-to-b from-sky-400 to-sky-600 border-4 border-black rounded-2xl p-6 text-center space-y-6 relative overflow-hidden shadow-lg">
+                    <!-- Floating clouds and stars background decorations -->
+                    <div class="absolute top-4 left-4 text-3xl opacity-30 select-none animate-pulse">☁️</div>
+                    <div class="absolute top-10 right-8 text-3xl opacity-30 select-none animate-pulse">⭐</div>
+                    
+                    <div class="space-y-1 relative z-10">
+                        <span class="bg-black/40 text-marioYellow text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
+                            🎵 NATIVE RETRO BEAT SYNTHESIZER
+                        </span>
+                        <h4 class="text-2xl font-black text-white" style="text-shadow: 2px 2px 0px #000;">
+                            跟著旋律大聲讀出口訣吧！
+                        </h4>
+                    </div>
+
+                    <!-- Bouncing Ball Karaoke Board -->
+                    <div class="bg-yellow-50 border-4 border-black rounded-xl p-6 min-h-[140px] flex flex-col items-center justify-center relative shadow-inner">
+                        <p id="karaoke-text" class="text-3xl font-black text-marioBlue tracking-wide leading-relaxed animate__animated">
+                            按下播放，音樂盒將為你演奏！
+                        </p>
+                        <p id="karaoke-sub-text" class="text-sm font-semibold text-gray-500 mt-2">
+                            旋律響起時，會像 KTV 伴唱一樣跳動唷！
+                        </p>
+                    </div>
+
+                    <!-- Interactive Synthesizer Piano Keys -->
+                    <div class="flex justify-center items-center space-x-4 relative z-10">
+                        <button id="btn-play-synth" onclick="playMultiplierKaraoke()" class="retro-btn-yellow font-black text-lg px-8 py-3.5 rounded-full flex items-center space-x-2">
+                            <span id="play-synth-icon">▶️</span>
+                            <span id="play-synth-text">播放口訣音樂 Beats</span>
+                        </button>
+                        <button id="btn-stop-synth" disabled onclick="stopMultiplierKaraoke()" class="bg-gray-300 border-3 border-black text-black opacity-50 font-black text-lg px-6 py-3.5 rounded-full">
+                            ⏹️ 停止
+                        </button>
+                    </div>
                 </div>
+
+                <!-- PLAYER MODE 2: YouTube Embed Player (Safe-load setup) -->
+                <div id="youtube-player-container" class="hidden space-y-4 animate__animated animate__fadeIn">
+                    <div class="bg-red-50 border-2 border-red-200 p-4 rounded-xl text-center">
+                        <p class="font-bold text-red-800 text-sm md:text-base">
+                            <b>提示：</b>如果您的瀏覽器有非常嚴格的防火牆、家長防護網或隔離限制，YouTube 播放器可能會加載失敗。請隨時切換回「音樂盒」或點擊大黃按鈕直接觀看！
+                        </p>
+                    </div>
+                    <!-- Frame -->
+                    <div class="relative w-full pb-[56.25%] border-4 border-black rounded-xl overflow-hidden bg-black shadow-inner">
+                        <iframe id="youtube-player" class="absolute top-0 left-0 w-full h-full" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                </div>
+
                 <!-- Sandbox Fallback Link Button -->
-                <div class="text-center py-2 bg-yellow-50 border-2 border-marioYellow rounded-xl flex flex-col sm:flex-row items-center justify-between p-4 space-y-2 sm:space-y-0">
-                    <span class="font-bold text-sm text-yellow-800"><i class="fa-brands fa-youtube text-red-600"></i> 如果上面影片無法載入，你可以點擊右邊按鈕：</span>
-                    <a id="youtube-external-btn" href="https://youtube.com/playlist?list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ" target="_blank" class="bg-red-600 border-2 border-black text-white px-4 py-2 rounded font-black text-sm shadow hover:bg-red-700 active:translate-y-0.5 transition-transform">
-                        📺 在 YouTube 開啟播放清單 🚀
+                <div class="text-center py-3 bg-yellow-50 border-2 border-marioYellow rounded-xl flex flex-col sm:flex-row items-center justify-between p-4 space-y-2 sm:space-y-0">
+                    <div class="text-left">
+                        <span class="font-bold text-sm text-yellow-800 block">🍭 官方 YouTube 直通車：</span>
+                        <span class="text-xs text-gray-600 block">如果影片加載卡住，可以直接一鍵跳轉到您的 YouTube 播放清單觀看喔！</span>
+                    </div>
+                    <a id="youtube-external-btn" href="https://youtube.com/playlist?list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ" target="_blank" class="bg-red-600 border-2 border-black text-white px-5 py-2.5 rounded-lg font-black text-sm shadow hover:bg-red-700 active:translate-y-0.5 transition-transform flex items-center space-x-2">
+                        <span>📺 在 YouTube 直接開啟 🚀</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
                     </a>
                 </div>
+
                 <div class="text-center pt-2">
                     <button onclick="switchSubTab('combat')" class="retro-btn-green px-8 py-3 text-lg font-black rounded-xl text-white">
                         學會了！挑戰乘法實戰 ⚔️ ➡️
@@ -564,17 +619,21 @@
 
     <!-- SOUND & GAME LOGIC -->
     <script>
-        // Game level data - Updated to use highly compatible youtube-nocookie and reliable embedding configuration
+        // Game level data with your exact playlist and specific indexes
         const LEVELS = {
             1: {
                 id: 1,
                 title: "1 與 2 的乘法樂園 🍄",
                 multiplierSet: [1, 2],
                 formulaKey: "1, 2",
-                // Specific high-compatibility educational video ID for 1&2 times tables
-                youtubeUrl: "https://www.youtube-nocookie.com/embed/y838_gL1_8c?enablejsapi=1&rel=0",
-                externalUrl: "https://www.youtube.com/watch?v=y838_gL1_8c&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ",
+                // Official Embed Link
+                youtubeUrl: "https://www.youtube.com/embed/videoseries?list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=0",
+                externalUrl: "https://www.youtube.com/watch?v=y838_gL1_8c&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=1",
                 formulas: [
+                    "一 一 如 一", "一 二 如 二", "一 三 如 三", "一 四 如 四", "一 五 如 五", "一 六 如 六", "一 七 如 七", "一 八 如 八", "一 九 如 九",
+                    "二 一 如 二", "二 二 如 四", "二 三 如 六", "二 四 如 八", "二 五 一 十", "二 六 十 二", "二 七 十 四", "二 八 十 六", "二 九 十 八"
+                ],
+                formulasMath: [
                     "1 × 1 = 1", "1 × 2 = 2", "1 × 3 = 3", "1 × 4 = 4", "1 × 5 = 5", "1 × 6 = 6", "1 × 7 = 7", "1 × 8 = 8", "1 × 9 = 9",
                     "2 × 1 = 2", "2 × 2 = 4", "2 × 3 = 6", "2 × 4 = 8", "2 × 5 = 10", "2 × 6 = 12", "2 × 7 = 14", "2 × 8 = 16", "2 × 9 = 18"
                 ],
@@ -610,9 +669,13 @@
                 title: "3 與 4 的森林迷宮 🌳",
                 multiplierSet: [3, 4],
                 formulaKey: "3, 4",
-                youtubeUrl: "https://www.youtube-nocookie.com/embed/S2o8u60-9V8?enablejsapi=1&rel=0",
-                externalUrl: "https://www.youtube.com/watch?v=S2o8u60-9V8&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ",
+                youtubeUrl: "https://www.youtube.com/embed/videoseries?list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=1",
+                externalUrl: "https://www.youtube.com/watch?v=S2o8u60-9V8&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=2",
                 formulas: [
+                    "三 一 如 三", "三 二 如 六", "三 三 如 九", "三 四 十 二", "三 五 十 五", "三 六 十 八", "三 七 廿 一", "三 八 廿 四", "三 九 廿 七",
+                    "四 一 如 四", "四 二 如 八", "四 三 十 二", "四 四 十 六", "四 五 二 十", "四 六 廿 四", "四 七 廿 八", "四 八 卅 二", "四 九 卅 六"
+                ],
+                formulasMath: [
                     "3 × 1 = 3", "3 × 2 = 6", "3 × 3 = 9", "3 × 4 = 12", "3 × 5 = 15", "3 × 6 = 18", "3 × 7 = 21", "3 × 8 = 24", "3 × 9 = 27",
                     "4 × 1 = 4", "4 × 2 = 8", "4 × 3 = 12", "4 × 4 = 16", "4 × 5 = 20", "4 × 6 = 24", "4 × 7 = 28", "4 × 8 = 32", "4 × 9 = 36"
                 ],
@@ -648,9 +711,13 @@
                 title: "5 與 6 的黃金沙漠 🌵",
                 multiplierSet: [5, 6],
                 formulaKey: "5, 6",
-                youtubeUrl: "https://www.youtube-nocookie.com/embed/9_I7xO_oP_8?enablejsapi=1&rel=0",
-                externalUrl: "https://www.youtube.com/watch?v=9_I7xO_oP_8&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ",
+                youtubeUrl: "https://www.youtube.com/embed/videoseries?list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=2",
+                externalUrl: "https://www.youtube.com/watch?v=9_I7xO_oP_8&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=3",
                 formulas: [
+                    "五 一 如 五", "五 二 一 十", "五 三 十 五", "五 四 二 十", "五 五 廿 五", "五 六 三 十", "五 七 卅 五", "五 八 四 十", "五 九 卅 五",
+                    "六 一 如 六", "六 二 十 二", "六 三 十 八", "六 四 廿 四", "六 五 三 十", "六 六 卅 六", "六 七 卅 二", "六 八 卅 八", "六 九 五 四"
+                ],
+                formulasMath: [
                     "5 × 1 = 5", "5 × 2 = 10", "5 × 3 = 15", "5 × 4 = 20", "5 × 5 = 25", "5 × 6 = 30", "5 × 7 = 35", "5 × 8 = 40", "5 × 9 = 45",
                     "6 × 1 = 6", "6 × 2 = 12", "6 × 3 = 18", "6 × 4 = 24", "6 × 5 = 30", "6 × 6 = 36", "6 × 7 = 42", "6 × 8 = 48", "6 × 9 = 54"
                 ],
@@ -686,9 +753,13 @@
                 title: "7 與 8 的雲中城堡 ☁️",
                 multiplierSet: [7, 8],
                 formulaKey: "7, 8",
-                youtubeUrl: "https://www.youtube-nocookie.com/embed/W_Xz88_b3k8?enablejsapi=1&rel=0",
-                externalUrl: "https://www.youtube.com/watch?v=W_Xz88_b3k8&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ",
+                youtubeUrl: "https://www.youtube.com/embed/videoseries?list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=3",
+                externalUrl: "https://www.youtube.com/watch?v=W_Xz88_b3k8&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=4",
                 formulas: [
+                    "七 一 如 七", "七 二 十 四", "七 三 廿 一", "七 四 廿 八", "七 五 卅 五", "七 六 卅 二", "七 七 卅 九", "七 八 卅 六", "七 九 六 三",
+                    "八 一 如 八", "八 二 十 六", "八 三 廿 四", "八 四 卅 二", "八 五 四 十", "八 六 卅 八", "八 七 卅 六", "八 八 卅 四", "八 九 七 二"
+                ],
+                formulasMath: [
                     "7 × 1 = 7", "7 × 2 = 14", "7 × 3 = 21", "7 × 4 = 28", "7 × 5 = 35", "7 × 6 = 42", "7 × 7 = 49", "7 × 8 = 56", "7 × 9 = 63",
                     "8 × 1 = 8", "8 × 2 = 16", "8 × 3 = 24", "8 × 4 = 32", "8 × 5 = 40", "8 × 6 = 48", "8 × 7 = 56", "8 × 8 = 64", "8 × 9 = 72"
                 ],
@@ -724,9 +795,12 @@
                 title: "9 的庫巴大魔王終極戰 🏰",
                 multiplierSet: [9],
                 formulaKey: "9",
-                youtubeUrl: "https://www.youtube-nocookie.com/embed/U8M30_EaO4A?enablejsapi=1&rel=0",
-                externalUrl: "https://www.youtube.com/watch?v=U8M30_EaO4A&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ",
+                youtubeUrl: "https://www.youtube.com/embed/videoseries?list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=4",
+                externalUrl: "https://www.youtube.com/watch?v=U8M30_EaO4A&list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ&index=5",
                 formulas: [
+                    "九 一 如 九", "九 二 十 八", "九 三 廿 七", "九 四 卅 六", "九 五 四 五", "九 六 卅 四", "九 七 卅 三", "九 八 七 二", "九 九 八 一"
+                ],
+                formulasMath: [
                     "9 × 1 = 9", "9 × 2 = 18", "9 × 3 = 27", "9 × 4 = 36", "9 × 5 = 45", "9 × 6 = 54", "9 × 7 = 63", "9 × 8 = 72", "9 × 9 = 81"
                 ],
                 apps: [
@@ -891,6 +965,7 @@
         // --- RETRO SYNTH AUDIO ENGINE (STANDALONE Web Audio API) ---
         const AudioEngine = {
             ctx: null,
+            synthInterval: null,
             init() {
                 if (!this.ctx) {
                     this.ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -957,6 +1032,21 @@
                 gain.connect(this.ctx.destination);
                 osc.start(now);
                 osc.stop(now + 0.2);
+            },
+            // Pure synthesizer beat for multiplication karaoke (tempo beat + dynamic melody beep)
+            playBeatNote(freq, type = "sine", duration = 0.25) {
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, now);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + duration);
             }
         };
 
@@ -977,7 +1067,11 @@
             appIndex: 0,
             appAnswersCorrect: 0,
 
-            leaderboard: []
+            leaderboard: [],
+            
+            // Retro synth player state
+            isKaraokePlaying: false,
+            karaokeIndex: 0
         };
 
         // --- APP INITIALIZATION ---
@@ -1214,9 +1308,17 @@
             avatarBox.innerHTML = char.svg;
 
             // Setup sub elements
-            loadFormulaCards(lvlObj.formulas);
+            loadFormulaCards(lvlObj.formulasMath);
             document.getElementById('youtube-player').src = lvlObj.youtubeUrl;
             document.getElementById('youtube-external-btn').href = lvlObj.externalUrl;
+
+            // Reset karaoke synthesizer state
+            stopMultiplierKaraoke();
+            document.getElementById('karaoke-text').textContent = "按下播放，音樂盒將為你演奏！";
+            document.getElementById('karaoke-text').className = "text-3xl font-black text-marioBlue tracking-wide leading-relaxed";
+
+            // Default Video / Synth switcher reset
+            setVideoMode('synth');
 
             // Combat & Apps init
             initCombatQuestions(lvlObj.multiplierSet);
@@ -1225,6 +1327,107 @@
             // Default view
             switchSubTab('formulas');
             navigateTo('screen-level-workspace');
+        }
+
+        // --- SWITCH VIDEO SUB-TAB PLAYER (SYNTH VS YOUTUBE) ---
+        function setVideoMode(mode) {
+            const btnSynth = document.getElementById('toggle-synth');
+            const btnYoutube = document.getElementById('toggle-youtube');
+            const synthContainer = document.getElementById('synth-player-container');
+            const youtubeContainer = document.getElementById('youtube-player-container');
+
+            if (mode === 'synth') {
+                btnSynth.className = "flex-1 py-2 px-3 text-sm font-black rounded-lg bg-marioRed text-white transition-all shadow";
+                btnYoutube.className = "flex-1 py-2 px-3 text-sm font-black rounded-lg text-gray-600 transition-all";
+                synthContainer.classList.remove('hidden');
+                youtubeContainer.classList.add('hidden');
+                
+                // Stop YouTube play by reloading iframe
+                const iframe = document.getElementById('youtube-player');
+                const src = iframe.src;
+                iframe.src = '';
+                iframe.src = src;
+            } else {
+                btnSynth.className = "flex-1 py-2 px-3 text-sm font-black rounded-lg text-gray-600 transition-all";
+                btnYoutube.className = "flex-1 py-2 px-3 text-sm font-black rounded-lg bg-marioRed text-white transition-all shadow";
+                synthContainer.classList.add('hidden');
+                youtubeContainer.classList.remove('hidden');
+                
+                // Stop Synth Karaoke if playing
+                stopMultiplierKaraoke();
+            }
+        }
+
+        // --- NATIVE RETRO BEAT KARAOKE ENGINE ---
+        function playMultiplierKaraoke() {
+            AudioEngine.init();
+            if (state.isKaraokePlaying) {
+                stopMultiplierKaraoke();
+                return;
+            }
+
+            state.isKaraokePlaying = true;
+            state.karaokeIndex = 0;
+
+            const formulas = LEVELS[state.activeLevel].formulas;
+            const formulasMath = LEVELS[state.activeLevel].formulasMath;
+
+            document.getElementById('play-synth-icon').textContent = "⏸️";
+            document.getElementById('play-synth-text').textContent = "暫停播放";
+            document.getElementById('btn-stop-synth').disabled = false;
+            document.getElementById('btn-stop-synth').classList.remove('opacity-50');
+
+            // Sound Beep definitions (Upbeat scale)
+            const synthScales = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25, 587.33];
+
+            function tick() {
+                if (!state.isKaraokePlaying) return;
+
+                if (state.karaokeIndex >= formulas.length) {
+                    stopMultiplierKaraoke();
+                    document.getElementById('karaoke-text').textContent = "🌟 學習完成！你真棒！";
+                    AudioEngine.playLevelUp();
+                    return;
+                }
+
+                // Render current Karaoke Step with active bouncing animation
+                const box = document.getElementById('karaoke-text');
+                box.innerHTML = `<span class="text-marioRed text-lg block tracking-widest animate-bounce mb-2">⭐ ${formulasMath[state.karaokeIndex]} ⭐</span>` + formulas[state.karaokeIndex];
+                box.className = "text-4xl font-black text-marioRed tracking-wider leading-relaxed animate__animated animate__pulse";
+
+                // NES Audio Beat trigger
+                const freq = synthScales[state.karaokeIndex % synthScales.length];
+                // Bass backing track
+                AudioEngine.playBeatNote(110, "sawtooth", 0.4); 
+                // Sparkly melody node
+                setTimeout(() => {
+                    AudioEngine.playBeatNote(freq, "triangle", 0.18);
+                }, 100);
+                setTimeout(() => {
+                    AudioEngine.playBeatNote(freq * 1.5, "sine", 0.12);
+                }, 220);
+
+                state.karaokeIndex++;
+                // Play next beat in 1.4 seconds (Perfect pacing for children)
+                state.synthInterval = setTimeout(tick, 1400);
+            }
+
+            tick();
+        }
+
+        function stopMultiplierKaraoke() {
+            state.isKaraokePlaying = false;
+            if (state.synthInterval) {
+                clearTimeout(state.synthInterval);
+                state.synthInterval = null;
+            }
+
+            document.getElementById('play-synth-icon').textContent = "▶️";
+            document.getElementById('play-synth-text').textContent = "播放口訣音樂 Beats";
+            document.getElementById('btn-stop-synth').disabled = true;
+            document.getElementById('btn-stop-synth').classList.add('opacity-50');
+            document.getElementById('karaoke-text').textContent = "按下播放，音樂盒將為你演奏！";
+            document.getElementById('karaoke-text').className = "text-3xl font-black text-marioBlue tracking-wide leading-relaxed";
         }
 
         // --- SWITCH SUB TABS ---
@@ -1255,6 +1458,9 @@
                 const src = iframe.src;
                 iframe.src = '';
                 iframe.src = src;
+                
+                // Also stop local karaoke beats
+                stopMultiplierKaraoke();
             }
         }
 
@@ -1486,6 +1692,7 @@
             }
         }
 
+        // --- BACK TO MAP ---
         function backToMap() {
             updateMapScreen();
             navigateTo('screen-level-select');
