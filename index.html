@@ -615,7 +615,6 @@
                 formulaKey: "1, 2",
                 // Two custom high-fidelity videos corresponding to Level 1
                 videos: [
-                    { title: "1的乘法歌曲", url: "https://www.youtube-nocookie.com/embed/KHg_t25yJ-4?enablejsapi=1&rel=0" },
                     { title: "2的乘法歌曲", url: "https://www.youtube-nocookie.com/embed/feQXV3WLHpc?enablejsapi=1&rel=0" }
                 ],
                 formulas: [
@@ -1198,12 +1197,6 @@
             showLeaderboard();
         }
 
-        function escapeHTML(str) {
-            return str.replace(/[&<>'"]/g, 
-                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-            );
-        }
-
         // --- NAVIGATION CONTROLLER ---
         function navigateTo(screenId) {
             AudioEngine.playJump();
@@ -1336,13 +1329,19 @@
             const switcher = document.getElementById('youtube-switcher');
             switcher.innerHTML = '';
             
-            lvlObj.videos.forEach((vid, vIdx) => {
-                const btn = document.createElement('button');
-                btn.className = `border-2 border-black font-black px-4 py-1.5 rounded-lg text-xs transition-all ${vIdx === 0 ? 'bg-marioYellow text-black shadow' : 'bg-white text-gray-700'}`;
-                btn.textContent = vid.title;
-                btn.onclick = () => selectYoutubeVideo(vIdx, btn);
-                switcher.appendChild(btn);
-            });
+            // Only show switcher if there is more than 1 video available
+            if (lvlObj.videos.length <= 1) {
+                switcher.classList.add('hidden');
+            } else {
+                switcher.classList.remove('hidden');
+                lvlObj.videos.forEach((vid, vIdx) => {
+                    const btn = document.createElement('button');
+                    btn.className = `border-2 border-black font-black px-4 py-1.5 rounded-lg text-xs transition-all ${vIdx === 0 ? 'bg-marioYellow text-black shadow' : 'bg-white text-gray-700'}`;
+                    btn.textContent = vid.title;
+                    btn.onclick = () => selectYoutubeVideo(vIdx, btn);
+                    switcher.appendChild(btn);
+                });
+            }
 
             // Load the default first video in the selection list
             document.getElementById('youtube-player').src = lvlObj.videos[0].url;
@@ -1357,7 +1356,6 @@
 
             // Combat & Apps init
             initCombatQuestions(lvlObj.multiplierSet);
-            initAppQuestions(lvlObj.apps);
 
             // Default view
             switchSubTab('formulas');
