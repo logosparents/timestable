@@ -88,10 +88,13 @@
         }
     </style>
 </head>
-<body class="bg-skyBlue min-h-screen flex flex-col font-sans select-none overflow-x-hidden">
+<body class="bg-skyBlue min-h-screen flex flex-col font-sans select-none overflow-x-hidden relative">
 
-    <!-- Sound Controller (Internal Synth via Web Audio API) -->
+    <!-- Web Audio & Speech Controller API -->
     <div id="audio-controls" class="hidden"></div>
+
+    <!-- Fullscreen Fireworks Overlay Canvas -->
+    <canvas id="fireworks-canvas" class="absolute inset-0 pointer-events-none z-40 hidden"></canvas>
 
     <!-- Navigation Header -->
     <header class="bg-marioRed text-white py-3 px-4 border-b-4 border-black flex justify-between items-center sticky top-0 z-50">
@@ -139,9 +142,9 @@
                 <h4 class="font-bold text-marioRed mb-2"><i class="fa-solid fa-star"></i> 冒險大攻略：</h4>
                 <ul class="text-sm text-gray-600 space-y-1.5 list-disc list-inside font-semibold">
                     <li>選擇一位實力強大的<b>夥伴角色</b>（由我們純代碼手工繪製，100%完美顯示！）。</li>
-                    <li>挑戰 <b>5 大乘法主題關卡</b>。</li>
-                    <li>每關完成：<b>讀口訣 ➡️ 聽廣東話互動卡拉OK/看官方影片 ➡️ 乘法實戰 ➡️ 解決應用題</b>。</li>
-                    <li>答對累積 💎 寶石，登上最終的<b>世界英雄排行榜</b>！</li>
+                    <li>挑戰 <b>6 大乘法主題關卡</b>（包含最終隨機混合挑戰！）。</li>
+                    <li>每關完成：<b>讀口訣 ➡️ 聽廣東話互動卡拉OK/看官方影片 ➡️ 5題乘法實戰 ➡️ 5題解決應用題</b>。</li>
+                    <li>答對累積 💎 寶石，解鎖後續地圖，登上最終的<b>世界英雄排行榜</b>！</li>
                 </ul>
             </div>
 
@@ -292,6 +295,26 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- Level 6 (Ultimate Review mixed) -->
+                <div class="level-row flex flex-col sm:flex-row items-center justify-between p-4 border-4 border-gray-300 rounded-xl bg-gray-50 opacity-60 transition-transform relative" id="lvl-row-6">
+                    <div class="flex items-center space-x-4">
+                        <span id="lvl-badge-6" class="text-4xl bg-white p-2 rounded-lg border-2 border-gray-300 font-black text-gray-400">👑</span>
+                        <div>
+                            <h4 class="font-black text-lg text-gray-700">第六關：終極挑戰 - 1-9 乘法大亂鬥 👑</h4>
+                            <p class="text-xs text-gray-500 font-semibold">需要獲得 25 顆寶石解鎖！挑戰 1-9 乘法隨機混合終極大關，看絢麗煙花！</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3 mt-3 sm:mt-0">
+                        <div id="map-char-indicator-6" class="hidden transition-all duration-300">
+                            <div class="w-12 h-12 flex items-center justify-center char-svg-container drop-shadow-md"></div>
+                            <span class="bg-black text-white text-[10px] px-1.5 py-0.5 rounded-full block text-center mt-0.5 font-bold animate-pulse">你在這!</span>
+                        </div>
+                        <button id="lvl-btn-6" disabled onclick="startLevel(6)" class="bg-gray-400 border-2 border-gray-500 text-white cursor-not-allowed px-6 py-2 font-bold text-sm rounded">
+                            🔒 尚未解鎖
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- Footer Buttons -->
@@ -315,7 +338,7 @@
                 </div>
                 <div class="flex items-center space-x-2 mt-3 md:mt-0 bg-yellow-100 border-2 border-marioYellow px-4 py-1.5 rounded-full font-bold text-sm text-yellow-800 shadow-sm">
                     <span>👑 本關獲得寶石：</span>
-                    <span id="active-lvl-gems" class="text-marioRed font-black text-lg">0</span> / 8 💎
+                    <span id="active-lvl-gems" class="text-marioRed font-black text-lg">0</span> / 10 💎
                 </div>
             </div>
 
@@ -472,7 +495,7 @@
             <!-- SUB-TAB CONTENT 4: Application Problems -->
             <div id="sub-content-application" class="hidden space-y-4">
                 <div class="flex justify-between items-center bg-gray-100 p-3 rounded-xl font-bold">
-                    <span class="text-gray-700">生活應用題進度：<span id="app-progress">1 / 3</span> 題</span>
+                    <span class="text-gray-700">生活應用題進度：<span id="app-progress">1 / 5</span> 題</span>
                     <span class="text-marioBlue">答對：<span id="app-score">0</span> 題</span>
                 </div>
 
@@ -502,7 +525,7 @@
                     <span class="text-6xl block">👑👑</span>
                     <h4 class="text-2xl font-black text-purple-800">本關卡終極挑戰成功！</h4>
                     <p class="font-bold text-gray-700 text-lg">
-                        你解決了生活應用問題，答對了 <span id="app-final-correct" class="text-2xl text-marioRed">0</span> / 3 題！
+                        你解決了生活應用問題，答對了 <span id="app-final-correct" class="text-2xl text-marioRed">0</span> / 5 題！
                     </p>
                     <p id="app-gems-feedback" class="text-marioYellow font-black text-lg bg-black px-5 py-2 rounded-full inline-block shadow-lg">
                         獲得寶石：💎 + 0 顆！
@@ -528,9 +551,9 @@
         </section>
 
         <!-- SCREEN 5: Victory Screen -->
-        <section id="screen-game-complete" class="hidden w-full bg-white retro-border p-6 md:p-8 rounded-2xl text-center space-y-6 animate__animated animate__zoomIn">
+        <section id="screen-game-complete" class="hidden w-full bg-white retro-border p-6 md:p-8 rounded-2xl text-center space-y-6 animate__animated animate__zoomIn relative">
             <div class="text-8xl floating my-4">👑</div>
-            <h2 class="text-3xl md:text-5xl font-black text-marioYellow" style="text-shadow: 2px 2px 0px #000;">
+            <h2 class="text-3xl md:text-5xl font-black text-marioYellow animate-pulse" style="text-shadow: 2px 2px 0px #000;">
                 世界大勝利！寶石守護者！
             </h2>
             
@@ -543,6 +566,9 @@
                     偉大的勇士 <span id="victory-player-name" class="text-marioRed text-lg font-black">小勇士</span>，你用強大無比的九九乘法魔法，成功拿回了所有寶石！
                     你一共收集了 <span id="victory-total-gems" class="text-xl text-marioYellow font-black bg-black px-3 py-1 rounded-md">0</span> 顆耀眼的乘法寶石！
                 </p>
+                <div id="victory-fireworks-tag" class="hidden bg-marioYellow border-2 border-black text-black text-xs font-black py-1 px-3 rounded-full inline-block animate-bounce shadow">
+                    🎆 終極煙花匯演正在為你盛大播放中！ 🎆
+                </div>
             </div>
 
             <div class="flex flex-col sm:flex-row justify-center gap-4 pt-4">
@@ -613,13 +639,12 @@
                 title: "1 與 2 的乘法樂園 🍄",
                 multiplierSet: [1, 2],
                 formulaKey: "1, 2",
-                // Two custom high-fidelity videos corresponding to Level 1
                 videos: [
                     { title: "2的乘法歌曲", url: "https://www.youtube-nocookie.com/embed/feQXV3WLHpc?enablejsapi=1&rel=0" }
                 ],
                 formulas: [
                     "一 一 如 一", "一 二 如 二", "一 三 如 三", "一 四 如 四", "一 五 如 五", "一 六 如 六", "一 七 如 七", "一 八 如 八", "一 九 如 九",
-                    "二 一 如 二", "二 二 如 四", "二 三 如 六", "二 四 如 八", "二 五 得 一 十", "二 六 一 十 二", "二 七 一 十 四", "二 八 一 十 六", "二 九 一 十 八"
+                    "二 一 如 二", "二 二 如 四", "二 三 如 六", "二 四 如 八", "二 五 一 十", "二 六 十 二", "二 七 十 四", "二 八 十 六", "二 九 十 八"
                 ],
                 formulasMath: [
                     "1 × 1 = 1", "1 × 2 = 2", "1 × 3 = 3", "1 × 4 = 4", "1 × 5 = 5", "1 × 6 = 6", "1 × 7 = 7", "1 × 8 = 8", "1 × 9 = 9",
@@ -649,6 +674,22 @@
                             { label: "2 × 8 = 16 頂", isCorrect: false },
                             { label: "2 × 9 = 18 頂", isCorrect: true }
                         ]
+                    },
+                    {
+                        text: "在一個金幣關卡中，瑪利歐每擊碎一個磚塊可以得到 2 枚金幣。他成功擊碎了 7 個磚塊，一共有幾枚金幣？",
+                        options: [
+                            { label: "2 + 7 = 9 枚", isCorrect: false },
+                            { label: "2 × 7 = 14 枚", isCorrect: true },
+                            { label: "2 × 8 = 16 枚", isCorrect: false }
+                        ]
+                    },
+                    {
+                        text: "路易吉得到了 2 顆超級無敵星星，每顆無敵星星可以持續 6 秒。他的無敵狀態總共可以持續多少秒？",
+                        options: [
+                            { label: "2 + 6 = 8 秒", isCorrect: false },
+                            { label: "2 × 5 = 10 秒", isCorrect: false },
+                            { label: "2 × 6 = 12 秒", isCorrect: true }
+                        ]
                     }
                 ]
             },
@@ -662,8 +703,8 @@
                     { title: "4的乘法歌曲", url: "https://www.youtube-nocookie.com/embed/qTQpd8jtuBs?enablejsapi=1&rel=0" }
                 ],
                 formulas: [
-                    "三 一 如 三", "三 二 如 六", "三 三 該 九", "三 四 一 十 二", "三 五 一 十 五", "三 六 一 十 八", "三 七 二 十 一", "三 八 二 十 四", "三 九 二 十 七",
-                    "四 一 如 四", "四 二 如 八", "四 三 一 十 二", "四 四 一 十 六", "四 五 終 二 十", "四 六 二 十 四", "四 七 二 十 八", "四 八 三 十 二", "四 九 三 十 六"
+                    "三 一 如 三", "三 二 如 六", "三 三 如 九", "三 四 十 二", "三 五 十 五", "三 六 十 八", "三 七 廿 一", "三 八 廿 四", "三 九 廿 七",
+                    "四 一 如 四", "四 二 如 八", "四 三 十 二", "四 四 十 六", "四 五 二 十", "四 六 廿 四", "四 七 廿 八", "四 八 卅 二", "四 九 卅 六"
                 ],
                 formulasMath: [
                     "3 × 1 = 3", "3 × 2 = 6", "3 × 3 = 9", "3 × 4 = 12", "3 × 5 = 15", "3 × 6 = 18", "3 × 7 = 21", "3 × 8 = 24", "3 × 9 = 27",
@@ -693,6 +734,22 @@
                             { label: "4 + 8 = 12 枚", isCorrect: false },
                             { label: "4 × 8 = 32 枚", isCorrect: true }
                         ]
+                    },
+                    {
+                        text: "大魔王庫巴每次投擲 3 個大鐵錘，他連續投擲了 9 次。他總共扔出了幾個鐵錘？",
+                        options: [
+                            { label: "3 + 9 = 12 個", isCorrect: false },
+                            { label: "3 × 9 = 27 個", isCorrect: true },
+                            { label: "3 × 8 = 24 個", isCorrect: false }
+                        ]
+                    },
+                    {
+                        text: "奇諾比奧在森林迷宮裡找到了 4 個寶箱，每個寶箱裡都有 7 顆魔法寶石。他總共獲得了多少顆寶石？",
+                        options: [
+                            { label: "4 × 7 = 28 顆", isCorrect: true },
+                            { label: "4 + 7 = 11 顆", isCorrect: false },
+                            { label: "4 × 8 = 32 顆", isCorrect: false }
+                        ]
                     }
                 ]
             },
@@ -706,8 +763,8 @@
                     { title: "6的乘法歌曲", url: "https://www.youtube-nocookie.com/embed/6HqMN30Zqu8?enablejsapi=1&rel=0" }
                 ],
                 formulas: [
-                    "五 一 如 五", "五 二 得 一 十", "五 三 一 十 五", "五 四 終 二 十", "五 五 二 十 五", "五 六 終 三 十", "五 七 三 十 五", "五 八 終 四 十", "五 九 四 十 五",
-                    "六 一 如 六", "六 二 一 十 二", "六 三 一 十 八", "六 四 二 十 四", "六 五 終 三 十", "六 六 三 十 六", "六 七 四 十 二", "六 八 四 十 八", "六 九 五 十 四"
+                    "五 一 如 五", "五 二 一 十", "五 三 十 五", "五 四 二 十", "五 五 廿 五", "五 六 三 十", "五 七 卅 五", "五 八 四 十", "五 九 卅 五",
+                    "六 一 如 六", "六 二 十 二", "六 三 十 八", "六 四 廿 四", "六 五 三 十", "六 六 卅 六", "六 七 卅 二", "六 八 卅 八", "六 九 五 四"
                 ],
                 formulasMath: [
                     "5 × 1 = 5", "5 × 2 = 10", "5 × 3 = 15", "5 × 4 = 20", "5 × 5 = 25", "5 × 6 = 30", "5 × 7 = 35", "5 × 8 = 40", "5 × 9 = 45",
@@ -737,6 +794,22 @@
                             { label: "5 × 8 = 40 個", isCorrect: false },
                             { label: "5 + 9 = 14 個", isCorrect: false }
                         ]
+                    },
+                    {
+                        text: "路易吉一次能跳過 6 個方塊障礙。如果他連續起跳了 8 次，他總共跳過了多少個方塊？",
+                        options: [
+                            { label: "6 + 8 = 14 個", isCorrect: false },
+                            { label: "6 × 7 = 42 個", isCorrect: false },
+                            { label: "6 × 8 = 48 個", isCorrect: true }
+                        ]
+                    },
+                    {
+                        text: "耀西每分鐘可以吃掉 5 顆甜沙果。如果牠快樂地吃了 6 分鐘，總共吃掉了幾顆甜沙果？",
+                        options: [
+                            { label: "5 × 6 = 30 顆", isCorrect: true },
+                            { label: "5 + 6 = 11 顆", isCorrect: false },
+                            { label: "5 × 7 = 35 顆", isCorrect: false }
+                        ]
                     }
                 ]
             },
@@ -750,8 +823,8 @@
                     { title: "8的乘法歌曲", url: "https://www.youtube-nocookie.com/embed/uaas61DTxYc?enablejsapi=1&rel=0" }
                 ],
                 formulas: [
-                    "七 一 如 七", "七 二 一 十 四", "七 三 二 十 一", "七 四 二 十 八", "七 五 三 十 五", "七 六 四 十 二", "七 七 四 十 九", "七 八 五 十 六", "七 九 六 十 三",
-                    "八 一 如 八", "八 二 一 十 六", "八 三 二 十 四", "八 四 三 十 二", "八 五 終 四 十", "八 六 四 十 八", "八 七 五 十 六", "八 八 六 十 四", "八 九 七 十 二"
+                    "七 一 如 七", "七 二 十 四", "七 三 廿 一", "七 四 廿 八", "七 五 卅 五", "七 六 卅 二", "七 七 卅 九", "七 八 卅 六", "七 九 六 三",
+                    "八 一 如 八", "八 二 十 六", "八 三 廿 四", "八 四 卅 二", "八 五 四 十", "八 六 卅 八", "八 七 卅 六", "八 八 卅 四", "八 九 七 二"
                 ],
                 formulasMath: [
                     "7 × 1 = 7", "7 × 2 = 14", "7 × 3 = 21", "7 × 4 = 28", "7 × 5 = 35", "7 × 6 = 42", "7 × 7 = 49", "7 × 8 = 56", "7 × 9 = 63",
@@ -781,6 +854,22 @@
                             { label: "8 × 8 = 64 顆", isCorrect: false },
                             { label: "8 + 9 = 17 顆", isCorrect: false }
                         ]
+                    },
+                    {
+                        text: "碧姬公主在每個花園收集了 7 朵漂亮的陽光百合，她走訪了 8 個花園，一共收集了幾朵花？",
+                        options: [
+                            { label: "7 + 8 = 15 朵", isCorrect: false },
+                            { label: "7 × 7 = 49 朵", isCorrect: false },
+                            { label: "7 × 8 = 56 朵", isCorrect: true }
+                        ]
+                    },
+                    {
+                        text: "每片雲朵中藏著 8 個金環，耀西飛越了 8 片金雲。牠總共遇到了多少個金環？",
+                        options: [
+                            { label: "8 × 8 = 64 個", isCorrect: true },
+                            { label: "8 × 7 = 56 個", isCorrect: false },
+                            { label: "8 + 8 = 16 個", isCorrect: false }
+                        ]
                     }
                 ]
             },
@@ -793,7 +882,7 @@
                     { title: "9的乘法歌曲", url: "https://www.youtube-nocookie.com/embed/ZraaxAuYzJA?enablejsapi=1&rel=0" }
                 ],
                 formulas: [
-                    "九 一 如 九", "九 二 一 十 八", "九 三 二 十 七", "九 四 三 十 六", "九 五 四 十 五", "九 六 五 十 四", "九 七 六 十 三", "九 八 七 十 二", "九 九 八 十 一"
+                    "九 一 如 九", "九 二 十 八", "九 三 廿 七", "九 四 卅 六", "九 五 四 五", "九 六 卅 四", "九 七 卅 三", "九 八 七 二", "九 九 八 一"
                 ],
                 formulasMath: [
                     "9 × 1 = 9", "9 × 2 = 18", "9 × 3 = 27", "9 × 4 = 36", "9 × 5 = 45", "9 × 6 = 54", "9 × 7 = 63", "9 × 8 = 72", "9 × 9 = 81"
@@ -821,6 +910,79 @@
                             { label: "9 × 8 = 72 個", isCorrect: false },
                             { label: "9 + 9 = 18 個", isCorrect: false },
                             { label: "9 × 9 = 81 個", isCorrect: true }
+                        ]
+                    },
+                    {
+                        text: "小庫巴在庫巴城堡的 5 面大牆上，每面牆都用油漆畫了 9 個好笑的塗鴉。他總共畫了多少個塗鴉？",
+                        options: [
+                            { label: "9 + 5 = 14 個", isCorrect: false },
+                            { label: "9 × 5 = 45 個", isCorrect: true },
+                            { label: "9 × 6 = 54 個", isCorrect: false }
+                        ]
+                    },
+                    {
+                        text: "在終極浮空城有 9 個移動平台，每個平台上有 8 枚會飛的金幣。一共有多少枚飛天金幣？",
+                        options: [
+                            { label: "9 × 8 = 72 枚", isCorrect: true },
+                            { label: "9 × 7 = 63 枚", isCorrect: false },
+                            { label: "9 + 8 = 17 枚", isCorrect: false }
+                        ]
+                    }
+                ]
+            },
+            6: {
+                id: 6,
+                title: "終極挑戰：1-9 乘法大亂鬥 👑",
+                multiplierSet: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                formulaKey: "1-9 混合",
+                videos: [
+                    { title: "乘法大闖關合集", url: "https://www.youtube-nocookie.com/embed/videoseries?list=PLkeIRfvF4jFs_T7tgZIAVXsyx-MXGBjlZ" }
+                ],
+                formulas: [
+                    "三 七 二 十 一", "四 八 三 十 二", "六 七 四 十 二", "七 八 五 十 六", "九 九 八 十 一"
+                ],
+                formulasMath: [
+                    "3 × 7 = 21", "4 × 8 = 32", "6 × 7 = 42", "7 × 8 = 56", "9 × 9 = 81"
+                ],
+                apps: [
+                    {
+                        text: "碧姬公主大廚烤製了 9 個美味蛋糕，每個蛋糕上面都要點綴 6 顆甜草莓。總共需要多少顆草莓？",
+                        options: [
+                            { label: "9 × 6 = 54 顆", isCorrect: true },
+                            { label: "9 × 5 = 45 顆", isCorrect: false },
+                            { label: "9 + 6 = 15 顆", isCorrect: false }
+                        ]
+                    },
+                    {
+                        text: "瑪利歐和路易吉一起探索了 8 座地下神秘城堡，每座城堡都隱藏著 8 個秘密房間。一共有多少個秘密房間？",
+                        options: [
+                            { label: "8 × 7 = 56 個", isCorrect: false },
+                            { label: "8 × 8 = 64 個", isCorrect: true },
+                            { label: "8 + 8 = 16 個", isCorrect: false }
+                        ]
+                    },
+                    {
+                        text: "在終極商店裡，小奇諾比奧買了 7 個綠色超級蘑菇，每個蘑菇可以給勇士增加 9 條生命。一共有幾條額外生命？",
+                        options: [
+                            { label: "7 + 9 = 16 條", isCorrect: false },
+                            { label: "7 × 8 = 56 條", isCorrect: false },
+                            { label: "7 × 9 = 63 條", isCorrect: true }
+                        ]
+                    },
+                    {
+                        text: "耀西在彩虹山上找到了 6 個神奇的恐龍蛋，每個蛋孵化出了 5 隻可愛的小耀西。一共孵化出幾隻小恐龍？",
+                        options: [
+                            { label: "6 × 5 = 30 隻", isCorrect: true },
+                            { label: "6 + 5 = 11 隻", isCorrect: false },
+                            { label: "6 × 6 = 36 隻", isCorrect: false }
+                        ]
+                    },
+                    {
+                        text: "大魔王庫巴站在雲朵上，一次朝著地面扔出 8 個刺刺球，牠連續扔了 6 次。一共有多少個刺刺球滾在地上？",
+                        options: [
+                            { label: "8 × 5 = 40 個", isCorrect: false },
+                            { label: "8 × 6 = 48 個", isCorrect: true },
+                            { label: "8 + 6 = 14 個", isCorrect: false }
                         ]
                     }
                 ]
@@ -1046,32 +1208,128 @@
             // Web Speech API - Cantonese朗讀引擎
             speakCantonese(text) {
                 if ('speechSynthesis' in window) {
-                    // 先停止當前可能正在發出的任何語音
                     window.speechSynthesis.cancel();
                     
                     const utterance = new SpeechSynthesisUtterance(text);
-                    utterance.lang = 'zh-HK'; // 指定廣東話
+                    utterance.lang = 'zh-HK'; 
                     
-                    // 尋找系統內建的本地廣東話語音包
                     const voices = window.speechSynthesis.getVoices();
                     const cantoneseVoice = voices.find(v => v.lang === 'zh-HK' || v.lang.includes('HK') || v.name.includes('Hong Kong'));
                     if (cantoneseVoice) {
                         utterance.voice = cantoneseVoice;
                     }
                     
-                    utterance.rate = 0.9; // 稍微調慢一點，讓小朋友聽得更清楚
-                    utterance.pitch = 1.1; // 稍微調高音調，聽起來更活潑可愛
+                    utterance.rate = 0.9; 
+                    utterance.pitch = 1.1; 
                     window.speechSynthesis.speak(utterance);
                 }
             }
         };
+
+        // --- FIREWORKS CANVAS ENGINE ---
+        let fireworksActive = false;
+        const fwCanvas = {
+            element: null,
+            ctx: null,
+            particles: [],
+            init() {
+                this.element = document.getElementById('fireworks-canvas');
+                this.ctx = this.element.getContext('2d');
+            },
+            resize() {
+                if (this.element) {
+                    this.element.width = window.innerWidth;
+                    this.element.height = window.innerHeight;
+                }
+            }
+        };
+
+        class FireworkParticle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 5 + 3;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.012 + 0.012;
+            }
+            draw() {
+                fwCanvas.ctx.save();
+                fwCanvas.ctx.globalAlpha = this.alpha;
+                fwCanvas.ctx.beginPath();
+                fwCanvas.ctx.arc(this.x, this.y, 4, 0, Math.PI * 2);
+                fwCanvas.ctx.fillStyle = this.color;
+                fwCanvas.ctx.fill();
+                fwCanvas.ctx.restore();
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += 0.08; // Gravity
+                this.alpha -= this.decay;
+            }
+        }
+
+        function launchFirework() {
+            if (!fwCanvas.element) return;
+            const x = Math.random() * fwCanvas.element.width;
+            const y = Math.random() * (fwCanvas.element.height * 0.5) + fwCanvas.element.height * 0.15;
+            const colors = ['#FF2222', '#FFEE22', '#22FF22', '#22EEFF', '#FF22FF', '#FF8822'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            for (let i = 0; i < 50; i++) {
+                fwCanvas.particles.push(new FireworkParticle(x, y, color));
+            }
+            AudioEngine.playCoin(); // Synthesize sparkle pops using retro coin sound!
+        }
+
+        function fireworkLoop() {
+            if (!fireworksActive) return;
+            fwCanvas.ctx.fillStyle = 'rgba(92, 148, 252, 0.25)'; // Blend with skyBlue
+            fwCanvas.ctx.fillRect(0, 0, fwCanvas.element.width, fwCanvas.element.height);
+
+            // Update & Draw Particles
+            for (let i = fwCanvas.particles.length - 1; i >= 0; i--) {
+                const p = fwCanvas.particles[i];
+                p.update();
+                p.draw();
+                if (p.alpha <= 0) {
+                    fwCanvas.particles.splice(i, 1);
+                }
+            }
+
+            if (Math.random() < 0.04) {
+                launchFirework();
+            }
+
+            requestAnimationFrame(fireworkLoop);
+        }
+
+        function startFireworks() {
+            fwCanvas.init();
+            fwCanvas.element.classList.remove('hidden');
+            fireworksActive = true;
+            fwCanvas.resize();
+            window.addEventListener('resize', () => fwCanvas.resize());
+            fireworkLoop();
+        }
+
+        function stopFireworks() {
+            fireworksActive = false;
+            if (fwCanvas.element) {
+                fwCanvas.element.classList.add('hidden');
+            }
+            fwCanvas.particles = [];
+        }
 
         // --- GAME INSTANCE STATE ---
         let state = {
             playerName: "快樂小勇士",
             selectedChar: "mario",
             totalGems: 0,
-            gemsByLevel: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+            gemsByLevel: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 },
             activeLevel: 1,
 
             combatQuestions: [],
@@ -1090,11 +1348,6 @@
             karaokeIndex: 0
         };
 
-        // 預載語音包 (解決 Chrome 等部分瀏覽器非同步載入 getVoices 的問題)
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.getVoices();
-        }
-
         // --- APP INITIALIZATION ---
         window.addEventListener('load', () => {
             initLeaderboard();
@@ -1103,7 +1356,7 @@
             selectCharacter('mario');
         });
 
-        // Dynamic builder for Character Cards to securely render custom vector SVGs
+        // Dynamic builder for Character Cards to render custom vector SVGs
         function renderCharacterSelectionGrid() {
             const grid = document.getElementById('character-grid');
             grid.innerHTML = '';
@@ -1137,11 +1390,11 @@
                 state.leaderboard = JSON.parse(stored);
             } else {
                 state.leaderboard = [
-                    { name: "瑪利歐老師", char: "mario", gems: 40, date: "2026-06-01" },
-                    { name: "路易吉小隊", char: "luigi", gems: 32, date: "2026-06-05" },
-                    { name: "碧姬公主粉", char: "peach", gems: 24, date: "2026-06-09" },
-                    { name: "奇諾小天使", char: "toad", gems: 15, date: "2026-06-10" },
-                    { name: "快樂耀西", char: "yoshi", gems: 8, date: "2026-06-10" }
+                    { name: "瑪利歐老師", char: "mario", gems: 60, date: "2026-06-01" },
+                    { name: "路易吉小隊", char: "luigi", gems: 52, date: "2026-06-05" },
+                    { name: "碧姬公主粉", char: "peach", gems: 44, date: "2026-06-09" },
+                    { name: "奇諾小天使", char: "toad", gems: 35, date: "2026-06-10" },
+                    { name: "快樂耀西", char: "yoshi", gems: 18, date: "2026-06-10" }
                 ];
                 saveLeaderboard();
             }
@@ -1195,6 +1448,12 @@
             state.leaderboard = [];
             initLeaderboard();
             showLeaderboard();
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
         }
 
         // --- NAVIGATION CONTROLLER ---
@@ -1260,11 +1519,11 @@
 
         // --- UPDATE MAP PATHS AND LOCK STATES ---
         function updateMapScreen() {
-            const thresholds = { 2: 5, 3: 10, 4: 15, 5: 20 };
+            const thresholds = { 2: 5, 3: 10, 4: 15, 5: 20, 6: 25 };
             const selectedCharObj = CHARACTERS[state.selectedChar];
 
             // Render position indicators on Map
-            for (let lvl = 1; lvl <= 5; lvl++) {
+            for (let lvl = 1; lvl <= 6; lvl++) {
                 const indicator = document.getElementById(`map-char-indicator-${lvl}`);
                 if (indicator) {
                     const svgContainer = indicator.querySelector('.char-svg-container');
@@ -1272,7 +1531,7 @@
 
                     // Place the indicator on the furthest unlocked level the player is on
                     const threshold = thresholds[lvl] || 0;
-                    if (state.totalGems >= threshold && (lvl === 5 || state.totalGems < (thresholds[lvl+1] || 999))) {
+                    if (state.totalGems >= threshold && (lvl === 6 || state.totalGems < (thresholds[lvl+1] || 999))) {
                         indicator.classList.remove('hidden');
                     } else {
                         indicator.classList.add('hidden');
@@ -1280,8 +1539,8 @@
                 }
             }
 
-            // Standard locks update
-            for (let lvl = 2; lvl <= 5; lvl++) {
+            // Standard locks update (Up to Level 6)
+            for (let lvl = 2; lvl <= 6; lvl++) {
                 const threshold = thresholds[lvl];
                 const row = document.getElementById(`lvl-row-${lvl}`);
                 const badge = document.getElementById(`lvl-badge-${lvl}`);
@@ -1289,18 +1548,22 @@
 
                 if (state.totalGems >= threshold) {
                     row.className = "level-row flex flex-col sm:flex-row items-center justify-between p-4 border-4 border-black rounded-xl bg-gradient-to-r from-red-100 to-amber-50 hover:scale-[1.01] transition-transform opacity-100";
-                    badge.className = "text-4xl bg-white p-2 rounded-lg border-2 border-black font-black text-marioRed";
-                    badge.innerHTML = `${lvl}`;
+                    if (badge) {
+                        badge.className = "text-4xl bg-white p-2 rounded-lg border-2 border-black font-black text-marioRed";
+                        badge.innerHTML = lvl === 6 ? "👑" : lvl;
+                    }
                     
                     btn.className = "retro-btn-red px-6 py-2 font-bold text-sm rounded";
                     btn.disabled = false;
                     btn.innerHTML = `進入關卡 ⭐️`;
                 } else {
                     row.className = "level-row flex flex-col sm:flex-row items-center justify-between p-4 border-4 border-gray-300 rounded-xl bg-gray-50 opacity-60";
-                    badge.className = "text-4xl bg-white p-2 rounded-lg border-2 border-gray-300 font-black text-gray-400";
-                    badge.innerHTML = "🔒";
+                    if (badge) {
+                        badge.className = "text-4xl bg-white p-2 rounded-lg border-2 border-gray-300 font-black text-gray-400";
+                        badge.innerHTML = "🔒";
+                    }
                     
-                    btn.className = "bg-gray-400 border-2 border-gray-500 text-white cursor-not-allowed mt-3 sm:mt-0 px-6 py-2 font-bold text-sm rounded";
+                    btn.className = "bg-gray-400 border-2 border-gray-500 text-white cursor-not-allowed px-6 py-2 font-bold text-sm rounded";
                     btn.disabled = true;
                     btn.innerHTML = `🔒 差 ${threshold - state.totalGems} 💎`;
                 }
@@ -1354,8 +1617,9 @@
             // Default Video / Synth switcher reset to Synth (Local TTS first)
             setVideoMode('synth');
 
-            // Combat & Apps init
+            // Combat & Apps init (COMPLETELY RESTORED & FIXES "讀取中" BUG!)
             initCombatQuestions(lvlObj.multiplierSet);
+            initAppQuestions(lvlObj.apps);
 
             // Default view
             switchSubTab('formulas');
@@ -1516,7 +1780,7 @@
                 const card = document.createElement('div');
                 card.className = "bg-white border-2 border-black rounded-xl p-3 text-center font-black text-lg shadow-sm hover:scale-105 active:scale-95 transition-transform cursor-pointer hover:bg-yellow-50 flex flex-col justify-center items-center h-20";
                 
-                const verbalText = LEVELS[state.activeLevel].formulas[idx];
+                const verbalText = LEVELS[state.activeLevel].formulas[idx % LEVELS[state.activeLevel].formulas.length];
                 card.onclick = () => {
                     AudioEngine.playCoin();
                     AudioEngine.speakCantonese(verbalText);
@@ -1653,13 +1917,13 @@
         }
 
         function renderAppQuestion() {
-            if (state.appIndex >= 3) {
+            if (state.appIndex >= 5) {
                 concludeApps();
                 return;
             }
 
             const q = state.appQuestions[state.appIndex];
-            document.getElementById('app-progress').textContent = `${state.appIndex + 1} / 3`;
+            document.getElementById('app-progress').textContent = `${state.appIndex + 1} / 5`;
             document.getElementById('app-score').textContent = state.appAnswersCorrect;
 
             document.getElementById('app-question-text').textContent = q.text;
@@ -1693,7 +1957,7 @@
 
             document.getElementById('app-final-correct').textContent = state.appAnswersCorrect;
 
-            // Earn up to 3 gems
+            // Earn up to 5 gems (since we expanded to 5 questions per level!)
             const combatGems = state.combatScores[state.activeLevel] || 0;
             const appGems = state.appAnswersCorrect;
             const newTotal = combatGems + appGems;
@@ -1710,11 +1974,11 @@
             document.getElementById('app-gems-feedback').innerHTML = `獲得寶石：💎 + ${appGems} 顆！`;
 
             const nextBtn = document.getElementById('workspace-next-level-btn');
-            if (state.activeLevel < 5) {
+            if (state.activeLevel < 6) {
                 nextBtn.textContent = `前往關卡 ${state.activeLevel + 1} 🚀`;
                 nextBtn.classList.remove('hidden');
             } else {
-                nextBtn.textContent = `🏆 完成全部關卡！拯救蘑菇王國！`;
+                nextBtn.textContent = `🏆 完成全部挑戰！觀看璀璨煙火！`;
                 nextBtn.classList.remove('retro-btn-red');
                 nextBtn.classList.add('retro-btn-yellow');
             }
@@ -1724,9 +1988,9 @@
 
         // --- TRAVEL MAP NAVIGATION ---
         function goToNextLevel() {
-            if (state.activeLevel < 5) {
+            if (state.activeLevel < 6) {
                 const nextLvl = state.activeLevel + 1;
-                const thresholds = { 2: 5, 3: 10, 4: 15, 5: 20 };
+                const thresholds = { 2: 5, 3: 10, 4: 15, 5: 20, 6: 25 };
                 if (state.totalGems >= thresholds[nextLvl]) {
                     startLevel(nextLvl);
                 } else {
@@ -1762,12 +2026,22 @@
             document.getElementById('victory-player-name').textContent = state.playerName;
             document.getElementById('victory-total-gems').textContent = state.totalGems;
 
+            // Trigger Fullscreen Fireworks if Level 6 is conquered!
+            if (state.activeLevel === 6) {
+                document.getElementById('victory-fireworks-tag').classList.remove('hidden');
+                startFireworks();
+            } else {
+                document.getElementById('victory-fireworks-tag').classList.add('hidden');
+                stopFireworks();
+            }
+
             navigateTo('screen-game-complete');
         }
 
         function restartGame() {
+            stopFireworks();
             state.totalGems = 0;
-            state.gemsByLevel = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+            state.gemsByLevel = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
             state.combatScores = {};
             state.activeLevel = 1;
 
