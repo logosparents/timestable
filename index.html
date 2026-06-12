@@ -630,7 +630,7 @@
         </div>
     </div>
 
-    <!-- SOUND & GAME LOGIC -->
+  <!-- SOUND & GAME LOGIC -->
     <script>
         // Game level data with your exact custom YouTube videoseries links mapped carefully
         const LEVELS = {
@@ -1226,8 +1226,10 @@
             }
         };
 
-        // --- FIREWORKS CANVAS ENGINE ---
+        // --- FIREWORKS CANVAS ENGINE (OPTIMIZED TO PREVENT HANGS) ---
         let fireworksActive = false;
+        let fireworksAnimationId = null;
+        
         const fwCanvas = {
             element: null,
             ctx: null,
@@ -1244,23 +1246,25 @@
             }
         };
 
+        const resizeHandler = () => fwCanvas.resize();
+
         class FireworkParticle {
             constructor(x, y, color) {
                 this.x = x;
                 this.y = y;
                 this.color = color;
                 const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 5 + 3;
+                const speed = Math.random() * 4 + 2; // Reduced speed slightly for smoother rendering
                 this.vx = Math.cos(angle) * speed;
                 this.vy = Math.sin(angle) * speed;
                 this.alpha = 1;
-                this.decay = Math.random() * 0.012 + 0.012;
+                this.decay = Math.random() * 0.015 + 0.015; // Faster decay to reduce particle count
             }
             draw() {
                 fwCanvas.ctx.save();
                 fwCanvas.ctx.globalAlpha = this.alpha;
                 fwCanvas.ctx.beginPath();
-                fwCanvas.ctx.arc(this.x, this.y, 4, 0, Math.PI * 2);
+                fwCanvas.ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
                 fwCanvas.ctx.fillStyle = this.color;
                 fwCanvas.ctx.fill();
                 fwCanvas.ctx.restore();
@@ -1276,18 +1280,22 @@
         function launchFirework() {
             if (!fwCanvas.element) return;
             const x = Math.random() * fwCanvas.element.width;
-            const y = Math.random() * (fwCanvas.element.height * 0.5) + fwCanvas.element.height * 0.15;
+            const y = Math.random() * (fwCanvas.element.height * 0.4) + fwCanvas.element.height * 0.15;
             const colors = ['#FF2222', '#FFEE22', '#22FF22', '#22EEFF', '#FF22FF', '#FF8822'];
             const color = colors[Math.floor(Math.random() * colors.length)];
-            for (let i = 0; i < 50; i++) {
+            
+            // Hard safety limit on active particles to prevent performance degradation
+            if (fwCanvas.particles.length > 150) return;
+
+            for (let i = 0; i < 25; i++) { // Reduced count from 50 to 25 per launch
                 fwCanvas.particles.push(new FireworkParticle(x, y, color));
             }
-            AudioEngine.playCoin(); // Synthesize sparkle pops using retro coin sound!
+            AudioEngine.playCoin(); 
         }
 
         function fireworkLoop() {
             if (!fireworksActive) return;
-            fwCanvas.ctx.fillStyle = 'rgba(92, 148, 252, 0.25)'; // Blend with skyBlue
+            fwCanvas.ctx.fillStyle = 'rgba(92, 148, 252, 0.25)'; // Sky blue blend
             fwCanvas.ctx.fillRect(0, 0, fwCanvas.element.width, fwCanvas.element.height);
 
             // Update & Draw Particles
@@ -1300,11 +1308,11 @@
                 }
             }
 
-            if (Math.random() < 0.04) {
+            if (Math.random() < 0.03) { // Lower launch rate
                 launchFirework();
             }
 
-            requestAnimationFrame(fireworkLoop);
+            fireworksAnimationId = requestAnimationFrame(fireworkLoop);
         }
 
         function startFireworks() {
@@ -1312,16 +1320,28 @@
             fwCanvas.element.classList.remove('hidden');
             fireworksActive = true;
             fwCanvas.resize();
-            window.addEventListener('resize', () => fwCanvas.resize());
+            
+            // Safe single listener pattern
+            window.removeEventListener('resize', resizeHandler);
+            window.addEventListener('resize', resizeHandler);
+            
+            if (fireworksAnimationId) {
+                cancelAnimationFrame(fireworksAnimationId);
+            }
             fireworkLoop();
         }
 
         function stopFireworks() {
             fireworksActive = false;
+            if (fireworksAnimationId) {
+                cancelAnimationFrame(fireworksAnimationId);
+                fireworksAnimationId = null;
+            }
             if (fwCanvas.element) {
                 fwCanvas.element.classList.add('hidden');
             }
             fwCanvas.particles = [];
+            window.removeEventListener('resize', resizeHandler);
         }
 
         // --- GAME INSTANCE STATE ---
@@ -1448,12 +1468,6 @@
             state.leaderboard = [];
             initLeaderboard();
             showLeaderboard();
-        }
-
-        function escapeHTML(str) {
-            return str.replace(/[&<>'"]/g, 
-                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-            );
         }
 
         // --- NAVIGATION CONTROLLER ---
@@ -2023,7 +2037,8 @@
             const vicBox = document.getElementById('victory-char-svg-box');
             vicBox.innerHTML = char.svg;
 
-            document.getElementById('victory-player-name').textContent = state.playerName;
+            // Updated victory congratulatory message to include selected user name and custom string
+            document.getElementById('victory-player-name').innerHTML = `<strong class="text-marioRed">${escapeHTML(state.playerName)}</strong>，恭喜你已成為乘法小達人！`;
             document.getElementById('victory-total-gems').textContent = state.totalGems;
 
             // Trigger Fullscreen Fireworks if Level 6 is conquered!
