@@ -11,7 +11,8 @@
   <!-- React and Babel -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- 使用穩定的 cdnjs UMD 版本，避免 Unpkg 載入 ESM 導致 "Cannot use import statement outside a module" 的錯誤 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.20/babel.min.js"></script>
   
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -62,16 +63,20 @@
     /* Print styling rules: Only print the Periodic Table card, hide everything else */
     @media print {
       @page {
-        size: landscape; /* Automatically set page to landscape format for perfect fit */
+        size: landscape; /* Standard landscape request */
         margin: 0.3cm;   /* Tight margins to maximize printable height */
       }
-      body {
+      /* Force iOS Safari/Chrome print preview to rotate horizontally */
+      html, body {
         background: white !important;
         color: black !important;
         padding: 0 !important;
         margin: 0 !important;
-        height: 100%;
-        overflow: hidden; /* Prevent extra blank page overflow */
+        width: 297mm !important;  /* Hardcoded A4 landscape width */
+        height: 210mm !important; /* Hardcoded A4 landscape height */
+        overflow: hidden !important; 
+        -webkit-print-color-adjust: exact; /* Ensure background colors are printed on Safari */
+        print-color-adjust: exact;
       }
       /* Hide navigation header, footer, settings, other tabs, and print controls */
       header, nav, footer, .no-print, button {
@@ -79,16 +84,18 @@
       }
       /* Expand periodic table to fill the printed A4 page precisely */
       .print-area {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100% !important;
-        max-width: 100% !important;
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 297mm !important;  /* Fit A4 landscape precisely */
+        height: 210mm !important;
         border: none !important;
         box-shadow: none !important;
-        padding: 0 !important;
+        padding: 0.4cm !important;
         margin: 0 !important;
-        page-break-inside: avoid;
+        box-sizing: border-box !important;
+        page-break-inside: avoid !important;
+        page-break-after: avoid !important;
       }
       
       /* Scale elements to fit strictly on exactly 1 page */
@@ -97,24 +104,24 @@
         margin-bottom: 2px !important;
       }
       .print-area p {
-        font-size: 0.75rem !important;
+        font-size: 0.7rem !important;
       }
       .print-area .grid-cols-18 {
         gap: 2px !important;
       }
       /* Shrink standard 118 grid cell height so standard table + actinide strip comfortably fits on one page */
       .print-area .h-\[52px\] {
-        height: 44px !important; 
+        height: 42px !important; 
       }
       .print-area .h-2 {
         height: 4px !important; /* Shrink the actinide gap separator */
       }
       .print-area .pt-3 {
-        padding-top: 6px !important;
+        padding-top: 4px !important;
       }
       .print-area .space-y-4 > :not([hidden]) ~ :not([hidden]) {
-        margin-top: 0.5rem !important;
-        margin-bottom: 0.5rem !important;
+        margin-top: 0.35rem !important;
+        margin-bottom: 0.35rem !important;
       }
     }
   </style>
@@ -577,16 +584,16 @@
       { num: 53, sym: "I", nameZh: "碘", nameEn: "Iodine", cat: "halogen" },
       { num: 54, sym: "Xe", nameZh: "氙", nameEn: "Xenon", cat: "noble-gas" },
       { num: 55, sym: "Cs", nameZh: "銫", nameEn: "Cesium", cat: "alkali-metal" },
-      { num: 56, sym: "Ba", nameZh: "鋇", nameEn: "Barium", cat: "alkaline-earth" },
+      { num: 56, sym: "Ba", nameZh: "", nameEn: "Barium", cat: "alkaline-earth" },
       { num: 57, sym: "La", nameZh: "鑭", nameEn: "Lanthanum", cat: "lanthanide" },
       { num: 58, sym: "Ce", nameZh: "鈰", nameEn: "Cerium", cat: "lanthanide" },
       { num: 59, sym: "Pr", nameZh: "鐠", nameEn: "Praseodymium", cat: "lanthanide" },
       { num: 60, sym: "Nd", nameZh: "釹", nameEn: "Neodymium", cat: "lanthanide" },
       { num: 61, sym: "Pm", nameZh: "鉕", nameEn: "Promethium", cat: "lanthanide" },
       { num: 62, sym: "Sm", nameZh: "釤", nameEn: "Samarium", cat: "lanthanide" },
-      { num: 63, sym: "Eu", nameZh: "", nameEn: "Europium", cat: "lanthanide" },
+      { num: 63, sym: "Eu", nameZh: "銪", nameEn: "Europium", cat: "lanthanide" },
       { num: 64, sym: "Gd", nameZh: "釓", nameEn: "Gadolinium", cat: "lanthanide" },
-      { num: 65, sym: "Tb", nameZh: "鋱", nameEn: "Terbium", cat: "lanthanide" },
+      { num: 65, sym: "Tb", nameZh: "", nameEn: "Terbium", cat: "lanthanide" },
       { num: 66, sym: "Dy", nameZh: "鏑", nameEn: "Dysprosium", cat: "lanthanide" },
       { num: 67, sym: "Ho", nameZh: "鈥", nameEn: "Holmium", cat: "lanthanide" },
       { num: 68, sym: "Er", nameZh: "鉺", nameEn: "Erbium", cat: "lanthanide" },
@@ -708,99 +715,99 @@
       };
 
       return (
-        <div class="max-w-6xl mx-auto px-4 py-6 font-kids">
+        <div className="max-w-6xl mx-auto px-4 py-6 font-kids">
           {/* --- TOP HEADER / NAVIGATION --- */}
-          <header class="bg-white rounded-3xl shadow-xl p-5 mb-8 flex flex-col md:flex-row justify-between items-center border-4 border-blue-200">
-            <div class="flex items-center gap-4 mb-4 md:mb-0">
-              <div class="bg-gradient-to-tr from-yellow-400 to-orange-500 w-16 h-16 rounded-2xl flex items-center justify-center text-white text-3xl shadow-md animate-float">
-                <i class="fa-solid fa-vial"></i>
+          <header className="bg-white rounded-3xl shadow-xl p-5 mb-8 flex flex-col md:flex-row justify-between items-center border-4 border-blue-200">
+            <div className="flex items-center gap-4 mb-4 md:mb-0">
+              <div className="bg-gradient-to-tr from-yellow-400 to-orange-500 w-16 h-16 rounded-2xl flex items-center justify-center text-white text-3xl shadow-md animate-float">
+                <i className="fa-solid fa-vial"></i>
               </div>
               <div>
-                <h1 class="text-3xl font-extrabold text-blue-600 tracking-wide flex items-center gap-2">
+                <h1 className="text-3xl font-extrabold text-blue-600 tracking-wide flex items-center gap-2">
                   <span>STEAM 元素歷險記</span>
                 </h1>
-                <p class="text-slate-500 text-sm">小學生專屬 ‧ 輕鬆玩轉前 20 號元素週期表 🧪</p>
+                <p className="text-slate-500 text-sm">小學生專屬 ‧ 輕鬆玩轉前 20 號元素週期表 🧪</p>
               </div>
             </div>
 
             {/* Stars Count & Achievement Stats */}
-            <div class="flex items-center gap-3">
-              <div class="bg-yellow-100 border-2 border-yellow-300 rounded-full py-2 px-5 flex items-center gap-2 shadow-inner">
-                <i class="fa-solid fa-star text-yellow-500 text-xl animate-bounce"></i>
-                <span class="text-2xl font-bold text-yellow-700">{stars}</span>
-                <span class="text-sm text-yellow-600">星星</span>
+            <div className="flex items-center gap-3">
+              <div className="bg-yellow-100 border-2 border-yellow-300 rounded-full py-2 px-5 flex items-center gap-2 shadow-inner">
+                <i className="fa-solid fa-star text-yellow-500 text-xl animate-bounce"></i>
+                <span className="text-2xl font-bold text-yellow-700">{stars}</span>
+                <span className="text-sm text-yellow-600">星星</span>
               </div>
               <button 
                 onClick={() => { playSynthSound('click'); setShowSettings(!showSettings); }}
-                class="bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full w-10 h-10 flex items-center justify-center transition border-2 border-slate-300"
+                className="bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full w-10 h-10 flex items-center justify-center transition border-2 border-slate-300"
                 title="老師設置面板"
               >
-                <i class="fa-solid fa-gear text-lg"></i>
+                <i className="fa-solid fa-gear text-lg"></i>
               </button>
             </div>
           </header>
 
           {/* Achievement Notification Toast */}
           {notif && (
-            <div class="fixed top-6 right-6 z-50 bg-gradient-to-r from-yellow-400 to-amber-500 text-white rounded-2xl p-5 shadow-2xl flex items-center gap-4 border-4 border-white animate-bounce max-w-sm">
-              <div class="text-4xl">🏆</div>
+            <div className="fixed top-6 right-6 z-50 bg-gradient-to-r from-yellow-400 to-amber-500 text-white rounded-2xl p-5 shadow-2xl flex items-center gap-4 border-4 border-white animate-bounce max-w-sm">
+              <div className="text-4xl">🏆</div>
               <div>
-                <h4 class="font-black text-lg">解鎖新成就勳章！</h4>
-                <p class="font-bold text-yellow-950">{notif.name}</p>
-                <p class="text-xs text-white/90">{notif.desc}</p>
+                <h4 className="font-black text-lg">解鎖新成就勳章！</h4>
+                <p className="font-bold text-yellow-950">{notif.name}</p>
+                <p className="text-xs text-white/90">{notif.desc}</p>
               </div>
             </div>
           )}
 
           {/* --- TEACHER SETTINGS MODAL --- */}
           {showSettings && (
-            <div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-              <div class="bg-white rounded-3xl max-w-lg w-full p-6 border-4 border-blue-400 shadow-2xl">
-                <div class="flex justify-between items-center mb-4">
-                  <h3 class="text-2xl font-bold text-blue-600 flex items-center gap-2">
-                    <i class="fa-solid fa-chalkboard-user"></i> 老師/系統工程師 設置區
+            <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+              <div className="bg-white rounded-3xl max-w-lg w-full p-6 border-4 border-blue-400 shadow-2xl">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-2xl font-bold text-blue-600 flex items-center gap-2">
+                    <i className="fa-solid fa-chalkboard-user"></i> 老師/系統工程師 設置區
                   </h3>
-                  <button onClick={() => setShowSettings(false)} class="text-slate-400 hover:text-slate-600 text-2xl">
-                    <i class="fa-solid fa-circle-xmark"></i>
+                  <button onClick={() => setShowSettings(false)} className="text-slate-400 hover:text-slate-600 text-2xl">
+                    <i className="fa-solid fa-circle-xmark"></i>
                   </button>
                 </div>
-                <p class="text-slate-500 text-xs mb-4 leading-relaxed">
+                <p className="text-slate-500 text-xs mb-4 leading-relaxed">
                   小學 STEAM 老師您好！為了讓您能高度彈性教學，在此處您可以直接修改本 App 的 YouTube 引導影片。若網路上有更適合小學生的教材（例如您手邊的 Wikipedia 相關教案影片），您可在此粘貼 iframe 可播放網址。
                 </p>
-                <div class="space-y-4 mb-6">
+                <div className="space-y-4 mb-6">
                   <div>
-                    <label class="block text-slate-700 font-bold text-sm mb-1">🎥 1. 週期表簡介影片網址 (YouTube Embed)</label>
+                    <label className="block text-slate-700 font-bold text-sm mb-1">🎥 1. 週期表簡介影片網址 (YouTube Embed)</label>
                     <input 
                       type="text" 
                       value={introVideoUrl} 
                       onChange={(e) => setIntroVideoUrl(e.target.value)}
-                      class="w-full border-2 border-slate-300 rounded-lg px-3 py-2 text-sm focus:border-blue-400 outline-none"
+                      className="w-full border-2 border-slate-300 rounded-lg px-3 py-2 text-sm focus:border-blue-400 outline-none"
                     />
                   </div>
                   <div>
-                    <label class="block text-slate-700 font-bold text-sm mb-1">🎵 2. 前 20 號元素之歌影片網址 (YouTube Embed)</label>
+                    <label className="block text-slate-700 font-bold text-sm mb-1">🎵 2. 前 20 號元素之歌影片網址 (YouTube Embed)</label>
                     <input 
                       type="text" 
                       value={elementsVideoUrl} 
                       onChange={(e) => setElementsVideoUrl(e.target.value)}
-                      class="w-full border-2 border-slate-300 rounded-lg px-3 py-2 text-sm focus:border-blue-400 outline-none"
+                      className="w-full border-2 border-slate-300 rounded-lg px-3 py-2 text-sm focus:border-blue-400 outline-none"
                     />
                   </div>
                 </div>
-                <div class="flex justify-between items-center">
+                <div className="flex justify-between items-center">
                   <button 
                     onClick={() => {
                       setIntroVideoUrl("https://www.youtube.com/embed/GkoGSoim3NA");
                       setElementsVideoUrl("https://www.youtube.com/embed/Vlae0SkweCk");
                       playSynthSound('click');
                     }}
-                    class="text-xs text-red-500 underline"
+                    className="text-xs text-red-500 underline"
                   >
                     重置為預設值
                   </button>
                   <button 
                     onClick={() => { playSynthSound('success'); setShowSettings(false); }}
-                    class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full shadow-md transition text-sm"
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full shadow-md transition text-sm"
                   >
                     保存並關閉
                   </button>
@@ -810,66 +817,66 @@
           )}
 
           {/* --- MAIN TABS BAR --- */}
-          <nav class="flex flex-wrap justify-center gap-3 mb-8">
+          <nav className="flex flex-wrap justify-center gap-3 mb-8">
             <button 
               onClick={() => { playSynthSound('click'); setActiveTab('intro'); }}
-              class={`flex items-center gap-2 py-3 px-6 rounded-full font-black text-lg transition duration-200 border-b-4 ${
+              className={`flex items-center gap-2 py-3 px-6 rounded-full font-black text-lg transition duration-200 border-b-4 ${
                 activeTab === 'intro' 
                   ? 'bg-blue-500 text-white shadow-lg border-blue-700 transform -translate-y-1' 
                   : 'bg-white text-slate-600 hover:bg-slate-50 border-slate-200 hover:border-slate-300'
               }`}
             >
-              <i class="fa-solid fa-photo-film text-xl"></i>
+              <i className="fa-solid fa-photo-film text-xl"></i>
               <span>1. 元素導航 Zone</span>
             </button>
             <button 
               onClick={() => { playSynthSound('click'); setActiveTab('flashcard'); }}
-              class={`flex items-center gap-2 py-3 px-6 rounded-full font-black text-lg transition duration-200 border-b-4 ${
+              className={`flex items-center gap-2 py-3 px-6 rounded-full font-black text-lg transition duration-200 border-b-4 ${
                 activeTab === 'flashcard' 
                   ? 'bg-rose-500 text-white shadow-lg border-rose-700 transform -translate-y-1' 
                   : 'bg-white text-slate-600 hover:bg-slate-50 border-slate-200 hover:border-slate-300'
               }`}
             >
-              <i class="fa-solid fa-clone text-xl"></i>
+              <i className="fa-solid fa-clone text-xl"></i>
               <span>2. 元素魔法閃卡</span>
             </button>
             <button 
               onClick={() => { playSynthSound('click'); setActiveTab('games'); }}
-              class={`flex items-center gap-2 py-3 px-6 rounded-full font-black text-lg transition duration-200 border-b-4 ${
+              className={`flex items-center gap-2 py-3 px-6 rounded-full font-black text-lg transition duration-200 border-b-4 ${
                 activeTab === 'games' 
                   ? 'bg-emerald-500 text-white shadow-lg border-emerald-700 transform -translate-y-1' 
                   : 'bg-white text-slate-600 hover:bg-slate-50 border-slate-200 hover:border-slate-300'
               }`}
             >
-              <i class="fa-solid fa-gamepad text-xl"></i>
+              <i className="fa-solid fa-gamepad text-xl"></i>
               <span>3. 元素大挑戰 (遊戲)</span>
             </button>
             <button 
               onClick={() => { playSynthSound('click'); setActiveTab('achievements'); }}
-              class={`flex items-center gap-2 py-3 px-6 rounded-full font-black text-lg transition duration-200 border-b-4 ${
+              className={`flex items-center gap-2 py-3 px-6 rounded-full font-black text-lg transition duration-200 border-b-4 ${
                 activeTab === 'achievements' 
                   ? 'bg-yellow-500 text-white shadow-lg border-yellow-700 transform -translate-y-1' 
                   : 'bg-white text-slate-600 hover:bg-slate-50 border-slate-200 hover:border-slate-300'
               }`}
             >
-              <i class="fa-solid fa-trophy text-xl"></i>
+              <i className="fa-solid fa-trophy text-xl"></i>
               <span>4. 我的成就榜</span>
             </button>
             <button 
               onClick={() => { playSynthSound('click'); setActiveTab('download'); }}
-              class={`flex items-center gap-2 py-3 px-6 rounded-full font-black text-lg transition duration-200 border-b-4 ${
+              className={`flex items-center gap-2 py-3 px-6 rounded-full font-black text-lg transition duration-200 border-b-4 ${
                 activeTab === 'download' 
                   ? 'bg-cyan-500 text-white shadow-lg border-cyan-700 transform -translate-y-1' 
                   : 'bg-white text-slate-600 hover:bg-slate-50 border-slate-200 hover:border-slate-300'
               }`}
             >
-              <i class="fa-solid fa-print text-xl"></i>
+              <i className="fa-solid fa-print text-xl"></i>
               <span>5. 完整元素週期表下載</span>
             </button>
           </nav>
 
           {/* --- TAB CONTENT AREA --- */}
-          <main class="transition-all duration-300">
+          <main className="transition-all duration-300">
             {activeTab === 'intro' && (
               <IntroSection 
                 introVideoUrl={introVideoUrl} 
@@ -892,9 +899,9 @@
           </main>
 
           {/* --- FOOTER --- */}
-          <footer class="mt-12 text-center text-slate-500 text-xs py-6 border-t-2 border-slate-200/50">
+          <footer className="mt-12 text-center text-slate-500 text-xs py-6 border-t-2 border-slate-200/50">
             <p>© 2026 STEAM 元素歷險記 - 小學化學啟蒙教學輔助系統 🧪</p>
-            <p class="mt-1">由 系統工程師 專為小學 STEAM 老師開發。支持 Web Speech API 及高音質語音朗讀。</p>
+            <p className="mt-1">由 系統工程師 專為小學 STEAM 老師開發。支持 Web Speech API 及高音質語音朗讀。</p>
           </footer>
         </div>
       );
@@ -915,23 +922,23 @@
       };
 
       return (
-        <div class="space-y-8 animate-pulse-slow">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="space-y-8 animate-pulse-slow">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
             {/* TV Show Card 1: Periodic Table Intro */}
-            <div class="bg-white rounded-3xl shadow-xl p-6 border-4 border-yellow-300">
-              <div class="flex items-center gap-3 mb-4">
-                <span class="text-3xl">🎥</span>
-                <h2 class="text-xl font-bold text-slate-800">認識元素週期表是甚麼？</h2>
+            <div className="bg-white rounded-3xl shadow-xl p-6 border-4 border-yellow-300">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-3xl">🎥</span>
+                <h2 className="text-xl font-bold text-slate-800">認識元素週期表是甚麼？</h2>
               </div>
-              <p class="text-slate-600 text-sm mb-4">
+              <p className="text-slate-600 text-sm mb-4">
                 世界上所有的物質，大到太陽，小到我們的手機和牙齒，都是由不同的一顆顆「化學元素」組成的喔！讓我們一起看影片，揭開元素週期表的神秘面紗！
               </p>
               
               {/* YouTube Video Embed */}
-              <div class="relative pb-[56.25%] h-0 rounded-2xl overflow-hidden border-4 border-slate-100 shadow-inner">
+              <div className="relative pb-[56.25%] h-0 rounded-2xl overflow-hidden border-4 border-slate-100 shadow-inner">
                 <iframe 
-                  class="absolute top-0 left-0 w-full h-full"
+                  className="absolute top-0 left-0 w-full h-full"
                   src={introVideoUrl}
                   title="YouTube video player" 
                   frameBorder="0" 
@@ -941,28 +948,28 @@
               </div>
               
               {/* Teacher Resources Box (DEBUG: Changed Kobo Link to Wikipedia) */}
-              <div class="mt-4 bg-yellow-50 rounded-xl p-3 border border-yellow-200 flex justify-between items-center text-xs text-yellow-800">
+              <div className="mt-4 bg-yellow-50 rounded-xl p-3 border border-yellow-200 flex justify-between items-center text-xs text-yellow-800">
                 <span>📚 元素週期表維基百科參考資料</span>
-                <a href="https://en.wikipedia.org/wiki/Periodic_table" target="_blank" rel="noopener noreferrer" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded-full transition">
-                  瀏覽 Wikipedia <i class="fa-solid fa-up-right-from-square"></i>
+                <a href="https://en.wikipedia.org/wiki/Periodic_table" target="_blank" rel="noopener noreferrer" className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded-full transition">
+                  瀏覽 Wikipedia <i className="fa-solid fa-up-right-from-square"></i>
                 </a>
               </div>
             </div>
 
             {/* TV Show Card 2: First 20 Elements Song */}
-            <div class="bg-white rounded-3xl shadow-xl p-6 border-4 border-blue-300">
-              <div class="flex items-center gap-3 mb-4">
-                <span class="text-3xl">🎵</span>
-                <h2 class="text-xl font-bold text-slate-800">超好聽！前 20 位元素之歌</h2>
+            <div className="bg-white rounded-3xl shadow-xl p-6 border-4 border-blue-300">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-3xl">🎵</span>
+                <h2 className="text-xl font-bold text-slate-800">超好聽！前 20 位元素之歌</h2>
               </div>
-              <p class="text-slate-600 text-sm mb-4">
+              <p className="text-slate-600 text-sm mb-4">
                 科學家們把前 20 號元素唱成了輕快的兒歌！一邊聽歌，一邊看著卡通動畫，跟著「氫氦鋰鈹硼、碳氮氧氟氖...」一起哼唱吧！
               </p>
 
               {/* YouTube Video Embed */}
-              <div class="relative pb-[56.25%] h-0 rounded-2xl overflow-hidden border-4 border-slate-100 shadow-inner">
+              <div className="relative pb-[56.25%] h-0 rounded-2xl overflow-hidden border-4 border-slate-100 shadow-inner">
                 <iframe 
-                  class="absolute top-0 left-0 w-full h-full"
+                  className="absolute top-0 left-0 w-full h-full"
                   src={elementsVideoUrl}
                   title="YouTube video player" 
                   frameBorder="0" 
@@ -971,27 +978,27 @@
                 ></iframe>
               </div>
 
-              <div class="mt-4 bg-blue-50 rounded-xl p-3 border border-blue-200 flex justify-between items-center text-xs text-blue-800">
+              <div className="mt-4 bg-blue-50 rounded-xl p-3 border border-blue-200 flex justify-between items-center text-xs text-blue-800">
                 <span>🎤 聽完了嗎？一起唱歌學化學！</span>
-                <span class="italic text-slate-400">唱出前20個元素！</span>
+                <span className="italic text-slate-400">唱出前20個元素！</span>
               </div>
             </div>
 
           </div>
 
           {/* Surprise Gift Box for First Visit */}
-          <div class="bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-400 rounded-3xl p-6 text-white shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-4">
-              <div class="text-5xl animate-bounce">🎁</div>
+          <div className="bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-400 rounded-3xl p-6 text-white shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center gap-4">
+              <div className="text-5xl animate-bounce">🎁</div>
               <div>
-                <h3 class="text-xl font-black">歡迎小學STEAM科學家！</h3>
-                <p class="text-sm text-white/90">看完引導影片後，點擊右邊即可領取你的第一份冒險起跑資金！</p>
+                <h3 className="text-xl font-black">歡迎小學STEAM科學家！</h3>
+                <p className="text-sm text-white/90">看完引導影片後，點擊右邊即可領取你的第一份冒險起跑資金！</p>
               </div>
             </div>
             <button 
               onClick={handleClaim}
               disabled={claimedGift}
-              class={`py-3 px-8 rounded-full font-black text-lg shadow-md transition transform hover:scale-105 active:scale-95 ${
+              className={`py-3 px-8 rounded-full font-black text-lg shadow-md transition transform hover:scale-105 active:scale-95 ${
                 claimedGift 
                   ? 'bg-white/40 text-white/80 cursor-not-allowed' 
                   : 'bg-yellow-400 text-slate-800 hover:bg-yellow-300'
@@ -1046,60 +1053,60 @@
       };
 
       return (
-        <div class="space-y-6">
+        <div className="space-y-6">
           {/* Controls & Search */}
-          <div class="bg-white rounded-3xl p-6 shadow-md border-4 border-rose-200 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="bg-white rounded-3xl p-6 shadow-md border-4 border-rose-200 flex flex-col md:flex-row justify-between items-center gap-4">
             
             {/* Filter buttons */}
-            <div class="flex flex-wrap gap-2 justify-center">
+            <div className="flex flex-wrap gap-2 justify-center">
               <button 
                 onClick={() => { playSynthSound('click'); setFilter('all'); }}
-                class={`px-4 py-2 rounded-full text-xs font-black transition ${filter === 'all' ? 'bg-rose-500 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
+                className={`px-4 py-2 rounded-full text-xs font-black transition ${filter === 'all' ? 'bg-rose-500 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
               >
                 全部元素 (All)
               </button>
               <button 
                 onClick={() => { playSynthSound('click'); setFilter('alkali-metal'); }}
-                class={`px-4 py-2 rounded-full text-xs font-black transition ${filter === 'alkali-metal' ? 'bg-amber-400 text-slate-800' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
+                className={`px-4 py-2 rounded-full text-xs font-black transition ${filter === 'alkali-metal' ? 'bg-amber-400 text-slate-800' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
               >
                 鹼金屬 🔋
               </button>
               <button 
                 onClick={() => { playSynthSound('click'); setFilter('alkaline-earth'); }}
-                class={`px-4 py-2 rounded-full text-xs font-black transition ${filter === 'alkaline-earth' ? 'bg-emerald-400 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
+                className={`px-4 py-2 rounded-full text-xs font-black transition ${filter === 'alkaline-earth' ? 'bg-emerald-400 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
               >
                 鹼土金屬 🎆
               </button>
               <button 
                 onClick={() => { playSynthSound('click'); setFilter('reactive-nonmetal'); }}
-                class={`px-4 py-2 rounded-full text-xs font-black transition ${filter === 'reactive-nonmetal' ? 'bg-pink-400 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
+                className={`px-4 py-2 rounded-full text-xs font-black transition ${filter === 'reactive-nonmetal' ? 'bg-pink-400 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
               >
                 非金屬 ☀️
               </button>
               <button 
                 onClick={() => { playSynthSound('click'); setFilter('noble-gas'); }}
-                class={`px-4 py-2 rounded-full text-xs font-black transition ${filter === 'noble-gas' ? 'bg-purple-400 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
+                className={`px-4 py-2 rounded-full text-xs font-black transition ${filter === 'noble-gas' ? 'bg-purple-400 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
               >
                 惰性氣體 🎈
               </button>
             </div>
 
             {/* Search Input */}
-            <div class="relative w-full md:w-64">
+            <div className="relative w-full md:w-64">
               <input 
                 type="text" 
                 placeholder="輸入中英文/符號搜尋..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                class="w-full pl-10 pr-4 py-2 rounded-full border-2 border-slate-300 focus:border-rose-400 outline-none text-sm font-bold"
+                className="w-full pl-10 pr-4 py-2 rounded-full border-2 border-slate-300 focus:border-rose-400 outline-none text-sm font-bold"
               />
-              <i class="fa-solid fa-magnifying-glass absolute left-4 top-3 text-slate-400"></i>
+              <i className="fa-solid fa-magnifying-glass absolute left-4 top-3 text-slate-400"></i>
             </div>
 
           </div>
 
           {/* Cards Grid - Enlarged card height to h-[450px] for readability */}
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {filteredElements.map((el) => {
               const isFlipped = flippedCards[el.num] || false;
               const isLearned = learnedElements.includes(el.num);
@@ -1108,61 +1115,61 @@
                 <div 
                   key={el.num} 
                   onClick={() => toggleFlip(el.num)}
-                  class="h-[450px] perspective-1000 cursor-pointer group"
+                  className="h-[450px] perspective-1000 cursor-pointer group"
                 >
-                  <div class={`relative w-full h-full duration-500 transform-style-3d transition-transform ${isFlipped ? 'rotate-y-180' : ''}`}>
+                  <div className={`relative w-full h-full duration-500 transform-style-3d transition-transform ${isFlipped ? 'rotate-y-180' : ''}`}>
                     
                     {/* --- FRONT SIDE --- */}
-                    <div class={`absolute inset-0 backface-hidden rounded-3xl border-4 bg-white shadow-lg overflow-hidden flex flex-col justify-between p-6 ${isLearned ? 'border-emerald-300' : 'border-rose-200'}`}>
+                    <div className={`absolute inset-0 backface-hidden rounded-3xl border-4 bg-white shadow-lg overflow-hidden flex flex-col justify-between p-6 ${isLearned ? 'border-emerald-300' : 'border-rose-200'}`}>
                       
                       {/* Card Top: Number and Status Badge */}
-                      <div class="flex justify-between items-center">
-                        <span class="bg-slate-100 text-slate-700 font-black rounded-full px-4 py-1.5 text-base">
+                      <div className="flex justify-between items-center">
+                        <span className="bg-slate-100 text-slate-700 font-black rounded-full px-4 py-1.5 text-base">
                           No. {el.num}
                         </span>
                         {isLearned ? (
-                          <span class="bg-emerald-100 text-emerald-700 text-sm font-bold py-1 px-3 rounded-full flex items-center gap-1">
-                            <i class="fa-solid fa-circle-check"></i> 已讀
+                          <span className="bg-emerald-100 text-emerald-700 text-sm font-bold py-1 px-3 rounded-full flex items-center gap-1">
+                            <i className="fa-solid fa-circle-check"></i> 已讀
                           </span>
                         ) : (
-                          <span class="bg-rose-50 text-rose-500 text-sm font-bold py-1 px-3 rounded-full">
+                          <span className="bg-rose-50 text-rose-500 text-sm font-bold py-1 px-3 rounded-full">
                             待解鎖 
                           </span>
                         )}
                       </div>
 
                       {/* Card Center: Large Chemical Symbol */}
-                      <div class="text-center my-4">
-                        <div class="text-7xl font-black mb-2 animate-float drop-shadow-sm">{el.emoji}</div>
-                        <h3 class="text-6xl font-black text-slate-800 tracking-tight">{el.sym}</h3>
-                        <p class="text-3xl font-black text-slate-700 mt-2">
+                      <div className="text-center my-4">
+                        <div className="text-7xl font-black mb-2 animate-float drop-shadow-sm">{el.emoji}</div>
+                        <h3 className="text-6xl font-black text-slate-800 tracking-tight">{el.sym}</h3>
+                        <p className="text-3xl font-black text-slate-700 mt-2">
                           {el.nameZh} 
-                          <span class="text-base font-bold text-slate-400 block mt-1">{el.nameEn}</span>
+                          <span className="text-base font-bold text-slate-400 block mt-1">{el.nameEn}</span>
                         </p>
                       </div>
 
                       {/* Card Bottom: Element category & Flip button */}
-                      <div class="space-y-3">
-                        <div class="text-center">
-                          <span class={`inline-block px-4 py-1.5 rounded-full text-xs font-bold border ${categoryNames[el.cat]?.color}`}>
+                      <div className="space-y-3">
+                        <div className="text-center">
+                          <span className={`inline-block px-4 py-1.5 rounded-full text-xs font-bold border ${categoryNames[el.cat]?.color}`}>
                             {categoryNames[el.cat]?.name}
                           </span>
                         </div>
-                        <div class="flex justify-between items-center gap-2 pt-2 border-t border-slate-100">
+                        <div className="flex justify-between items-center gap-2 pt-2 border-t border-slate-100">
                           <button 
                             onClick={(e) => markAsLearned(el.num, e)}
                             disabled={isLearned}
-                            class={`flex-1 text-xs md:text-sm py-2.5 px-3 rounded-full font-bold flex items-center justify-center gap-1 transition ${
+                            className={`flex-1 text-xs md:text-sm py-2.5 px-3 rounded-full font-bold flex items-center justify-center gap-1 transition ${
                               isLearned 
                                 ? 'bg-emerald-50 text-emerald-300 cursor-default' 
                                 : 'bg-rose-500 hover:bg-rose-600 text-white hover:scale-105 active:scale-95'
                             }`}
                           >
-                            <i class="fa-solid fa-lightbulb text-sm"></i>
+                            <i className="fa-solid fa-lightbulb text-sm"></i>
                             {isLearned ? '已學會 (+2★)' : '學會了 (+2★)'}
                           </button>
-                          <div class="bg-rose-100 text-rose-600 rounded-full w-10 h-10 flex items-center justify-center text-sm group-hover:bg-rose-200 transition">
-                            <i class="fa-solid fa-rotate"></i>
+                          <div className="bg-rose-100 text-rose-600 rounded-full w-10 h-10 flex items-center justify-center text-sm group-hover:bg-rose-200 transition">
+                            <i className="fa-solid fa-rotate"></i>
                           </div>
                         </div>
                       </div>
@@ -1170,13 +1177,13 @@
                     </div>
 
                     {/* --- BACK SIDE (BILINGUAL & LARGE FONT) --- */}
-                    <div class="absolute inset-0 backface-hidden rotate-y-180 rounded-3xl border-4 border-blue-200 bg-blue-50 shadow-lg p-5 flex flex-col justify-between">
+                    <div className="absolute inset-0 backface-hidden rotate-y-180 rounded-3xl border-4 border-blue-200 bg-blue-50 shadow-lg p-5 flex flex-col justify-between">
                       
                       {/* Back Top: Title and Speak Voice Button */}
-                      <div class="flex justify-between items-center pb-2 border-b-2 border-blue-100">
+                      <div className="flex justify-between items-center pb-2 border-b-2 border-blue-100">
                         <div>
-                          <span class="text-xs text-blue-500 font-bold block">Atomic No. {el.num}</span>
-                          <span class="text-xl font-extrabold text-blue-800">{el.sym} - {el.nameZh} <span class="text-sm font-bold text-slate-500 block">{el.nameEn}</span></span>
+                          <span className="text-xs text-blue-500 font-bold block">Atomic No. {el.num}</span>
+                          <span className="text-xl font-extrabold text-blue-800">{el.sym} - {el.nameZh} <span className="text-sm font-bold text-slate-500 block">{el.nameEn}</span></span>
                         </div>
                         <button 
                           onClick={(e) => {
@@ -1184,23 +1191,23 @@
                             playSynthSound('bubble');
                             speakEnglish(el.voiceText);
                           }}
-                          class="bg-blue-500 hover:bg-blue-600 active:scale-95 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-md transition"
+                          className="bg-blue-500 hover:bg-blue-600 active:scale-95 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-md transition"
                           title="英語發音"
                         >
-                          <i class="fa-solid fa-volume-high text-lg"></i>
+                          <i className="fa-solid fa-volume-high text-lg"></i>
                         </button>
                       </div>
 
                       {/* Back Center: Content description (BILINGUAL & ENLARGED) */}
-                      <div class="my-3 space-y-4 flex-1 overflow-y-auto pr-1">
+                      <div className="my-3 space-y-4 flex-1 overflow-y-auto pr-1">
                         {/* 1. Common Use Block */}
                         <div>
-                          <span class="inline-block bg-blue-200 text-blue-800 text-xs font-black px-3 py-1 rounded-full mb-1.5 shadow-sm">
+                          <span className="inline-block bg-blue-200 text-blue-800 text-xs font-black px-3 py-1 rounded-full mb-1.5 shadow-sm">
                             🌱 常見用途 / Uses
                           </span>
-                          <div class="space-y-0.5 pl-1">
-                            <p class="text-base font-extrabold text-slate-800 leading-snug">{el.useZh}</p>
-                            <p class="text-xs font-bold text-slate-500 leading-snug italic">{el.useEn}</p>
+                          <div className="space-y-0.5 pl-1">
+                            <p className="text-base font-extrabold text-slate-800 leading-snug">{el.useZh}</p>
+                            <p className="text-xs font-bold text-slate-500 leading-snug italic">{el.useEn}</p>
                           </div>
                         </div>
 
@@ -1209,16 +1216,16 @@
                           <span class="inline-block bg-amber-200 text-amber-800 text-xs font-black px-3 py-1 rounded-full mb-1.5 shadow-sm">
                             💡 科學冷知識 / Facts
                           </span>
-                          <div class="space-y-1 pl-1 border-l-4 border-amber-300">
-                            <p class="text-sm font-extrabold text-slate-700 leading-relaxed">{el.factZh}</p>
-                            <p class="text-xs font-bold text-slate-500 leading-relaxed italic">{el.factEn}</p>
+                          <div className="space-y-1 pl-1 border-l-4 border-amber-300">
+                            <p className="text-sm font-extrabold text-slate-700 leading-relaxed">{el.factZh}</p>
+                            <p className="text-xs font-bold text-slate-500 leading-relaxed italic">{el.factEn}</p>
                           </div>
                         </div>
                       </div>
 
                       {/* Back Bottom: Back button hint */}
-                      <div class="text-center text-xs text-blue-400 font-bold pt-2 border-t border-blue-100 flex items-center justify-center gap-1">
-                        <i class="fa-solid fa-arrow-left"></i> 點擊卡片翻回正面 (Tap to Flip)
+                      <div className="text-center text-xs text-blue-400 font-bold pt-2 border-t border-blue-100 flex items-center justify-center gap-1">
+                        <i className="fa-solid fa-arrow-left"></i> 點擊卡片翻回正面 (Tap to Flip)
                       </div>
 
                     </div>
@@ -1239,26 +1246,26 @@
       const [currentGame, setCurrentGame] = useState('none'); 
 
       return (
-        <div class="space-y-6">
+        <div className="space-y-6">
           {currentGame === 'none' ? (
-            <div class="text-center space-y-8 py-4">
-              <div class="max-w-2xl mx-auto bg-white rounded-3xl p-6 border-4 border-emerald-200 shadow-md">
-                <h2 class="text-2xl font-black text-emerald-600 mb-2">🎮 互動 STEAM 遊戲大廳</h2>
-                <p class="text-slate-500 text-sm">歡迎來到遊戲大廳！在這裡我們設計了 3 款超酷的化學小遊戲，動手動腦，答對就能賺取大量金星星喔！</p>
+            <div className="text-center space-y-8 py-4">
+              <div className="max-w-2xl mx-auto bg-white rounded-3xl p-6 border-4 border-emerald-200 shadow-md">
+                <h2 className="text-2xl font-black text-emerald-600 mb-2">🎮 互動 STEAM 遊戲大廳</h2>
+                <p className="text-slate-500 text-sm">歡迎來到遊戲大廳！在這裡我們設計了 3 款超酷的化學小遊戲，動手動腦，答對就能賺取大量金星星喔！</p>
               </div>
 
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Game Card 1: Matching Game */}
-                <div class="bg-white rounded-3xl border-4 border-pink-300 shadow-xl overflow-hidden hover:scale-105 transition flex flex-col justify-between">
-                  <div class="p-6 text-center space-y-4">
-                    <div class="text-6xl animate-bounce">🧬</div>
-                    <h3 class="text-xl font-bold text-slate-800">1. 元素連連看</h3>
-                    <p class="text-slate-500 text-xs">將化學元素符號與它們對應的日常實物或用途連線起來！看看你有多了解日常生活中的化學！</p>
+                <div className="bg-white rounded-3xl border-4 border-pink-300 shadow-xl overflow-hidden hover:scale-105 transition flex flex-col justify-between">
+                  <div className="p-6 text-center space-y-4">
+                    <div className="text-6xl animate-bounce">🧬</div>
+                    <h3 className="text-xl font-bold text-slate-800">1. 元素連連看</h3>
+                    <p className="text-slate-500 text-xs">將化學元素符號與它們對應的日常實物或用途連線起來！看看你有多了解日常生活中的化學！</p>
                   </div>
-                  <div class="p-6 bg-pink-50 border-t-2 border-pink-100">
+                  <div className="p-6 bg-pink-50 border-t-2 border-pink-100">
                     <button 
                       onClick={() => { playSynthSound('click'); setCurrentGame('matching'); }}
-                      class="w-full bg-pink-500 hover:bg-pink-600 text-white font-black py-3 rounded-2xl shadow-md transition"
+                      className="w-full bg-pink-500 hover:bg-pink-600 text-white font-black py-3 rounded-2xl shadow-md transition"
                     >
                       開始大挑戰 ⚡
                     </button>
@@ -1266,16 +1273,16 @@
                 </div>
 
                 {/* Game Card 2: Quiz Game */}
-                <div class="bg-white rounded-3xl border-4 border-yellow-300 shadow-xl overflow-hidden hover:scale-105 transition flex flex-col justify-between">
-                  <div class="p-6 text-center space-y-4">
-                    <div class="text-6xl animate-bounce">🏆</div>
-                    <h3 class="text-xl font-bold text-slate-800">2. 化學知識問答</h3>
-                    <p class="text-slate-500 text-xs">瘋狂科學家為你準備了5道最精采的選擇題。答對即可賺取星星，衝擊最高成就寶座！</p>
+                <div className="bg-white rounded-3xl border-4 border-yellow-300 shadow-xl overflow-hidden hover:scale-105 transition flex flex-col justify-between">
+                  <div className="p-6 text-center space-y-4">
+                    <div className="text-6xl animate-bounce">🏆</div>
+                    <h3 className="text-xl font-bold text-slate-800">2. 化學知識問答</h3>
+                    <p className="text-slate-500 text-xs">瘋狂科學家為你準備了5道最精采的選擇題。答對即可賺取星星，衝擊最高成就寶座！</p>
                   </div>
-                  <div class="p-6 bg-yellow-50 border-t-2 border-yellow-100">
+                  <div className="p-6 bg-yellow-50 border-t-2 border-yellow-100">
                     <button 
                       onClick={() => { playSynthSound('click'); setCurrentGame('quiz'); }}
-                      class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-black py-3 rounded-2xl shadow-md transition"
+                      className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-black py-3 rounded-2xl shadow-md transition"
                     >
                       知識王對決 💥
                     </button>
@@ -1283,16 +1290,16 @@
                 </div>
 
                 {/* Game Card 3: Puzzle Grid */}
-                <div class="bg-white rounded-3xl border-4 border-blue-300 shadow-xl overflow-hidden hover:scale-105 transition flex flex-col justify-between">
-                  <div class="p-6 text-center space-y-4">
-                    <div class="text-6xl animate-bounce">🧩</div>
-                    <h3 class="text-xl font-bold text-slate-800">3. 元素大拼圖</h3>
-                    <p class="text-slate-500 text-xs">元素在週期表中有自己固定的家！一陣狂風吹走了幾位元素，你能幫忙把他們送回家嗎？</p>
+                <div className="bg-white rounded-3xl border-4 border-blue-300 shadow-xl overflow-hidden hover:scale-105 transition flex flex-col justify-between">
+                  <div className="p-6 text-center space-y-4">
+                    <div className="text-6xl animate-bounce">🧩</div>
+                    <h3 className="text-xl font-bold text-slate-800">3. 元素大拼圖</h3>
+                    <p className="text-slate-500 text-xs">元素在週期表中有自己固定的家！一陣狂風吹走了幾位元素，你能幫忙把他們送回家嗎？</p>
                   </div>
-                  <div class="p-6 bg-blue-50 border-t-2 border-blue-100">
+                  <div className="p-6 bg-blue-50 border-t-2 border-blue-100">
                     <button 
                       onClick={() => { playSynthSound('click'); setCurrentGame('puzzle'); }}
-                      class="w-full bg-blue-500 hover:bg-blue-600 text-white font-black py-3 rounded-2xl shadow-md transition"
+                      className="w-full bg-blue-500 hover:bg-blue-600 text-white font-black py-3 rounded-2xl shadow-md transition"
                     >
                       修復週期表 🛠️
                     </button>
@@ -1304,9 +1311,9 @@
             <div>
               <button 
                 onClick={() => { playSynthSound('click'); setCurrentGame('none'); }}
-                class="bg-white hover:bg-slate-50 text-slate-600 font-bold py-2 px-5 rounded-full shadow-md transition border-2 border-slate-200 flex items-center gap-2 mb-6"
+                className="bg-white hover:bg-slate-50 text-slate-600 font-bold py-2 px-5 rounded-full shadow-md transition border-2 border-slate-200 flex items-center gap-2 mb-6"
               >
-                <i class="fa-solid fa-arrow-left"></i> 返回遊戲大廳
+                <i className="fa-solid fa-arrow-left"></i> 返回遊戲大廳
               </button>
 
               {currentGame === 'matching' && <MatchingGame addStars={addStars} />}
@@ -1392,19 +1399,19 @@
       };
 
       return (
-        <div class="bg-white rounded-3xl p-6 border-4 border-pink-300 shadow-xl max-w-2xl mx-auto space-y-6">
-          <div class="text-center">
-            <h3 class="text-2xl font-black text-pink-600 flex items-center justify-center gap-2">
+        <div className="bg-white rounded-3xl p-6 border-4 border-pink-300 shadow-xl max-w-2xl mx-auto space-y-6">
+          <div className="text-center">
+            <h3 className="text-2xl font-black text-pink-600 flex items-center justify-center gap-2">
               <span>🧬 元素與日常實物連連看</span>
             </h3>
-            <p class="text-slate-500 text-sm mt-1">選中左邊的元素符號，再選中對應的生活常見物品吧！</p>
+            <p className="text-slate-500 text-sm mt-1">選中左邊的元素符號，再選中對應的生活常見物品吧！</p>
           </div>
 
-          <div class="grid grid-cols-2 gap-8 relative py-4">
+          <div className="grid grid-cols-2 gap-8 relative py-4">
             
             {/* Left Column (Symbols) */}
-            <div class="space-y-4">
-              <h4 class="text-center font-bold text-slate-400 text-xs">化學符號</h4>
+            <div className="space-y-4">
+              <h4 className="text-center font-bold text-slate-400 text-xs">化學符號</h4>
               {leftItems.map((item) => {
                 const isMatched = matchedPairs.includes(item.sym);
                 const isSelected = selectedLeft === item.sym;
@@ -1413,7 +1420,7 @@
                     key={item.sym}
                     onClick={() => handleLeftClick(item.sym)}
                     disabled={isMatched}
-                    class={`w-full py-4 rounded-2xl font-extrabold text-2xl border-4 transition flex items-center justify-center ${
+                    className={`w-full py-4 rounded-2xl font-extrabold text-2xl border-4 transition flex items-center justify-center ${
                       isMatched 
                         ? 'bg-emerald-100 border-emerald-300 text-emerald-500 opacity-60' 
                         : isSelected
@@ -1421,15 +1428,15 @@
                           : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
                     }`}
                   >
-                    {item.sym} {isMatched && <i class="fa-solid fa-circle-check text-sm ml-2"></i>}
+                    {item.sym} {isMatched && <i className="fa-solid fa-circle-check text-sm ml-2"></i>}
                   </button>
                 );
               })}
             </div>
 
             {/* Right Column (Uses) */}
-            <div class="space-y-4">
-              <h4 class="text-center font-bold text-slate-400 text-xs">日常用途 / 生活常見</h4>
+            <div className="space-y-4">
+              <h4 className="text-center font-bold text-slate-400 text-xs">日常用途 / 生活常見</h4>
               {rightItems.map((item) => {
                 const isMatched = matchedPairs.includes(item.sym);
                 const isSelected = selectedRight === item.sym;
@@ -1438,7 +1445,7 @@
                     key={item.sym}
                     onClick={() => handleRightClick(item.sym)}
                     disabled={isMatched}
-                    class={`w-full py-4 px-2 rounded-2xl font-bold text-sm border-4 transition flex items-center justify-center ${
+                    className={`w-full py-4 px-2 rounded-2xl font-bold text-sm border-4 transition flex items-center justify-center ${
                       isMatched 
                         ? 'bg-emerald-100 border-emerald-300 text-emerald-500 opacity-60' 
                         : isSelected
@@ -1446,7 +1453,7 @@
                           : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
                     }`}
                   >
-                    {item.use} {isMatched && <i class="fa-solid fa-circle-check text-sm ml-2"></i>}
+                    {item.use} {isMatched && <i className="fa-solid fa-circle-check text-sm ml-2"></i>}
                   </button>
                 );
               })}
@@ -1456,12 +1463,12 @@
 
           {/* Success Banner */}
           {completed && (
-            <div class="bg-gradient-to-r from-emerald-400 to-teal-500 text-white rounded-2xl p-5 text-center animate-bounce shadow-lg space-y-3">
-              <h4 class="text-xl font-black">🎉 太棒了！全部連線正確！</h4>
-              <p class="text-sm">你獲得了 🌟 10 顆星星獎勵！日常生活的化學難不倒你！</p>
+            <div className="bg-gradient-to-r from-emerald-400 to-teal-500 text-white rounded-2xl p-5 text-center animate-bounce shadow-lg space-y-3">
+              <h4 className="text-xl font-black">🎉 太棒了！全部連線正確！</h4>
+              <p className="text-sm">你獲得了 🌟 10 顆星星獎勵！日常生活的化學難不倒你！</p>
               <button 
                 onClick={initializeGame}
-                class="bg-white text-emerald-600 font-extrabold py-2 px-6 rounded-full shadow hover:bg-slate-50 transition"
+                className="bg-white text-emerald-600 font-extrabold py-2 px-6 rounded-full shadow hover:bg-slate-50 transition"
               >
                 再玩一局 🔄
               </button>
@@ -1537,22 +1544,22 @@
       const currentQ = questions[currentIndex];
 
       return (
-        <div class="bg-white rounded-3xl p-6 border-4 border-yellow-300 shadow-xl max-w-xl mx-auto space-y-6">
+        <div className="bg-white rounded-3xl p-6 border-4 border-yellow-300 shadow-xl max-w-xl mx-auto space-y-6">
           {!quizCompleted ? (
-            <div class="space-y-4">
-              <div class="flex justify-between items-center text-xs text-slate-400 font-bold">
+            <div className="space-y-4">
+              <div className="flex justify-between items-center text-xs text-slate-400 font-bold">
                 <span>問答進行中...</span>
                 <span>問題 {currentIndex + 1} / 5</span>
               </div>
-              <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden border">
-                <div class="bg-yellow-400 h-full transition-all duration-300" style={{ width: `${(currentIndex + 1) * 20}%` }}></div>
+              <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden border">
+                <div className="bg-yellow-400 h-full transition-all duration-300" style={{ width: `${(currentIndex + 1) * 20}%` }}></div>
               </div>
 
-              <div class="bg-yellow-50/50 rounded-2xl p-4 border border-yellow-100">
-                <p class="text-lg font-black text-slate-800 leading-relaxed">{currentQ.q}</p>
+              <div className="bg-yellow-50/50 rounded-2xl p-4 border border-yellow-100">
+                <p className="text-lg font-black text-slate-800 leading-relaxed">{currentQ.q}</p>
               </div>
 
-              <div class="space-y-3">
+              <div className="space-y-3">
                 {currentQ.options.map((opt, idx) => {
                   let btnStyle = "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100";
                   
@@ -1571,21 +1578,21 @@
                       key={idx}
                       onClick={() => handleOptionClick(idx)}
                       disabled={isAnswered}
-                      class={`w-full py-3 px-4 rounded-xl border-2 text-left text-sm font-bold transition flex justify-between items-center ${btnStyle}`}
+                      className={`w-full py-3 px-4 rounded-xl border-2 text-left text-sm font-bold transition flex justify-between items-center ${btnStyle}`}
                     >
                       <span>{opt}</span>
-                      {isAnswered && idx === currentQ.correct && <i class="fa-solid fa-circle-check text-emerald-600"></i>}
-                      {isAnswered && idx === selectedAnswer && idx !== currentQ.correct && <i class="fa-solid fa-circle-xmark text-rose-600"></i>}
+                      {isAnswered && idx === currentQ.correct && <i className="fa-solid fa-circle-check text-emerald-600"></i>}
+                      {isAnswered && idx === selectedAnswer && idx !== currentQ.correct && <i className="fa-solid fa-circle-xmark text-rose-600"></i>}
                     </button>
                   );
                 })}
               </div>
 
               {isAnswered && (
-                <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs text-blue-700 flex items-start gap-2 animate-pulse-slow">
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs text-blue-700 flex items-start gap-2 animate-pulse-slow">
                   <span>💡</span>
                   <div>
-                    <span class="font-bold">科學解答小貼士：</span>
+                    <span className="font-bold">科學解答小貼士：</span>
                     <span>{currentQ.hint}</span>
                   </div>
                 </div>
@@ -1594,7 +1601,7 @@
               {isAnswered && (
                 <button 
                   onClick={handleNext}
-                  class="w-full bg-blue-500 hover:bg-blue-600 text-white font-black py-3 rounded-2xl shadow transition"
+                  className="w-full bg-blue-500 hover:bg-blue-600 text-white font-black py-3 rounded-2xl shadow transition"
                 >
                   {currentIndex < 4 ? '下一題 ➡️' : '查看最終得分 🏁'}
                 </button>
@@ -1602,22 +1609,22 @@
 
             </div>
           ) : (
-            <div class="text-center space-y-6 py-4">
-              <div class="text-6xl animate-bounce">🎖️</div>
-              <h4 class="text-2xl font-black text-slate-800">完成化學問答！</h4>
-              <div class="bg-yellow-50 rounded-2xl p-6 border-2 border-yellow-200 max-w-sm mx-auto space-y-2">
-                <p class="text-slate-500 text-sm font-bold">答對題數：</p>
-                <p class="text-4xl font-extrabold text-yellow-600">{score} / 5</p>
-                <p class="text-slate-500 text-xs font-bold pt-2 border-t border-yellow-100">
+            <div className="text-center space-y-6 py-4">
+              <div className="text-6xl animate-bounce">🎖️</div>
+              <h4 className="text-2xl font-black text-slate-800">完成化學問答！</h4>
+              <div className="bg-yellow-50 rounded-2xl p-6 border-2 border-yellow-200 max-w-sm mx-auto space-y-2">
+                <p className="text-slate-500 text-sm font-bold">答對題數：</p>
+                <p className="text-4xl font-extrabold text-yellow-600">{score} / 5</p>
+                <p className="text-slate-500 text-xs font-bold pt-2 border-t border-yellow-100">
                   答對每題賺取 3 顆星星！你共獲得：
                 </p>
-                <p class="text-2xl font-black text-emerald-600">🌟 {score * 3} 顆金星星！</p>
+                <p className="text-2xl font-black text-emerald-600">🌟 {score * 3} 顆金星星！</p>
               </div>
 
-              <div class="flex gap-4 max-w-sm mx-auto">
+              <div className="flex gap-4 max-w-sm mx-auto">
                 <button 
                   onClick={startQuiz}
-                  class="flex-1 bg-yellow-400 hover:bg-yellow-500 text-slate-800 font-extrabold py-3 rounded-2xl shadow transition"
+                  className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-slate-800 font-extrabold py-3 rounded-2xl shadow transition"
                 >
                   再挑戰一次 🔄
                 </button>
@@ -1697,50 +1704,50 @@
       };
 
       return (
-        <div class="bg-white rounded-3xl p-6 border-4 border-blue-300 shadow-xl max-w-xl mx-auto space-y-6">
-          <div class="text-center">
-            <h3 class="text-2xl font-black text-blue-600 flex items-center justify-center gap-2">
+        <div className="bg-white rounded-3xl p-6 border-4 border-blue-300 shadow-xl max-w-xl mx-auto space-y-6">
+          <div className="text-center">
+            <h3 className="text-2xl font-black text-blue-600 flex items-center justify-center gap-2">
               <span>🧩 元素拼圖挑戰：修復前8位週期表</span>
             </h3>
-            <p class="text-slate-500 text-sm mt-1">
+            <p className="text-slate-500 text-sm mt-1">
               先在底下點選被吹跑的元素卡，再點擊週期表中閃爍對應序號「？」的空白家裡吧！
             </p>
           </div>
 
           {/* Mini-Periodic Grid (Layout) */}
-          <div class="border-4 border-dashed border-slate-200 rounded-3xl p-4 bg-slate-50/50 space-y-4">
+          <div className="border-4 border-dashed border-slate-200 rounded-3xl p-4 bg-slate-50/50 space-y-4">
             {/* Period 1 (H on left, He on far right) */}
-            <div class="flex justify-between items-center gap-4">
+            <div className="flex justify-between items-center gap-4">
               {gridElements.filter(g => g.num <= 2).map((item) => (
                 <div 
                   key={item.num}
                   onClick={() => item.isMissing && handleSlotClick(item.num)}
-                  class={`w-20 h-20 rounded-2xl border-4 font-black flex flex-col items-center justify-center transition cursor-pointer ${
+                  className={`w-20 h-20 rounded-2xl border-4 font-black flex flex-col items-center justify-center transition cursor-pointer ${
                     item.isMissing 
                       ? 'bg-blue-100 border-blue-400 text-blue-500 hover:scale-105 shadow-inner border-dashed animate-pulse'
                       : 'bg-emerald-400 border-emerald-600 text-white shadow'
                   }`}
                 >
-                  <span class="text-[10px] block opacity-85">No.{item.num}</span>
-                  <span class="text-xl">{item.isMissing ? '?' : item.sym}</span>
+                  <span className="text-[10px] block opacity-85">No.{item.num}</span>
+                  <span className="text-xl">{item.isMissing ? '?' : item.sym}</span>
                 </div>
               ))}
             </div>
 
             {/* Period 2 (Li, Be, B, C, N, O in grid) */}
-            <div class="grid grid-cols-6 gap-2">
+            <div className="grid grid-cols-6 gap-2">
               {gridElements.filter(g => g.num >= 3 && g.num <= 8).map((item) => (
                 <div 
                   key={item.num}
                   onClick={() => item.isMissing && handleSlotClick(item.num)}
-                  class={`h-20 rounded-xl border-4 font-black flex flex-col items-center justify-center transition cursor-pointer ${
+                  className={`h-20 rounded-xl border-4 font-black flex flex-col items-center justify-center transition cursor-pointer ${
                     item.isMissing 
                       ? 'bg-blue-100 border-blue-400 text-blue-500 hover:scale-105 shadow-inner border-dashed animate-pulse'
                       : 'bg-emerald-400 border-emerald-600 text-white shadow'
                   }`}
                 >
-                  <span class="text-[9px] block opacity-85">No.{item.num}</span>
-                  <span class="text-lg">{item.isMissing ? '?' : item.sym}</span>
+                  <span className="text-[9px] block opacity-85">No.{item.num}</span>
+                  <span className="text-lg">{item.isMissing ? '?' : item.sym}</span>
                 </div>
               ))}
             </div>
@@ -1748,22 +1755,22 @@
 
           {/* Missing elements drawer */}
           {!solved && (
-            <div class="bg-blue-50 rounded-2xl p-4 border border-blue-100 space-y-3">
-              <h4 class="text-xs font-bold text-slate-500 text-center">🌬️ 被狂風刮走掉落的化學元素：</h4>
-              <div class="flex justify-center gap-4">
+            <div className="bg-blue-50 rounded-2xl p-4 border border-blue-100 space-y-3">
+              <h4 className="text-xs font-bold text-slate-500 text-center">🌬️ 被狂風刮走掉落的化學元素：</h4>
+              <div className="flex justify-center gap-4">
                 {missingSlots.map((item) => {
                   const isSelected = draggedItem?.num === item.num;
                   return (
                     <button
                       key={item.num}
                       onClick={() => { playSynthSound('click'); setDraggedItem(item); }}
-                      class={`w-16 h-16 rounded-xl border-4 font-extrabold text-lg shadow-md flex flex-col items-center justify-center transition ${
+                      className={`w-16 h-16 rounded-xl border-4 font-extrabold text-lg shadow-md flex flex-col items-center justify-center transition ${
                         isSelected 
                           ? 'bg-yellow-400 border-yellow-600 text-slate-800 scale-110 shadow-lg' 
                           : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-100'
                       }`}
                     >
-                      <span class="text-[9px] block opacity-70">No.{item.num}</span>
+                      <span className="text-[9px] block opacity-70">No.{item.num}</span>
                       <span>{item.sym}</span>
                     </button>
                   );
@@ -1774,12 +1781,12 @@
 
           {/* Success Reward Banner */}
           {solved && (
-            <div class="bg-gradient-to-r from-emerald-400 to-teal-500 text-white rounded-2xl p-5 text-center animate-bounce shadow-lg space-y-3">
-              <h4 class="text-xl font-black">🎉 週期表修復大成功！</h4>
-              <p class="text-sm">太厲害了，所有元素都順利送回正確原子序位置了！你獲得了 🌟 15 顆星星獎勵！</p>
+            <div className="bg-gradient-to-r from-emerald-400 to-teal-500 text-white rounded-2xl p-5 text-center animate-bounce shadow-lg space-y-3">
+              <h4 className="text-xl font-black">🎉 太棒了！全部連線正確！</h4>
+              <p class="text-sm">你獲得了 🌟 15 顆星星獎勵！</p>
               <button 
                 onClick={initPuzzle}
-                class="bg-white text-emerald-600 font-extrabold py-2 px-6 rounded-full shadow hover:bg-slate-50 transition"
+                className="bg-white text-emerald-600 font-extrabold py-2 px-6 rounded-full shadow hover:bg-slate-50 transition"
               >
                 繼續拼圖 🔄
               </button>
@@ -1823,68 +1830,68 @@
       };
 
       return (
-        <div class="bg-white rounded-3xl p-6 border-4 border-yellow-300 shadow-xl max-w-2xl mx-auto space-y-6">
-          <div class="text-center">
-            <h3 class="text-2xl font-black text-yellow-600">🏆 STEAM 化學榮譽勳章榜</h3>
-            <p class="text-slate-500 text-sm mt-1">努力學習累積星星，就能解鎖超棒的化學榮譽稱號！</p>
+        <div className="bg-white rounded-3xl p-6 border-4 border-yellow-300 shadow-xl max-w-2xl mx-auto space-y-6">
+          <div className="text-center">
+            <h3 className="text-2xl font-black text-yellow-600">🏆 STEAM 化學榮譽勳章榜</h3>
+            <p className="text-slate-500 text-sm mt-1">努力學習累積星星，就能解鎖超棒的化學榮譽稱號！</p>
           </div>
 
           {/* WhatsApp Share Card */}
-          <div class="bg-gradient-to-r from-emerald-400 to-teal-500 rounded-2xl p-5 text-white shadow-md space-y-3 animate-float border-2 border-white">
-            <div class="flex items-center gap-3">
-              <div class="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center text-xl shadow-inner">
-                <i class="fa-brands fa-whatsapp"></i>
+          <div className="bg-gradient-to-r from-emerald-400 to-teal-500 rounded-2xl p-5 text-white shadow-md space-y-3 animate-float border-2 border-white">
+            <div className="flex items-center gap-3">
+              <div className="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center text-xl shadow-inner">
+                <i className="fa-brands fa-whatsapp"></i>
               </div>
-              <h4 class="text-lg font-black">📢 課堂成就分享給家長</h4>
+              <h4 className="text-lg font-black">📢 課堂成就分享給家長</h4>
             </div>
-            <p class="text-xs text-white/95 leading-relaxed font-bold">
-              太厲害了！快把你今天獲得的 <span class="bg-yellow-400 text-slate-800 px-2 py-0.5 rounded-full font-black text-sm">{stars} 顆金星星</span> 與榮譽成果透過 WhatsApp 即時發送給家長，讓爸爸媽媽一齊為你的科學冒險感到驕傲吧！
+            <p className="text-xs text-white/95 leading-relaxed font-bold">
+              太厲害了！快把你今天獲得的 <span className="bg-yellow-400 text-slate-800 px-2 py-0.5 rounded-full font-black text-sm">{stars} 顆金星星</span> 與榮譽成果透過 WhatsApp 即時發送給家長，讓爸爸媽媽一齊為你的科學冒險感到驕傲吧！
             </p>
             <button 
               onClick={handleWhatsappShare}
-              class="w-full bg-white hover:bg-slate-50 text-emerald-600 font-black py-3 px-6 rounded-xl shadow transition duration-200 flex items-center justify-center gap-2 text-sm md:text-base border-b-4 border-emerald-600 active:translate-y-0.5"
+              className="w-full bg-white hover:bg-slate-50 text-emerald-600 font-black py-3 px-6 rounded-xl shadow transition duration-200 flex items-center justify-center gap-2 text-sm md:text-base border-b-4 border-emerald-600 active:translate-y-0.5"
             >
-              <i class="fa-brands fa-whatsapp text-lg"></i>
+              <i className="fa-brands fa-whatsapp text-lg"></i>
               <span>傳送成果與 App 網址給家長 🚀</span>
             </button>
           </div>
 
-          <div class="space-y-4">
+          <div className="space-y-4">
             {badgesPool.map((b) => {
               const isUnlocked = unlockedAchievements.includes(b.id);
               
               return (
                 <div 
                   key={b.id} 
-                  class={`border-4 rounded-2xl p-5 flex items-center justify-between gap-4 transition ${
+                  className={`border-4 rounded-2xl p-5 flex items-center justify-between gap-4 transition ${
                     isUnlocked 
                       ? 'bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-300 shadow-md' 
                       : 'bg-slate-50 border-slate-200 text-slate-400'
                   }`}
                 >
-                  <div class="flex items-center gap-4">
-                    <div class={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-inner border-2 ${
+                  <div className="flex items-center gap-4">
+                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-inner border-2 ${
                       isUnlocked 
                         ? 'bg-yellow-400 text-white border-white' 
                         : 'bg-slate-200 text-slate-400 border-slate-300'
                     }`}>
-                      <i class={`fa-solid ${b.icon}`}></i>
+                      <i className={`fa-solid ${b.icon}`}></i>
                     </div>
                     <div>
-                      <h4 class={`text-lg font-black ${isUnlocked ? 'text-slate-800' : 'text-slate-400'}`}>
+                      <h4 className={`text-lg font-black ${isUnlocked ? 'text-slate-800' : 'text-slate-400'}`}>
                         {b.name}
                       </h4>
-                      <p class="text-xs text-slate-500">{b.desc}</p>
+                      <p className="text-xs text-slate-500">{b.desc}</p>
                     </div>
                   </div>
 
-                  <div class="text-right">
+                  <div className="text-right">
                     {isUnlocked ? (
-                      <span class="bg-emerald-100 text-emerald-700 font-extrabold text-xs py-1.5 px-3 rounded-full border border-emerald-300">
+                      <span className="bg-emerald-100 text-emerald-700 font-extrabold text-xs py-1.5 px-3 rounded-full border border-emerald-300">
                         🎉 已解鎖
                       </span>
                     ) : (
-                      <div class="text-xs text-slate-400 font-bold">
+                      <div className="text-xs text-slate-400 font-bold">
                         需 {b.target} 🌟
                       </div>
                     )}
@@ -1894,11 +1901,11 @@
             })}
           </div>
 
-          <div class="pt-4 border-t border-slate-100 text-center space-y-2">
-            <p class="text-xs text-slate-400 font-bold">目前擁有 {stars} 顆星，已解鎖 {unlockedAchievements.length} / 3 個榮譽勳章</p>
-            <div class="w-full bg-slate-100 h-4 rounded-full overflow-hidden border">
+          <div className="pt-4 border-t border-slate-100 text-center space-y-2">
+            <p className="text-xs text-slate-400 font-bold">目前擁有 {stars} 顆星，已解鎖 {unlockedAchievements.length} / 3 個榮譽勳章</p>
+            <div className="w-full bg-slate-100 h-4 rounded-full overflow-hidden border">
               <div 
-                class="bg-gradient-to-r from-yellow-400 to-amber-500 h-full transition-all duration-500" 
+                className="bg-gradient-to-r from-yellow-400 to-amber-500 h-full transition-all duration-500" 
                 style={{ width: `${Math.min((stars / 60) * 100, 100)}%` }}
               ></div>
             </div>
@@ -1981,88 +1988,88 @@
       const finalGrid = buildPeriodicGrid();
 
       return (
-        <div class="space-y-6">
+        <div className="space-y-6">
           {/* Header Controls (Hidden during actual print) */}
-          <div class="no-print bg-white rounded-3xl p-6 shadow-md border-4 border-cyan-200 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="space-y-1 text-center md:text-left">
-              <h3 class="text-2xl font-black text-cyan-600 flex items-center justify-center md:justify-start gap-2">
-                <i class="fa-solid fa-file-pdf"></i>
+          <div className="no-print bg-white rounded-3xl p-6 shadow-md border-4 border-cyan-200 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="space-y-1 text-center md:text-left">
+              <h3 className="text-2xl font-black text-cyan-600 flex items-center justify-center md:justify-start gap-2">
+                <i className="fa-solid fa-file-pdf"></i>
                 <span>標準 118 號元素週期表（A4 橫向列印版）</span>
               </h3>
-              <p class="text-slate-500 text-sm">
+              <p className="text-slate-500 text-sm">
                 此處顯示的是完整的元素週期表。點擊右側按鈕，系統會自動在橫向 A4 紙張上完整排版，您可以列印實體紙張或存為高清 PDF 學習單！
               </p>
             </div>
             <button 
               onClick={handlePrint}
-              class="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-black py-3.5 px-8 rounded-full shadow-lg transition transform hover:scale-105 active:scale-95 flex items-center gap-2"
+              className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-black py-3.5 px-8 rounded-full shadow-lg transition transform hover:scale-105 active:scale-95 flex items-center gap-2"
             >
-              <i class="fa-solid fa-print text-xl"></i>
+              <i className="fa-solid fa-print text-xl"></i>
               <span>列印 / 另存高清 A4 PDF</span>
             </button>
           </div>
 
           {/* Printable Element Grid Paper Container (Beautifully styled for complete table) */}
-          <div class="print-area bg-white rounded-3xl border-4 border-slate-200 p-6 shadow-xl max-w-[1050px] mx-auto space-y-4">
+          <div className="print-area bg-white rounded-3xl border-4 border-slate-200 p-6 shadow-xl max-w-[1050px] mx-auto space-y-4">
             
             {/* Header Title inside document */}
-            <div class="text-center border-b-2 border-slate-100 pb-2 flex justify-between items-center px-2">
-              <div class="text-left">
-                <h2 class="text-2xl font-black text-slate-800 tracking-wide">
+            <div className="text-center border-b-2 border-slate-100 pb-2 flex justify-between items-center px-2">
+              <div className="text-left">
+                <h2 className="text-2xl font-black text-slate-800 tracking-wide">
                   🧪 STEAM 元素歷險記 — 化學元素週期表
                 </h2>
-                <p class="text-slate-400 text-xs font-bold mt-0.5">完整的 118 個化學元素佈局（IUPAC 標準 / A4 橫向）</p>
+                <p className="text-slate-400 text-xs font-bold mt-0.5">完整的 118 個化學元素佈局（IUPAC 標準 / A4 橫向）</p>
               </div>
-              <div class="text-right text-[10px] text-slate-400 font-bold max-w-[200px] leading-tight no-print">
+              <div className="text-right text-[10px] text-slate-400 font-bold max-w-[200px] leading-tight no-print">
                 小學 STEAM 專用教材 ‧ 支援實體課堂列印與彩繪著色
               </div>
             </div>
 
             {/* Scientific Periodic Layout Grid (18 columns layout for row alignments) */}
-            <div class="overflow-x-auto pb-2">
-              <div class="min-w-[980px] grid grid-cols-18 gap-[3px]" style={{ gridTemplateColumns: 'repeat(18, minmax(0, 1fr))' }}>
+            <div className="overflow-x-auto pb-2">
+              <div className="min-w-[980px] grid grid-cols-18 gap-[3px]" style={{ gridTemplateColumns: 'repeat(18, minmax(0, 1fr))' }}>
                 {finalGrid.map((el, index) => {
                   const row = Math.floor(index / 18);
                   
                   // Render separator spacer row between actinides and main table
                   if (row === 7) {
-                    return <div key={`spacer-${index}`} class="h-2"></div>;
+                    return <div key={`spacer-${index}`} className="h-2"></div>;
                   }
 
                   if (el === null) {
                     // Specific annotations in empty regions to make it look highly professional and authentic!
                     if (index === 18 * 2 + 5) {
                       return (
-                        <div key={`empty-${index}`} class="col-span-6 row-span-1 flex items-center justify-center text-center opacity-40 select-none no-print">
-                          <span class="text-xs font-bold text-slate-300 tracking-widest uppercase">Periodic Table</span>
+                        <div key={`empty-${index}`} className="col-span-6 row-span-1 flex items-center justify-center text-center opacity-40 select-none no-print">
+                          <span className="text-xs font-bold text-slate-300 tracking-widest uppercase">Periodic Table</span>
                         </div>
                       );
                     }
                     // Skip render for cells spanned by the label
                     if (index > 18 * 2 + 5 && index <= 18 * 2 + 10) return null;
 
-                    return <div key={`empty-${index}`} class="rounded bg-slate-50/20 h-[52px]"></div>;
+                    return <div key={`empty-${index}`} className="rounded bg-slate-50/20 h-[52px]"></div>;
                   }
                   
                   return (
                     <div 
                       key={el.num} 
-                      class={`p-1 rounded border-[1.5px] flex flex-col justify-between h-[52px] transition hover:shadow ${getCategoryBorderColor(el.cat)}`}
+                      className={`p-1 rounded border-[1.5px] flex flex-col justify-between h-[52px] transition hover:shadow ${getCategoryBorderColor(el.cat)}`}
                     >
                       {/* Top element info */}
-                      <div class="flex justify-between items-start leading-none text-[8px]">
-                        <span class="text-slate-400 font-black">#{el.num}</span>
+                      <div className="flex justify-between items-start leading-none text-[8px]">
+                        <span className="text-slate-400 font-black">#{el.num}</span>
                       </div>
 
                       {/* Chemical symbol display */}
-                      <div class="text-center">
-                        <h4 class="text-base font-black text-slate-800 leading-none">{el.sym}</h4>
+                      <div className="text-center">
+                        <h4 className="text-base font-black text-slate-800 leading-none">{el.sym}</h4>
                       </div>
 
                       {/* Bilingual Names */}
-                      <div class="text-center leading-none">
-                        <p class="text-[9px] font-black text-slate-700 truncate">{el.nameZh}</p>
-                        <p class="text-[7px] font-bold text-slate-400 truncate mt-0.5">{el.nameEn}</p>
+                      <div className="text-center leading-none">
+                        <p className="text-[9px] font-black text-slate-700 truncate">{el.nameZh}</p>
+                        <p className="text-[7px] font-bold text-slate-400 truncate mt-0.5">{el.nameEn}</p>
                       </div>
                     </div>
                   );
@@ -2071,11 +2078,11 @@
             </div>
 
             {/* Colorful Legends Group */}
-            <div class="grid grid-cols-5 md:grid-cols-10 gap-1.5 pt-3 border-t border-slate-100 text-center">
+            <div className="grid grid-cols-5 md:grid-cols-10 gap-1.5 pt-3 border-t border-slate-100 text-center">
               {Object.keys(categoryNames).map((key) => {
                 const cat = categoryNames[key];
                 return (
-                  <div key={key} class={`p-1 rounded text-[9px] font-black border ${cat.color} truncate shadow-sm`}>
+                  <div key={key} className={`p-1 rounded text-[9px] font-black border ${cat.color} truncate shadow-sm`}>
                     {cat.name}
                   </div>
                 );
@@ -2083,7 +2090,7 @@
             </div>
 
             {/* Student metadata slot for physical worksheets */}
-            <div class="pt-3 border-t border-dashed border-slate-200 flex justify-between text-[11px] text-slate-400 font-bold px-2">
+            <div className="pt-3 border-t border-dashed border-slate-200 flex justify-between text-[11px] text-slate-400 font-bold px-2">
               <span>姓名 (Name): ______________________</span>
               <span>班別 (Class): ______________________</span>
               <span>STEAM 課堂專屬學習單</span>
