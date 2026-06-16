@@ -63,19 +63,21 @@
     @media print {
       @page {
         size: landscape; /* Automatically set page to landscape format for perfect fit */
-        margin: 0.5cm;
+        margin: 0.3cm;   /* Tight margins to maximize printable height */
       }
       body {
         background: white !important;
         color: black !important;
         padding: 0 !important;
         margin: 0 !important;
+        height: 100%;
+        overflow: hidden; /* Prevent extra blank page overflow */
       }
       /* Hide navigation header, footer, settings, other tabs, and print controls */
       header, nav, footer, .no-print, button {
         display: none !important;
       }
-      /* Expand periodic table to fill the printed A4 page */
+      /* Expand periodic table to fill the printed A4 page precisely */
       .print-area {
         position: absolute;
         left: 0;
@@ -86,6 +88,33 @@
         box-shadow: none !important;
         padding: 0 !important;
         margin: 0 !important;
+        page-break-inside: avoid;
+      }
+      
+      /* Scale elements to fit strictly on exactly 1 page */
+      .print-area h2 {
+        font-size: 1.25rem !important; /* text-xl */
+        margin-bottom: 2px !important;
+      }
+      .print-area p {
+        font-size: 0.75rem !important;
+      }
+      .print-area .grid-cols-18 {
+        gap: 2px !important;
+      }
+      /* Shrink standard 118 grid cell height so standard table + actinide strip comfortably fits on one page */
+      .print-area .h-\[52px\] {
+        height: 44px !important; 
+      }
+      .print-area .h-2 {
+        height: 4px !important; /* Shrink the actinide gap separator */
+      }
+      .print-area .pt-3 {
+        padding-top: 6px !important;
+      }
+      .print-area .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+        margin-top: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
       }
     }
   </style>
@@ -536,7 +565,7 @@
       { num: 41, sym: "Nb", nameZh: "鈮", nameEn: "Niobium", cat: "transition-metal" },
       { num: 42, sym: "Mo", nameZh: "鉬", nameEn: "Molybdenum", cat: "transition-metal" },
       { num: 43, sym: "Tc", nameZh: "鎝", nameEn: "Technetium", cat: "transition-metal" },
-      { num: 44, sym: "Ru", nameZh: "", nameEn: "Ruthenium", cat: "transition-metal" },
+      { num: 44, sym: "Ru", nameZh: "釕", nameEn: "Ruthenium", cat: "transition-metal" },
       { num: 45, sym: "Rh", nameZh: "銠", nameEn: "Rhodium", cat: "transition-metal" },
       { num: 46, sym: "Pd", nameZh: "鈀", nameEn: "Palladium", cat: "transition-metal" },
       { num: 47, sym: "Ag", nameZh: "銀", nameEn: "Silver", cat: "transition-metal" },
@@ -548,14 +577,14 @@
       { num: 53, sym: "I", nameZh: "碘", nameEn: "Iodine", cat: "halogen" },
       { num: 54, sym: "Xe", nameZh: "氙", nameEn: "Xenon", cat: "noble-gas" },
       { num: 55, sym: "Cs", nameZh: "銫", nameEn: "Cesium", cat: "alkali-metal" },
-      { num: 56, sym: "Ba", nameZh: "", nameEn: "Barium", cat: "alkaline-earth" },
+      { num: 56, sym: "Ba", nameZh: "鋇", nameEn: "Barium", cat: "alkaline-earth" },
       { num: 57, sym: "La", nameZh: "鑭", nameEn: "Lanthanum", cat: "lanthanide" },
       { num: 58, sym: "Ce", nameZh: "鈰", nameEn: "Cerium", cat: "lanthanide" },
       { num: 59, sym: "Pr", nameZh: "鐠", nameEn: "Praseodymium", cat: "lanthanide" },
       { num: 60, sym: "Nd", nameZh: "釹", nameEn: "Neodymium", cat: "lanthanide" },
       { num: 61, sym: "Pm", nameZh: "鉕", nameEn: "Promethium", cat: "lanthanide" },
       { num: 62, sym: "Sm", nameZh: "釤", nameEn: "Samarium", cat: "lanthanide" },
-      { num: 63, sym: "Eu", nameZh: "銪", nameEn: "Europium", cat: "lanthanide" },
+      { num: 63, sym: "Eu", nameZh: "", nameEn: "Europium", cat: "lanthanide" },
       { num: 64, sym: "Gd", nameZh: "釓", nameEn: "Gadolinium", cat: "lanthanide" },
       { num: 65, sym: "Tb", nameZh: "鋱", nameEn: "Terbium", cat: "lanthanide" },
       { num: 66, sym: "Dy", nameZh: "鏑", nameEn: "Dysprosium", cat: "lanthanide" },
@@ -1368,7 +1397,7 @@
             <h3 class="text-2xl font-black text-pink-600 flex items-center justify-center gap-2">
               <span>🧬 元素與日常實物連連看</span>
             </h3>
-            <p class="text-slate-500 text-sm mt-1">選中左邊的元素符號，再選中邊對應的生活常見物品吧！</p>
+            <p class="text-slate-500 text-sm mt-1">選中左邊的元素符號，再選中對應的生活常見物品吧！</p>
           </div>
 
           <div class="grid grid-cols-2 gap-8 relative py-4">
@@ -1460,7 +1489,7 @@
         { q: "街上五顏六色非常美麗耀眼的「霓虹燈招牌」，裡面充入了甚麼氣體？", options: ["Ar (氬)", "Mg (鎂)", "Si (矽)", "Ne (氖)"], correct: 3, hint: "Neon 氖通電時會發出絢麗紅光。" },
         { q: "保護牙齒避免產生蛀牙，我們應該使用含有哪種元素的防蛀牙膏？", options: ["F (氟)", "C (碳)", "Be (鈹)", "S (硫)"], correct: 0, hint: "Fluorine 氟是牙齒表面結合成保護盾。" },
         { q: "香蕉中富含哪種重要的電解質，能保證我們的肌肉神經健康運動？", options: ["Na (鈉)", "K (鉀)", "Li (鋰)", "Al (鋁)"], correct: 1, hint: "Potassium 鉀在香蕉 and 牛油果中最多。" },
-        { q: "燃燒時發出耀眼奪目白光，常用於煙花和閃光彈的是哪種元素？", options: ["Mg (鎂)", "He (氦)", "H (氫)", "Si (矽)"], correct: 0, hint: "Magnesium 燃燒白光非常閃耀。" }
+        { q: "燃燒時發出耀眼奪目白光，常用於煙花 and 閃光彈的是哪種元素？", options: ["Mg (鎂)", "He (氦)", "H (氫)", "Si (矽)"], correct: 0, hint: "Magnesium 燃燒白光非常閃耀。" }
       ];
 
       const startQuiz = () => {
@@ -1800,7 +1829,7 @@
             <p class="text-slate-500 text-sm mt-1">努力學習累積星星，就能解鎖超棒的化學榮譽稱號！</p>
           </div>
 
-          {/* WhatsApp Share Card (NEW FUNCTION) */}
+          {/* WhatsApp Share Card */}
           <div class="bg-gradient-to-r from-emerald-400 to-teal-500 rounded-2xl p-5 text-white shadow-md space-y-3 animate-float border-2 border-white">
             <div class="flex items-center gap-3">
               <div class="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center text-xl shadow-inner">
@@ -1879,7 +1908,7 @@
     }
 
     // ==========================================
-    // 5. DOWNLOAD & PRINT SECTION (TAB 5 - CORRECT 118-ELEMENT LAYOUT)
+    // 5. DOWNLOAD & PRINT SECTION (TAB 5 - CORRECT 118-ELEMENT LAYOUT - 1 PAGE FIT)
     // ==========================================
     function DownloadSection() {
       const handlePrint = () => {
